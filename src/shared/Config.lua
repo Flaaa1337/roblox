@@ -103,6 +103,15 @@ Config.MinPlayersForVote = 3
 Config.MinVotesToThrow = 2
 
 ---------------------------------------------------------------------------
+-- Bot crew: keeps the balloon lively while the game has few players.
+-- Bots fill the basket up to BotCrewSize passengers and hop off when real
+-- players join. They are clearly marked with a robot icon.
+---------------------------------------------------------------------------
+Config.BotsEnabled = true
+Config.BotCrewSize = 5
+Config.BotHookRange = 22
+
+---------------------------------------------------------------------------
 -- Rescue raft
 ---------------------------------------------------------------------------
 Config.DeliveriesToReturn = 3
