@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "locale": "de-de",
+    "status": "draft",
+    "author": "Claude (machine draft)",
+    "reviewed": false,
+    "note": "Unreviewed draft. Needs semantic review by a qualified reviewer before release."
+  },
+  "objective.first_capture": {
+    "text": "Bring deine erste Anomalie nach Hause.",
+    "status": "draft"
+  },
+  "objective.go_to_portal": {
+    "text": "Geh zum leuchtenden Portal, um deine erste Expedition zu starten.",
+    "status": "draft"
+  },
+  "objective.explore_zone": {
+    "text": "Sieh dich um. In dieser Zone leben Anomalien.",
+    "status": "draft"
+  },
+  "action.enter_portal": {
+    "text": "Betreten",
+    "status": "draft"
+  },
+  "action.return_to_hub": {
+    "text": "Zurück",
+    "status": "draft"
+  },
+  "portal.to_area": {
+    "text": "Portal: {area}",
+    "status": "draft"
+  },
+  "portal.to_hub": {
+    "text": "Portal: Forschungszentrum",
+    "status": "draft"
+  },
+  "portal.not_available": {
+    "text": "Noch nicht verfügbar",
+    "status": "draft"
+  },
+  "area.hub": {
+    "text": "Forschungszentrum",
+    "status": "draft"
+  },
+  "area.glitch_grove": {
+    "text": "Glitch-Hain",
+    "status": "draft"
+  },
+  "area.scrap_district": {
+    "text": "Schrottviertel",
+    "status": "draft"
+  },
+  "area.void_station": {
+    "text": "Leerenstation",
+    "status": "draft"
+  },
+  "status.safe_area": {
+    "text": "Sicherer Bereich",
+    "status": "draft"
+  },
+  "status.expedition_area": {
+    "text": "Expeditionsgebiet",
+    "status": "draft"
+  },
+  "status.loading": {
+    "text": "Wird geladen...",
+    "status": "draft"
+  },
+  "status.traveling": {
+    "text": "Unterwegs...",
+    "status": "draft"
+  },
+  "base.yours": {
+    "text": "Deine Basis",
+    "status": "draft"
+  },
+  "base.owned_by": {
+    "text": "Basis von {name}",
+    "status": "draft"
+  },
+  "base.vacant": {
+    "text": "Freier Basisplatz",
+    "status": "draft"
+  },
+  "base.direction": {
+    "text": "Deine Basis ist mit einem cyanfarbenen Strahl markiert.",
+    "status": "draft"
+  },
+  "sign.extraction": {
+    "text": "Extraktionspunkt",
+    "status": "draft"
+  },
+  "sign.arrival": {
+    "text": "Ankunftspunkt",
+    "status": "draft"
+  },
+  "sign.welcome": {
+    "text": "Willkommen, Forscher",
+    "status": "draft"
+  },
+  "hint.move_touch": {
+    "text": "Benutze den Stick zum Laufen und die Sprungtaste zum Springen.",
+    "status": "draft"
+  },
+  "hint.dismiss": {
+    "text": "Verstanden",
+    "status": "draft"
+  },
+  "error.translation_fallback": {
+    "text": "Einige Texte werden auf Englisch angezeigt.",
+    "status": "draft"
+  }
+}

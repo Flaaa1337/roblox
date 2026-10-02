@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "locale": "ja-jp",
+    "status": "draft",
+    "author": "Claude (machine draft)",
+    "reviewed": false,
+    "note": "Unreviewed draft. Needs semantic review by a qualified reviewer before release."
+  },
+  "objective.first_capture": {
+    "text": "最初のアノマリーを持ち帰ろう。",
+    "status": "draft"
+  },
+  "objective.go_to_portal": {
+    "text": "光るポータルまで歩いて、最初の探索を始めよう。",
+    "status": "draft"
+  },
+  "objective.explore_zone": {
+    "text": "周りを見てみよう。このゾーンにはアノマリーがいる。",
+    "status": "draft"
+  },
+  "action.enter_portal": {
+    "text": "入る",
+    "status": "draft"
+  },
+  "action.return_to_hub": {
+    "text": "戻る",
+    "status": "draft"
+  },
+  "portal.to_area": {
+    "text": "ポータル：{area}",
+    "status": "draft"
+  },
+  "portal.to_hub": {
+    "text": "ポータル：研究ハブ",
+    "status": "draft"
+  },
+  "portal.not_available": {
+    "text": "まだ利用できません",
+    "status": "draft"
+  },
+  "area.hub": {
+    "text": "研究ハブ",
+    "status": "draft"
+  },
+  "area.glitch_grove": {
+    "text": "グリッチの森",
+    "status": "draft"
+  },
+  "area.scrap_district": {
+    "text": "スクラップ地区",
+    "status": "draft"
+  },
+  "area.void_station": {
+    "text": "ヴォイド・ステーション",
+    "status": "draft"
+  },
+  "status.safe_area": {
+    "text": "安全エリア",
+    "status": "draft"
+  },
+  "status.expedition_area": {
+    "text": "探索エリア",
+    "status": "draft"
+  },
+  "status.loading": {
+    "text": "読み込み中...",
+    "status": "draft"
+  },
+  "status.traveling": {
+    "text": "移動中...",
+    "status": "draft"
+  },
+  "base.yours": {
+    "text": "あなたの拠点",
+    "status": "draft"
+  },
+  "base.owned_by": {
+    "text": "{name}の拠点",
+    "status": "draft"
+  },
+  "base.vacant": {
+    "text": "空いている拠点",
+    "status": "draft"
+  },
+  "base.direction": {
+    "text": "あなたの拠点はシアンの光で示されています。",
+    "status": "draft"
+  },
+  "sign.extraction": {
+    "text": "脱出ポイント",
+    "status": "draft"
+  },
+  "sign.arrival": {
+    "text": "到着ポイント",
+    "status": "draft"
+  },
+  "sign.welcome": {
+    "text": "ようこそ、研究員",
+    "status": "draft"
+  },
+  "hint.move_touch": {
+    "text": "スティックで移動し、ジャンプボタンでジャンプします。",
+    "status": "draft"
+  },
+  "hint.dismiss": {
+    "text": "OK",
+    "status": "draft"
+  },
+  "error.translation_fallback": {
+    "text": "一部のテキストは英語で表示されます。",
+    "status": "draft"
+  }
+}

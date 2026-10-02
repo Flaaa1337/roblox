@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "locale": "fr-fr",
+    "status": "draft",
+    "author": "Claude (machine draft)",
+    "reviewed": false,
+    "note": "Unreviewed draft. Needs semantic review by a qualified reviewer before release."
+  },
+  "objective.first_capture": {
+    "text": "Ramène ta première anomalie à la maison.",
+    "status": "draft"
+  },
+  "objective.go_to_portal": {
+    "text": "Marche jusqu'au portail lumineux pour commencer ta première expédition.",
+    "status": "draft"
+  },
+  "objective.explore_zone": {
+    "text": "Regarde autour de toi. Des anomalies vivent dans cette zone.",
+    "status": "draft"
+  },
+  "action.enter_portal": {
+    "text": "Entrer",
+    "status": "draft"
+  },
+  "action.return_to_hub": {
+    "text": "Retour",
+    "status": "draft"
+  },
+  "portal.to_area": {
+    "text": "Portail : {area}",
+    "status": "draft"
+  },
+  "portal.to_hub": {
+    "text": "Portail : Centre de recherche",
+    "status": "draft"
+  },
+  "portal.not_available": {
+    "text": "Pas encore disponible",
+    "status": "draft"
+  },
+  "area.hub": {
+    "text": "Centre de recherche",
+    "status": "draft"
+  },
+  "area.glitch_grove": {
+    "text": "Bosquet Glitch",
+    "status": "draft"
+  },
+  "area.scrap_district": {
+    "text": "Quartier de la Ferraille",
+    "status": "draft"
+  },
+  "area.void_station": {
+    "text": "Station du Vide",
+    "status": "draft"
+  },
+  "status.safe_area": {
+    "text": "Zone sûre",
+    "status": "draft"
+  },
+  "status.expedition_area": {
+    "text": "Zone d'expédition",
+    "status": "draft"
+  },
+  "status.loading": {
+    "text": "Chargement...",
+    "status": "draft"
+  },
+  "status.traveling": {
+    "text": "Voyage en cours...",
+    "status": "draft"
+  },
+  "base.yours": {
+    "text": "Ta base",
+    "status": "draft"
+  },
+  "base.owned_by": {
+    "text": "Base de {name}",
+    "status": "draft"
+  },
+  "base.vacant": {
+    "text": "Emplacement de base libre",
+    "status": "draft"
+  },
+  "base.direction": {
+    "text": "Ta base est indiquée par un rayon cyan.",
+    "status": "draft"
+  },
+  "sign.extraction": {
+    "text": "Point d'extraction",
+    "status": "draft"
+  },
+  "sign.arrival": {
+    "text": "Point d'arrivée",
+    "status": "draft"
+  },
+  "sign.welcome": {
+    "text": "Bienvenue, chercheur",
+    "status": "draft"
+  },
+  "hint.move_touch": {
+    "text": "Utilise le joystick pour te déplacer et le bouton de saut pour sauter.",
+    "status": "draft"
+  },
+  "hint.dismiss": {
+    "text": "Compris",
+    "status": "draft"
+  },
+  "error.translation_fallback": {
+    "text": "Certains textes sont affichés en anglais.",
+    "status": "draft"
+  }
+}

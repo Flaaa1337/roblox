@@ -1,5 +1,6 @@
 *.rbxl
 *.rbxlx
+!ANOMALY_HEIST.rbxlx
 !OVERBOARD.rbxlx
 !SCRAPFALL.rbxlx
 *.rbxl.lock

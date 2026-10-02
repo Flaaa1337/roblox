@@ -1,0 +1,309 @@
+{
+  "_meta": {
+    "criticalKeys": 16,
+    "note": "pending = no translations yet; English fallback is used.",
+    "sourceKeys": 50
+  },
+  "locales": {
+    "ar-001": {
+      "allStrings": 52,
+      "criticalStrings": 31.2,
+      "reviewedStrings": 0,
+      "status": "draft"
+    },
+    "bg-bg": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "bn-bd": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "bs-ba": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "cs-cz": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "da-dk": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "de-de": {
+      "allStrings": 52,
+      "criticalStrings": 31.2,
+      "reviewedStrings": 0,
+      "status": "draft"
+    },
+    "el-gr": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "en-gb": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "en-us": {
+      "allStrings": 100,
+      "criticalStrings": 100,
+      "reviewedStrings": 50,
+      "status": "source"
+    },
+    "es-es": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "es-mx": {
+      "allStrings": 52,
+      "criticalStrings": 31.2,
+      "reviewedStrings": 0,
+      "status": "draft"
+    },
+    "et-ee": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "fi-fi": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "fil-ph": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "fr-ca": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "fr-fr": {
+      "allStrings": 52,
+      "criticalStrings": 31.2,
+      "reviewedStrings": 0,
+      "status": "draft"
+    },
+    "hi-in": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "hr-hr": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "hu-hu": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "id-id": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "it-it": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "ja-jp": {
+      "allStrings": 52,
+      "criticalStrings": 31.2,
+      "reviewedStrings": 0,
+      "status": "draft"
+    },
+    "ka-ge": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "kk-kz": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "km-kh": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "ko-kr": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "lt-lt": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "lv-lv": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "ms-my": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "my-mm": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "nb-no": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "nl-nl": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "pl-pl": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "pt-br": {
+      "allStrings": 52,
+      "criticalStrings": 31.2,
+      "reviewedStrings": 0,
+      "status": "draft"
+    },
+    "pt-pt": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "ro-ro": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "ru-ru": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "si-lk": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "sk-sk": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "sl-sl": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "sq-al": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "sr-rs": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "sv-se": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "th-th": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "tr-tr": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "uk-ua": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "vi-vn": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "zh-cn": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    },
+    "zh-tw": {
+      "allStrings": 0,
+      "criticalStrings": 0,
+      "reviewedStrings": 0,
+      "status": "pending"
+    }
+  }
+}

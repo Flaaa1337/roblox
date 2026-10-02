@@ -1,0 +1,229 @@
+{
+  "_meta": {
+    "note": "Project-owned locale settings. fallback = locales tried before the en-us source. Regional variants of the same language fall back to each other; scripts never cross (zh-cn and zh-tw do not fall back to each other). bs-ba script is set to Latn although the registry's native name is Cyrillic; needs reviewer confirmation."
+  },
+  "sourceLocale": "en-us",
+  "locales": {
+    "sq-al": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "ar-001": {
+      "script": "Arab",
+      "direction": "rtl"
+    },
+    "bn-bd": {
+      "script": "Beng",
+      "direction": "ltr"
+    },
+    "nb-no": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "bs-ba": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "bg-bg": {
+      "script": "Cyrl",
+      "direction": "ltr"
+    },
+    "my-mm": {
+      "script": "Mymr",
+      "direction": "ltr"
+    },
+    "zh-cn": {
+      "script": "Hans",
+      "direction": "ltr"
+    },
+    "zh-tw": {
+      "script": "Hant",
+      "direction": "ltr"
+    },
+    "hr-hr": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "cs-cz": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "da-dk": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "nl-nl": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "en-us": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "en-gb": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "en-us"
+      ]
+    },
+    "et-ee": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "fil-ph": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "fi-fi": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "fr-fr": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "fr-ca"
+      ]
+    },
+    "fr-ca": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "fr-fr"
+      ]
+    },
+    "ka-ge": {
+      "script": "Geor",
+      "direction": "ltr"
+    },
+    "de-de": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "el-gr": {
+      "script": "Grek",
+      "direction": "ltr"
+    },
+    "hi-in": {
+      "script": "Deva",
+      "direction": "ltr"
+    },
+    "hu-hu": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "id-id": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "it-it": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "ja-jp": {
+      "script": "Jpan",
+      "direction": "ltr"
+    },
+    "kk-kz": {
+      "script": "Cyrl",
+      "direction": "ltr"
+    },
+    "km-kh": {
+      "script": "Khmr",
+      "direction": "ltr"
+    },
+    "ko-kr": {
+      "script": "Kore",
+      "direction": "ltr"
+    },
+    "lv-lv": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "lt-lt": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "ms-my": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "pl-pl": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "pt-br": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "pt-pt"
+      ]
+    },
+    "pt-pt": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "pt-br"
+      ]
+    },
+    "ro-ro": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "ru-ru": {
+      "script": "Cyrl",
+      "direction": "ltr"
+    },
+    "sr-rs": {
+      "script": "Cyrl",
+      "direction": "ltr"
+    },
+    "si-lk": {
+      "script": "Sinh",
+      "direction": "ltr"
+    },
+    "sk-sk": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "sl-sl": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "es-es": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "es-mx"
+      ]
+    },
+    "es-mx": {
+      "script": "Latn",
+      "direction": "ltr",
+      "fallback": [
+        "es-es"
+      ]
+    },
+    "sv-se": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "th-th": {
+      "script": "Thai",
+      "direction": "ltr"
+    },
+    "tr-tr": {
+      "script": "Latn",
+      "direction": "ltr"
+    },
+    "uk-ua": {
+      "script": "Cyrl",
+      "direction": "ltr"
+    },
+    "vi-vn": {
+      "script": "Latn",
+      "direction": "ltr"
+    }
+  }
+}

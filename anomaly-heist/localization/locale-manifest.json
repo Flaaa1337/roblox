@@ -1,0 +1,574 @@
+{
+  "_meta": {
+    "generatedBy": "tools/localization.luau",
+    "note": "A manifest entry is a coverage target, not a finished translation. See coverage.json.",
+    "registrySnapshot": "localization/registry-snapshot.language-codes.md",
+    "registrySource": "https://github.com/Roblox/creator-docs/blob/main/content/en-us/production/localization/language-codes.md"
+  },
+  "locales": [
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Albanian",
+      "fallback": {},
+      "languageCode": "sq",
+      "localeId": "sq-al",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Shqipe",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "draft",
+      "direction": "rtl",
+      "englishName": "Arabic",
+      "fallback": {},
+      "languageCode": "ar",
+      "localeId": "ar-001",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "العربية",
+      "script": "Arab"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Bengali",
+      "fallback": {},
+      "languageCode": "bn",
+      "localeId": "bn-bd",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "বাংলা",
+      "script": "Beng"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Bokmal",
+      "fallback": {},
+      "languageCode": "nb",
+      "localeId": "nb-no",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Bokmål",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Bosnian",
+      "fallback": {},
+      "languageCode": "bs",
+      "localeId": "bs-ba",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "босански",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Bulgarian",
+      "fallback": {},
+      "languageCode": "bg",
+      "localeId": "bg-bg",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "български",
+      "script": "Cyrl"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Burmese",
+      "fallback": {},
+      "languageCode": "my",
+      "localeId": "my-mm",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "ဗမာစာ",
+      "script": "Mymr"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Chinese",
+      "fallback": {},
+      "languageCode": "zh-hans",
+      "localeId": "zh-cn",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Simplified) (中文(简体)",
+      "script": "Hans"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Chinese",
+      "fallback": {},
+      "languageCode": "zh-hant",
+      "localeId": "zh-tw",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Traditional) (中文(繁體)",
+      "script": "Hant"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Croatian",
+      "fallback": {},
+      "languageCode": "hr",
+      "localeId": "hr-hr",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Hrvatski",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Czech",
+      "fallback": {},
+      "languageCode": "cs",
+      "localeId": "cs-cz",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Čeština",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Danish",
+      "fallback": {},
+      "languageCode": "da",
+      "localeId": "da-dk",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Dansk",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Dutch",
+      "fallback": {},
+      "languageCode": "nl",
+      "localeId": "nl-nl",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Nederlands",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "source",
+      "direction": "ltr",
+      "englishName": "English",
+      "fallback": {},
+      "languageCode": "en",
+      "localeId": "en-us",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "English - United States",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "English",
+      "fallback": [
+        "en-us"
+      ],
+      "languageCode": "en",
+      "localeId": "en-gb",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "English - United Kingdom",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Estonian",
+      "fallback": {},
+      "languageCode": "et",
+      "localeId": "et-ee",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Eesti",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Filipino",
+      "fallback": {},
+      "languageCode": "fil",
+      "localeId": "fil-ph",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Filipino",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Finnish",
+      "fallback": {},
+      "languageCode": "fi",
+      "localeId": "fi-fi",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Suomi",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "draft",
+      "direction": "ltr",
+      "englishName": "French",
+      "fallback": [
+        "fr-ca"
+      ],
+      "languageCode": "fr",
+      "localeId": "fr-fr",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Français - France",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "French",
+      "fallback": [
+        "fr-fr"
+      ],
+      "languageCode": "fr",
+      "localeId": "fr-ca",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Français - Canada",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Georgian",
+      "fallback": {},
+      "languageCode": "ka",
+      "localeId": "ka-ge",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "ქართული",
+      "script": "Geor"
+    },
+    {
+      "coverageStatus": "draft",
+      "direction": "ltr",
+      "englishName": "German",
+      "fallback": {},
+      "languageCode": "de",
+      "localeId": "de-de",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Deutsch",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Greek",
+      "fallback": {},
+      "languageCode": "el",
+      "localeId": "el-gr",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "ελληνικά",
+      "script": "Grek"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Hindi",
+      "fallback": {},
+      "languageCode": "hi",
+      "localeId": "hi-in",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "हिन्दी",
+      "script": "Deva"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Hungarian",
+      "fallback": {},
+      "languageCode": "hu",
+      "localeId": "hu-hu",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Magyar",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Indonesian",
+      "fallback": {},
+      "languageCode": "id",
+      "localeId": "id-id",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Bahasa Indonesia",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Italian",
+      "fallback": {},
+      "languageCode": "it",
+      "localeId": "it-it",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Italiano",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "draft",
+      "direction": "ltr",
+      "englishName": "Japanese",
+      "fallback": {},
+      "languageCode": "ja",
+      "localeId": "ja-jp",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "日本語",
+      "script": "Jpan"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Kazakh",
+      "fallback": {},
+      "languageCode": "kk",
+      "localeId": "kk-kz",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "қазақ тілі",
+      "script": "Cyrl"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Khmer",
+      "fallback": {},
+      "languageCode": "km",
+      "localeId": "km-kh",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "ភាសាខ្មែរ",
+      "script": "Khmr"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Korean",
+      "fallback": {},
+      "languageCode": "ko",
+      "localeId": "ko-kr",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "한국어",
+      "script": "Kore"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Latvian",
+      "fallback": {},
+      "languageCode": "lv",
+      "localeId": "lv-lv",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Latviešu",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Lithuanian",
+      "fallback": {},
+      "languageCode": "lt",
+      "localeId": "lt-lt",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Lietuvių",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Malay",
+      "fallback": {},
+      "languageCode": "ms",
+      "localeId": "ms-my",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Bahasa Melayu",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Polish",
+      "fallback": {},
+      "languageCode": "pl",
+      "localeId": "pl-pl",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Polski",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "draft",
+      "direction": "ltr",
+      "englishName": "Portuguese",
+      "fallback": [
+        "pt-pt"
+      ],
+      "languageCode": "pt",
+      "localeId": "pt-br",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Português - Brazil",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Portuguese",
+      "fallback": [
+        "pt-br"
+      ],
+      "languageCode": "pt",
+      "localeId": "pt-pt",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Português - Portugal",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Romanian",
+      "fallback": {},
+      "languageCode": "ro",
+      "localeId": "ro-ro",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Română",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Russian",
+      "fallback": {},
+      "languageCode": "ru",
+      "localeId": "ru-ru",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "русский",
+      "script": "Cyrl"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Serbian",
+      "fallback": {},
+      "languageCode": "sr",
+      "localeId": "sr-rs",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "српски",
+      "script": "Cyrl"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Sinhala",
+      "fallback": {},
+      "languageCode": "si",
+      "localeId": "si-lk",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "සිංහල",
+      "script": "Sinh"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Slovak",
+      "fallback": {},
+      "languageCode": "sk",
+      "localeId": "sk-sk",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Slovenčina",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Slovenian",
+      "fallback": {},
+      "languageCode": "sl",
+      "localeId": "sl-sl",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Slovenski",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Spanish",
+      "fallback": [
+        "es-mx"
+      ],
+      "languageCode": "es",
+      "localeId": "es-es",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Español - Spain",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "draft",
+      "direction": "ltr",
+      "englishName": "Spanish",
+      "fallback": [
+        "es-es"
+      ],
+      "languageCode": "es",
+      "localeId": "es-mx",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Español - Mexico",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Swedish",
+      "fallback": {},
+      "languageCode": "sv",
+      "localeId": "sv-se",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Svenska",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Thai",
+      "fallback": {},
+      "languageCode": "th",
+      "localeId": "th-th",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "ภาษาไทย",
+      "script": "Thai"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Turkish",
+      "fallback": {},
+      "languageCode": "tr",
+      "localeId": "tr-tr",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Türkçe",
+      "script": "Latn"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Ukrainian",
+      "fallback": {},
+      "languageCode": "uk",
+      "localeId": "uk-ua",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "україньска",
+      "script": "Cyrl"
+    },
+    {
+      "coverageStatus": "pending",
+      "direction": "ltr",
+      "englishName": "Vietnamese",
+      "fallback": {},
+      "languageCode": "vi",
+      "localeId": "vi-vn",
+      "manifestUpdated": "2026-10-02",
+      "nativeName": "Tiểng Việt",
+      "script": "Latn"
+    }
+  ]
+}

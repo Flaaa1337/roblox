@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "locale": "ar-001",
+    "status": "draft",
+    "author": "Claude (machine draft)",
+    "reviewed": false,
+    "note": "Unreviewed draft. Needs semantic review by a qualified reviewer before release."
+  },
+  "objective.first_capture": {
+    "text": "أحضر أول شذوذ لك إلى المنزل.",
+    "status": "draft"
+  },
+  "objective.go_to_portal": {
+    "text": "امشِ إلى البوابة المضيئة لبدء رحلتك الاستكشافية الأولى.",
+    "status": "draft"
+  },
+  "objective.explore_zone": {
+    "text": "انظر حولك. تعيش الشذوذات في هذه المنطقة.",
+    "status": "draft"
+  },
+  "action.enter_portal": {
+    "text": "ادخل",
+    "status": "draft"
+  },
+  "action.return_to_hub": {
+    "text": "عودة",
+    "status": "draft"
+  },
+  "portal.to_area": {
+    "text": "بوابة: {area}",
+    "status": "draft"
+  },
+  "portal.to_hub": {
+    "text": "بوابة: مركز الأبحاث",
+    "status": "draft"
+  },
+  "portal.not_available": {
+    "text": "غير متاح بعد",
+    "status": "draft"
+  },
+  "area.hub": {
+    "text": "مركز الأبحاث",
+    "status": "draft"
+  },
+  "area.glitch_grove": {
+    "text": "بستان الخلل",
+    "status": "draft"
+  },
+  "area.scrap_district": {
+    "text": "حي الخردة",
+    "status": "draft"
+  },
+  "area.void_station": {
+    "text": "محطة الفراغ",
+    "status": "draft"
+  },
+  "status.safe_area": {
+    "text": "منطقة آمنة",
+    "status": "draft"
+  },
+  "status.expedition_area": {
+    "text": "منطقة استكشاف",
+    "status": "draft"
+  },
+  "status.loading": {
+    "text": "جارٍ التحميل...",
+    "status": "draft"
+  },
+  "status.traveling": {
+    "text": "جارٍ الانتقال...",
+    "status": "draft"
+  },
+  "base.yours": {
+    "text": "قاعدتك",
+    "status": "draft"
+  },
+  "base.owned_by": {
+    "text": "قاعدة {name}",
+    "status": "draft"
+  },
+  "base.vacant": {
+    "text": "مكان قاعدة فارغ",
+    "status": "draft"
+  },
+  "base.direction": {
+    "text": "قاعدتك مُعلَّمة بشعاع سماوي.",
+    "status": "draft"
+  },
+  "sign.extraction": {
+    "text": "نقطة الاستخراج",
+    "status": "draft"
+  },
+  "sign.arrival": {
+    "text": "نقطة الوصول",
+    "status": "draft"
+  },
+  "sign.welcome": {
+    "text": "مرحبًا أيها الباحث",
+    "status": "draft"
+  },
+  "hint.move_touch": {
+    "text": "استخدم عصا التحكم للتحرك وزر القفز للقفز.",
+    "status": "draft"
+  },
+  "hint.dismiss": {
+    "text": "فهمت",
+    "status": "draft"
+  },
+  "error.translation_fallback": {
+    "text": "بعض النصوص معروضة باللغة الإنجليزية.",
+    "status": "draft"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "locale": "es-mx",
+    "status": "draft",
+    "author": "Claude (machine draft)",
+    "reviewed": false,
+    "note": "Unreviewed draft. Needs semantic review by a qualified reviewer before release."
+  },
+  "objective.first_capture": {
+    "text": "Lleva tu primera anomalía a casa.",
+    "status": "draft"
+  },
+  "objective.go_to_portal": {
+    "text": "Camina hacia el portal brillante para comenzar tu primera expedición.",
+    "status": "draft"
+  },
+  "objective.explore_zone": {
+    "text": "Mira a tu alrededor. En esta zona viven anomalías.",
+    "status": "draft"
+  },
+  "action.enter_portal": {
+    "text": "Entrar",
+    "status": "draft"
+  },
+  "action.return_to_hub": {
+    "text": "Volver",
+    "status": "draft"
+  },
+  "portal.to_area": {
+    "text": "Portal: {area}",
+    "status": "draft"
+  },
+  "portal.to_hub": {
+    "text": "Portal: Centro de Investigación",
+    "status": "draft"
+  },
+  "portal.not_available": {
+    "text": "Aún no disponible",
+    "status": "draft"
+  },
+  "area.hub": {
+    "text": "Centro de Investigación",
+    "status": "draft"
+  },
+  "area.glitch_grove": {
+    "text": "Arboleda Glitch",
+    "status": "draft"
+  },
+  "area.scrap_district": {
+    "text": "Distrito Chatarra",
+    "status": "draft"
+  },
+  "area.void_station": {
+    "text": "Estación del Vacío",
+    "status": "draft"
+  },
+  "status.safe_area": {
+    "text": "Zona segura",
+    "status": "draft"
+  },
+  "status.expedition_area": {
+    "text": "Zona de expedición",
+    "status": "draft"
+  },
+  "status.loading": {
+    "text": "Cargando...",
+    "status": "draft"
+  },
+  "status.traveling": {
+    "text": "Viajando...",
+    "status": "draft"
+  },
+  "base.yours": {
+    "text": "Tu base",
+    "status": "draft"
+  },
+  "base.owned_by": {
+    "text": "Base de {name}",
+    "status": "draft"
+  },
+  "base.vacant": {
+    "text": "Espacio de base libre",
+    "status": "draft"
+  },
+  "base.direction": {
+    "text": "Tu base está marcada con un rayo cian.",
+    "status": "draft"
+  },
+  "sign.extraction": {
+    "text": "Punto de extracción",
+    "status": "draft"
+  },
+  "sign.arrival": {
+    "text": "Punto de llegada",
+    "status": "draft"
+  },
+  "sign.welcome": {
+    "text": "Bienvenido, investigador",
+    "status": "draft"
+  },
+  "hint.move_touch": {
+    "text": "Usa el joystick para moverte y el botón de salto para saltar.",
+    "status": "draft"
+  },
+  "hint.dismiss": {
+    "text": "Entendido",
+    "status": "draft"
+  },
+  "error.translation_fallback": {
+    "text": "Algunos textos se muestran en inglés.",
+    "status": "draft"
+  }
+}

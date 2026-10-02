@@ -1,0 +1,6 @@
+# Pinned command-line tools (https://github.com/rojo-rbx/rokit). Versions were
+# verified in the development container on 2026-10-02.
+[tools]
+rojo = "rojo-rbx/rojo@7.6.1"
+lune = "lune-org/lune@0.10.4"
+luau-lsp = "JohnnyMorganz/luau-lsp@1.70.1"

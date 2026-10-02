@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "locale": "pt-br",
+    "status": "draft",
+    "author": "Claude (machine draft)",
+    "reviewed": false,
+    "note": "Unreviewed draft. Needs semantic review by a qualified reviewer before release."
+  },
+  "objective.first_capture": {
+    "text": "Leve sua primeira anomalia para casa.",
+    "status": "draft"
+  },
+  "objective.go_to_portal": {
+    "text": "Vá até o portal brilhante para começar sua primeira expedição.",
+    "status": "draft"
+  },
+  "objective.explore_zone": {
+    "text": "Olhe ao redor. Anomalias vivem nesta zona.",
+    "status": "draft"
+  },
+  "action.enter_portal": {
+    "text": "Entrar",
+    "status": "draft"
+  },
+  "action.return_to_hub": {
+    "text": "Voltar",
+    "status": "draft"
+  },
+  "portal.to_area": {
+    "text": "Portal: {area}",
+    "status": "draft"
+  },
+  "portal.to_hub": {
+    "text": "Portal: Centro de Pesquisa",
+    "status": "draft"
+  },
+  "portal.not_available": {
+    "text": "Ainda não disponível",
+    "status": "draft"
+  },
+  "area.hub": {
+    "text": "Centro de Pesquisa",
+    "status": "draft"
+  },
+  "area.glitch_grove": {
+    "text": "Bosque Glitch",
+    "status": "draft"
+  },
+  "area.scrap_district": {
+    "text": "Distrito da Sucata",
+    "status": "draft"
+  },
+  "area.void_station": {
+    "text": "Estação do Vazio",
+    "status": "draft"
+  },
+  "status.safe_area": {
+    "text": "Área segura",
+    "status": "draft"
+  },
+  "status.expedition_area": {
+    "text": "Área de expedição",
+    "status": "draft"
+  },
+  "status.loading": {
+    "text": "Carregando...",
+    "status": "draft"
+  },
+  "status.traveling": {
+    "text": "Viajando...",
+    "status": "draft"
+  },
+  "base.yours": {
+    "text": "Sua base",
+    "status": "draft"
+  },
+  "base.owned_by": {
+    "text": "Base de {name}",
+    "status": "draft"
+  },
+  "base.vacant": {
+    "text": "Espaço de base livre",
+    "status": "draft"
+  },
+  "base.direction": {
+    "text": "Sua base está marcada com um feixe ciano.",
+    "status": "draft"
+  },
+  "sign.extraction": {
+    "text": "Ponto de extração",
+    "status": "draft"
+  },
+  "sign.arrival": {
+    "text": "Ponto de chegada",
+    "status": "draft"
+  },
+  "sign.welcome": {
+    "text": "Bem-vindo, pesquisador",
+    "status": "draft"
+  },
+  "hint.move_touch": {
+    "text": "Use o direcional para se mover e o botão de pulo para pular.",
+    "status": "draft"
+  },
+  "hint.dismiss": {
+    "text": "Entendi",
+    "status": "draft"
+  },
+  "error.translation_fallback": {
+    "text": "Alguns textos são exibidos em inglês.",
+    "status": "draft"
+  }
+}

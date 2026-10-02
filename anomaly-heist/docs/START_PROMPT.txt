@@ -1,0 +1,9 @@
+Read CLAUDE.md and docs/BUILD_SPEC.md fully before editing. Build ANOMALY HEIST as a real, polished Roblox experience, not another concept document.
+
+The US is explicitly included: source text is US English and the product targets worldwide players across all Roblox-supported locales. Keep language, geographic availability, pricing, and policy eligibility separate.
+
+Inspect the actual workspace, installed tools, and permissions first. Do not assume VS Code, the Rojo CLI, uploaded assets, or Studio access already exist. Preserve existing work.
+
+Start with M0 and progress toward the first walkable M1 build using complete project files and primitive asset fallbacks. Use references/roblox_style_reference.png as visual guidance, not proof of implementation.
+
+Follow the ownership, localization, performance, and acceptance requirements. Report what you changed, what you actually tested, what remains untested, and the exact next Studio step. Do not publish, spend money, modify production data, or invent successful tests.

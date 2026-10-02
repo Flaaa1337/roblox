@@ -1,0 +1,3546 @@
+<roblox version="4">
+  <Item class="Lighting" referent="0">
+    <Properties>
+      <string name="Name">Lighting</string>
+      <token name="Technology">3</token>
+    </Properties>
+  </Item>
+  <Item class="LocalizationService" referent="1">
+    <Properties>
+      <string name="Name">LocalizationService</string>
+    </Properties>
+    <Item class="LocalizationTable" referent="2">
+      <Properties>
+        <string name="Name">AnomalyHeistStrings</string>
+        <string name="Contents">[{"key":"action.capture","context":"Interaction label for capturing a creature.","source":"Capture","values":{}},{"key":"action.drop","context":"Intentional cargo release.","source":"Drop cargo","values":{}},{"key":"action.enter_portal","context":"Proximity prompt action on a portal. Short verb.","source":"Enter","values":{"ar-001":"ادخل","de-de":"Betreten","es-mx":"Entrar","fr-fr":"Entrer","ja-jp":"入る","pt-br":"Entrar"}},{"key":"action.extract","context":"Extraction interaction.","source":"Extract","values":{}},{"key":"action.return_to_hub","context":"Proximity prompt action on the return portal. Short verb.","source":"Return","values":{"ar-001":"عودة","de-de":"Zurück","es-mx":"Volver","fr-fr":"Retour","ja-jp":"戻る","pt-br":"Voltar"}},{"key":"area.glitch_grove","context":"Name of the beginner expedition zone. Green forest with violet glitches.","source":"Glitch Grove","values":{"ar-001":"بستان الخلل","de-de":"Glitch-Hain","es-mx":"Arboleda Glitch","fr-fr":"Bosquet Glitch","ja-jp":"グリッチの森","pt-br":"Bosque Glitch"}},{"key":"area.hub","context":"Name of the safe social hub.","source":"Research Hub","values":{"ar-001":"مركز الأبحاث","de-de":"Forschungszentrum","es-mx":"Centro de Investigación","fr-fr":"Centre de recherche","ja-jp":"研究ハブ","pt-br":"Centro de Pesquisa"}},{"key":"area.scrap_district","context":"Name of the second zone: containers and repair bays.","source":"Scrap District","values":{"ar-001":"حي الخردة","de-de":"Schrottviertel","es-mx":"Distrito Chatarra","fr-fr":"Quartier de la Ferraille","ja-jp":"スクラップ地区","pt-br":"Distrito da Sucata"}},{"key":"area.void_station","context":"Name of the third zone: dark laboratory.","source":"Void Station","values":{"ar-001":"محطة الفراغ","de-de":"Leerenstation","es-mx":"Estación del Vacío","fr-fr":"Station du Vide","ja-jp":"ヴォイド・ステーション","pt-br":"Estação do Vazio"}},{"key":"base.direction","context":"Onboarding hint pointing out the base marker.","source":"Your base is marked with a cyan beam.","values":{"ar-001":"قاعدتك مُعلَّمة بشعاع سماوي.","de-de":"Deine Basis ist mit einem cyanfarbenen Strahl markiert.","es-mx":"Tu base está marcada con un rayo cian.","fr-fr":"Ta base est indiquée par un rayon cyan.","ja-jp":"あなたの拠点はシアンの光で示されています。","pt-br":"Sua base está marcada com um feixe ciano."}},{"key":"base.owned_by","context":"Sign above another player's base. {name} is a Roblox display name.","source":"{name}'s base","values":{"ar-001":"قاعدة {name}","de-de":"Basis von {name}","es-mx":"Base de {name}","fr-fr":"Base de {name}","ja-jp":"{name}の拠点","pt-br":"Base de {name}"}},{"key":"base.vacant","context":"Sign above an unassigned base plot.","source":"Free base slot","values":{"ar-001":"مكان قاعدة فارغ","de-de":"Freier Basisplatz","es-mx":"Espacio de base libre","fr-fr":"Emplacement de base libre","ja-jp":"空いている拠点","pt-br":"Espaço de base livre"}},{"key":"base.yours","context":"Sign above the local player's own base plot.","source":"Your base","values":{"ar-001":"قاعدتك","de-de":"Deine Basis","es-mx":"Tu base","fr-fr":"Ta base","ja-jp":"あなたの拠点","pt-br":"Sua base"}},{"key":"error.inventory_full","context":"No automatic item destruction.","source":"Your collection is full. Make room before capturing.","values":{}},{"key":"error.portal_cooldown","context":"Portal rate limit.","source":"Please wait a moment before using the portal again.","values":{}},{"key":"error.portal_locked","context":"Portal for a locked or unbuilt zone.","source":"This zone is not available yet.","values":{}},{"key":"error.portal_too_far","context":"Portal request from too far away.","source":"Move closer to the portal.","values":{}},{"key":"error.server_failed","context":"Server initialization failed; gameplay is blocked.","source":"Something went wrong while starting. Please rejoin.","values":{}},{"key":"error.server_starting","context":"Client waiting for the server ready signal.","source":"The server is still starting. Please wait.","values":{}},{"key":"error.translation_fallback","context":"Honest note when a translation is missing for the player's language.","source":"Some text is shown in English.","values":{"ar-001":"بعض النصوص معروضة باللغة الإنجليزية.","de-de":"Einige Texte werden auf Englisch angezeigt.","es-mx":"Algunos textos se muestran en inglés.","fr-fr":"Certains textes sont affichés en anglais.","ja-jp":"一部のテキストは英語で表示されます。","pt-br":"Alguns textos são exibidos em inglês."}},{"key":"error.travel_failed","context":"Portal fallback after a timeout.","source":"Travel failed. You are back in a safe place.","values":{}},{"key":"evolution.requirement","context":"Parameterized evolution requirement.","source":"Extract this species {count} times.","values":{}},{"key":"hint.dismiss","context":"Button that hides an onboarding hint.","source":"Got it","values":{"ar-001":"فهمت","de-de":"Verstanden","es-mx":"Entendido","fr-fr":"Compris","ja-jp":"OK","pt-br":"Entendi"}},{"key":"hint.move_gamepad","context":"Movement hint on gamepads. No button names: they differ between controller brands.","source":"Use the left stick to move and the jump button to jump.","values":{}},{"key":"hint.move_keyboard","context":"Key names are filled in for the player's keyboard layout.","source":"Move with {up} {left} {down} {right}. Jump with {jump}.","values":{}},{"key":"hint.move_touch","context":"Movement hint on touch devices.","source":"Use the thumbstick to move and the jump button to jump.","values":{"ar-001":"استخدم عصا التحكم للتحرك وزر القفز للقفز.","de-de":"Benutze den Stick zum Laufen und die Sprungtaste zum Springen.","es-mx":"Usa el joystick para moverte y el botón de salto para saltar.","fr-fr":"Utilise le joystick pour te déplacer et le bouton de saut pour sauter.","ja-jp":"スティックで移動し、ジャンプボタンでジャンプします。","pt-br":"Use o direcional para se mover e o botão de pulo para pular."}},{"key":"info.safe_collection","context":"Ownership explanation.","source":"Your secured collection is safe.","values":{}},{"key":"objective.explore_zone","context":"Shown on arrival in an expedition zone during the first build (capture arrives in a later update).","source":"Look around. Anomalies live in this zone.","values":{"ar-001":"انظر حولك. تعيش الشذوذات في هذه المنطقة.","de-de":"Sieh dich um. In dieser Zone leben Anomalien.","es-mx":"Mira a tu alrededor. En esta zona viven anomalías.","fr-fr":"Regarde autour de toi. Des anomalies vivent dans cette zone.","ja-jp":"周りを見てみよう。このゾーンにはアノマリーがいる。","pt-br":"Olhe ao redor. Anomalias vivem nesta zona."}},{"key":"objective.first_capture","context":"First objective shown in the HUD.","source":"Bring your first anomaly home.","values":{"ar-001":"أحضر أول شذوذ لك إلى المنزل.","de-de":"Bring deine erste Anomalie nach Hause.","es-mx":"Lleva tu primera anomalía a casa.","fr-fr":"Ramène ta première anomalie à la maison.","ja-jp":"最初のアノマリーを持ち帰ろう。","pt-br":"Leve sua primeira anomalia para casa."}},{"key":"objective.go_to_portal","context":"Onboarding hint in the hub before the first expedition.","source":"Walk to the glowing portal to start your first expedition.","values":{"ar-001":"امشِ إلى البوابة المضيئة لبدء رحلتك الاستكشافية الأولى.","de-de":"Geh zum leuchtenden Portal, um deine erste Expedition zu starten.","es-mx":"Camina hacia el portal brillante para comenzar tu primera expedición.","fr-fr":"Marche jusqu'au portail lumineux pour commencer ta première expédition.","ja-jp":"光るポータルまで歩いて、最初の探索を始めよう。","pt-br":"Vá até o portal brilhante para começar sua primeira expedição."}},{"key":"portal.not_available","context":"Sign on a dormant portal for a zone that is not built yet.","source":"Not available yet","values":{"ar-001":"غير متاح بعد","de-de":"Noch nicht verfügbar","es-mx":"Aún no disponible","fr-fr":"Pas encore disponible","ja-jp":"まだ利用できません","pt-br":"Ainda não disponível"}},{"key":"portal.to_area","context":"Proximity prompt object text. {area} is a localized area name.","source":"Portal: {area}","values":{"ar-001":"بوابة: {area}","de-de":"Portal: {area}","es-mx":"Portal: {area}","fr-fr":"Portail : {area}","ja-jp":"ポータル：{area}","pt-br":"Portal: {area}"}},{"key":"portal.to_hub","context":"Return portal object text.","source":"Portal: Research Hub","values":{"ar-001":"بوابة: مركز الأبحاث","de-de":"Portal: Forschungszentrum","es-mx":"Portal: Centro de Investigación","fr-fr":"Portail : Centre de recherche","ja-jp":"ポータル：研究ハブ","pt-br":"Portal: Centro de Pesquisa"}},{"key":"settings.reduced_motion","context":"Accessibility toggle.","source":"Reduced motion","values":{}},{"key":"sign.arrival","context":"World sign at the safe arrival pad of a zone.","source":"Arrival point","values":{"ar-001":"نقطة الوصول","de-de":"Ankunftspunkt","es-mx":"Punto de llegada","fr-fr":"Point d'arrivée","ja-jp":"到着ポイント","pt-br":"Ponto de chegada"}},{"key":"sign.extraction","context":"World sign at an extraction zone.","source":"Extraction point","values":{"ar-001":"نقطة الاستخراج","de-de":"Extraktionspunkt","es-mx":"Punto de extracción","fr-fr":"Point d'extraction","ja-jp":"脱出ポイント","pt-br":"Ponto de extração"}},{"key":"sign.welcome","context":"Large sign in the hub center.","source":"Welcome, researcher","values":{"ar-001":"مرحبًا أيها الباحث","de-de":"Willkommen, Forscher","es-mx":"Bienvenido, investigador","fr-fr":"Bienvenue, chercheur","ja-jp":"ようこそ、研究員","pt-br":"Bem-vindo, pesquisador"}},{"key":"species.fridge_dog.description","context":"Creature description.","source":"Its cold breath makes the ground slippery.","values":{}},{"key":"species.fridge_dog.name","context":"Creature name. A small dog whose body is a refrigerator.","source":"Fridge Dog","values":{}},{"key":"species.glitch_pigeon.description","context":"Creature description.","source":"A pigeon that sometimes slips sideways through space.","values":{}},{"key":"species.glitch_pigeon.name","context":"Creature name. Gray pigeon with one segmented violet wing.","source":"Glitch Pigeon","values":{}},{"key":"species.siren_toad.description","context":"Creature description.","source":"Its loud call alerts nearby guardians.","values":{}},{"key":"species.siren_toad.name","context":"Creature name. Green toad with a speaker-like throat.","source":"Siren Toad","values":{}},{"key":"status.expedition_area","context":"HUD badge while inside an expedition zone.","source":"Expedition area","values":{"ar-001":"منطقة استكشاف","de-de":"Expeditionsgebiet","es-mx":"Zona de expedición","fr-fr":"Zone d'expédition","ja-jp":"探索エリア","pt-br":"Área de expedição"}},{"key":"status.loading","context":"Shown while the game starts.","source":"Loading...","values":{"ar-001":"جارٍ التحميل...","de-de":"Wird geladen...","es-mx":"Cargando...","fr-fr":"Chargement...","ja-jp":"読み込み中...","pt-br":"Carregando..."}},{"key":"status.safe_area","context":"HUD badge: no PvP or cargo theft here.","source":"Safe area","values":{"ar-001":"منطقة آمنة","de-de":"Sicherer Bereich","es-mx":"Zona segura","fr-fr":"Zone sûre","ja-jp":"安全エリア","pt-br":"Área segura"}},{"key":"status.saving","context":"Persistence not yet confirmed.","source":"Saving your anomaly...","values":{}},{"key":"status.secured","context":"Display only after confirmed ownership.","source":"Anomaly secured!","values":{}},{"key":"status.traveling","context":"Shown during a portal transition.","source":"Traveling...","values":{"ar-001":"جارٍ الانتقال...","de-de":"Unterwegs...","es-mx":"Viajando...","fr-fr":"Voyage en cours...","ja-jp":"移動中...","pt-br":"Viajando..."}},{"key":"warning.risk_zone","context":"Before entering a PvP area.","source":"Unsecured cargo can be stolen here.","values":{}}]</string>
+      </Properties>
+    </Item>
+  </Item>
+  <Item class="Players" referent="3">
+    <Properties>
+      <string name="Name">Players</string>
+      <int name="MaxPlayersInternal">8</int>
+    </Properties>
+  </Item>
+  <Item class="ReplicatedStorage" referent="4">
+    <Properties>
+      <string name="Name">ReplicatedStorage</string>
+    </Properties>
+    <Item class="Folder" referent="5">
+      <Properties>
+        <string name="Name">Shared</string>
+      </Properties>
+      <Item class="Folder" referent="6">
+        <Properties>
+          <string name="Name">Config</string>
+        </Properties>
+        <Item class="ModuleScript" referent="7">
+          <Properties>
+            <string name="Name">ConfigValidator</string>
+            <string name="Source"><![CDATA[--!strict
+-- Startup validation (spec section 23). Returns a list of problems; the
+-- server refuses to start gameplay when any are found.
+
+local GameConfig = require(script.Parent.GameConfig)
+local ZoneDefinitions = require(script.Parent.ZoneDefinitions)
+local CreatureDefinitions = require(script.Parent.CreatureDefinitions)
+local FeatureFlags = require(script.Parent.FeatureFlags)
+local Strings = require(script.Parent.Parent.Generated.Strings)
+
+local ConfigValidator = {}
+
+function ConfigValidator.validate(): { string }
+	local problems: { string } = {}
+	local function check(ok: boolean, message: string)
+		if not ok then
+			table.insert(problems, message)
+		end
+	end
+
+	check(GameConfig.plotCount == GameConfig.maxPlayers, "plotCount must equal maxPlayers (one base per player)")
+	check(GameConfig.hub.pathWidth >= 14, "hub paths must be at least 14 studs wide")
+
+	for id, zone in ZoneDefinitions do
+		check(zone.id == id, "zone id mismatch: " .. id)
+		check(Strings.source[zone.nameKey] ~= nil, "zone " .. id .. " has unknown name key " .. zone.nameKey)
+		local total = 0
+		for _, entry in zone.spawnTable do
+			local species = CreatureDefinitions[entry.speciesId]
+			check(species ~= nil, "zone " .. id .. " spawns unknown species " .. entry.speciesId)
+			check(species == nil or species.implemented, "zone " .. id .. " spawns unimplemented species " .. entry.speciesId)
+			check(entry.weight > 0, "zone " .. id .. " has a non-positive spawn weight")
+			total += entry.weight
+		end
+		check(not zone.implemented or total == 100, "zone " .. id .. " spawn weights must total 100 (got " .. total .. ")")
+	end
+
+	for id, species in CreatureDefinitions do
+		check(species.id == id, "species id mismatch: " .. id)
+		check(Strings.source[species.nameKey] ~= nil, "species " .. id .. " has unknown name key")
+		check(Strings.source[species.descriptionKey] ~= nil, "species " .. id .. " has unknown description key")
+	end
+
+	check(FeatureFlags.commerce == false, "commerce must stay disabled until its release gate")
+	check(FeatureFlags.trading == false, "trading must stay disabled")
+	check(Strings.source["objective.first_capture"] ~= nil, "generated strings are missing")
+
+	return problems
+end
+
+return ConfigValidator
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="8">
+          <Properties>
+            <string name="Name">CreatureDefinitions</string>
+            <string name="Source"><![CDATA[--!strict
+-- Species records for the first slice. speciesId never changes; display
+-- names are localized. Further species are added when they are implemented.
+
+local Types = require(script.Parent.Parent.Types)
+
+local CreatureDefinitions: { [string]: Types.SpeciesDefinition } = {
+	glitch_pigeon = {
+		id = "glitch_pigeon",
+		nameKey = "species.glitch_pigeon.name",
+		descriptionKey = "species.glitch_pigeon.description",
+		rarity = "common",
+		implemented = true,
+	},
+	fridge_dog = {
+		id = "fridge_dog",
+		nameKey = "species.fridge_dog.name",
+		descriptionKey = "species.fridge_dog.description",
+		rarity = "uncommon",
+		implemented = true,
+	},
+	siren_toad = {
+		id = "siren_toad",
+		nameKey = "species.siren_toad.name",
+		descriptionKey = "species.siren_toad.description",
+		rarity = "uncommon",
+		implemented = true,
+	},
+}
+
+return CreatureDefinitions
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="9">
+          <Properties>
+            <string name="Name">FeatureFlags</string>
+            <string name="Source"><![CDATA[--!strict
+-- Server-authoritative feature flags. Conservative defaults: anything that
+-- changes ownership or involves money starts off. The client may read these
+-- to hide UI; it can never enable a server capability.
+
+local FeatureFlags = {
+	pvp = false, -- M4
+	commerce = false, -- M6, requires owner approval
+	trading = false, -- post-launch, separate spec
+	liveEvents = false,
+	capture = false, -- M2: capture/cargo/extraction loop
+	mutationGeneration = false, -- M2
+	-- Studio-only localization stress test: "off" | "long" | "rtl".
+	-- Ignored outside Studio. See docs/LOCALIZATION.md.
+	studioPseudoLocale = "off",
+}
+
+return FeatureFlags
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="10">
+          <Properties>
+            <string name="Name">GameConfig</string>
+            <string name="Source"><![CDATA[--!strict
+-- Versioned tunable values. Change values here, never inline in services.
+
+local GameConfig = {
+	version = "0.1.0-m1",
+
+	maxPlayers = 8,
+	plotCount = 8, -- exactly one base per player slot
+
+	hub = {
+		size = 256,
+		plotRingRadius = 100,
+		plotSize = 32,
+		pathWidth = 14,
+		spawnOffset = Vector3.new(0, 0, -40), -- spawn faces the beginner portal (+Z)
+	},
+
+	portal = {
+		promptDistance = 10,
+		maxUseDistance = 16, -- server-side proximity check (prompt range + latency slack)
+		cooldownSeconds = 3,
+		streamTimeoutSeconds = 6,
+		clientTimeoutSeconds = 10,
+		fallCheckDelaySeconds = 3,
+		fallDistance = 40, -- below the arrival point counts as "fell into the void"
+	},
+
+	camera = {
+		minZoom = 6,
+		maxZoom = 40,
+	},
+}
+
+return GameConfig
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="11">
+          <Properties>
+            <string name="Name">ZoneDefinitions</string>
+            <string name="Source"><![CDATA[--!strict
+-- Expedition zones. Only implemented zones get a working portal; the others
+-- show a dormant portal frame with a "not available yet" sign.
+
+local Types = require(script.Parent.Parent.Types)
+
+local ZoneDefinitions: { [string]: Types.ZoneDefinition } = {
+	glitch_grove = {
+		id = "glitch_grove",
+		nameKey = "area.glitch_grove",
+		center = Vector3.new(0, 0, 768),
+		size = Vector2.new(256, 256),
+		implemented = true,
+		portalSide = "north",
+		-- M2 slice spawn table: only implemented species (spec section 8).
+		spawnTable = {
+			{ speciesId = "glitch_pigeon", weight = 50 },
+			{ speciesId = "fridge_dog", weight = 30 },
+			{ speciesId = "siren_toad", weight = 20 },
+		},
+	},
+	scrap_district = {
+		id = "scrap_district",
+		nameKey = "area.scrap_district",
+		center = Vector3.new(768, 0, 0),
+		size = Vector2.new(256, 256),
+		implemented = false,
+		portalSide = "east",
+		spawnTable = {},
+	},
+	void_station = {
+		id = "void_station",
+		nameKey = "area.void_station",
+		center = Vector3.new(-768, 0, 0),
+		size = Vector2.new(256, 256),
+		implemented = false,
+		portalSide = "west",
+		spawnTable = {},
+	},
+}
+
+return ZoneDefinitions
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="Folder" referent="12">
+        <Properties>
+          <string name="Name">Generated</string>
+        </Properties>
+        <Item class="ModuleScript" referent="13">
+          <Properties>
+            <string name="Name">Strings</string>
+            <string name="Source"><![CDATA[--!strict
+-- GENERATED by tools/localization.luau - do not edit by hand.
+-- Source strings, translations and fallback chains for the runtime resolver.
+
+local Strings = {}
+
+Strings.sourceLocale = "en-us"
+
+Strings.source = {
+	["action.capture"] = "Capture",
+	["action.drop"] = "Drop cargo",
+	["action.enter_portal"] = "Enter",
+	["action.extract"] = "Extract",
+	["action.return_to_hub"] = "Return",
+	["area.glitch_grove"] = "Glitch Grove",
+	["area.hub"] = "Research Hub",
+	["area.scrap_district"] = "Scrap District",
+	["area.void_station"] = "Void Station",
+	["base.direction"] = "Your base is marked with a cyan beam.",
+	["base.owned_by"] = "{name}'s base",
+	["base.vacant"] = "Free base slot",
+	["base.yours"] = "Your base",
+	["error.inventory_full"] = "Your collection is full. Make room before capturing.",
+	["error.portal_cooldown"] = "Please wait a moment before using the portal again.",
+	["error.portal_locked"] = "This zone is not available yet.",
+	["error.portal_too_far"] = "Move closer to the portal.",
+	["error.server_failed"] = "Something went wrong while starting. Please rejoin.",
+	["error.server_starting"] = "The server is still starting. Please wait.",
+	["error.translation_fallback"] = "Some text is shown in English.",
+	["error.travel_failed"] = "Travel failed. You are back in a safe place.",
+	["evolution.requirement"] = "Extract this species {count} times.",
+	["hint.dismiss"] = "Got it",
+	["hint.move_gamepad"] = "Use the left stick to move and the jump button to jump.",
+	["hint.move_keyboard"] = "Move with {up} {left} {down} {right}. Jump with {jump}.",
+	["hint.move_touch"] = "Use the thumbstick to move and the jump button to jump.",
+	["info.safe_collection"] = "Your secured collection is safe.",
+	["objective.explore_zone"] = "Look around. Anomalies live in this zone.",
+	["objective.first_capture"] = "Bring your first anomaly home.",
+	["objective.go_to_portal"] = "Walk to the glowing portal to start your first expedition.",
+	["portal.not_available"] = "Not available yet",
+	["portal.to_area"] = "Portal: {area}",
+	["portal.to_hub"] = "Portal: Research Hub",
+	["settings.reduced_motion"] = "Reduced motion",
+	["sign.arrival"] = "Arrival point",
+	["sign.extraction"] = "Extraction point",
+	["sign.welcome"] = "Welcome, researcher",
+	["species.fridge_dog.description"] = "Its cold breath makes the ground slippery.",
+	["species.fridge_dog.name"] = "Fridge Dog",
+	["species.glitch_pigeon.description"] = "A pigeon that sometimes slips sideways through space.",
+	["species.glitch_pigeon.name"] = "Glitch Pigeon",
+	["species.siren_toad.description"] = "Its loud call alerts nearby guardians.",
+	["species.siren_toad.name"] = "Siren Toad",
+	["status.expedition_area"] = "Expedition area",
+	["status.loading"] = "Loading...",
+	["status.safe_area"] = "Safe area",
+	["status.saving"] = "Saving your anomaly...",
+	["status.secured"] = "Anomaly secured!",
+	["status.traveling"] = "Traveling...",
+	["warning.risk_zone"] = "Unsecured cargo can be stolen here.",
+} :: { [string]: string }
+
+Strings.translations = {
+	["ar-001"] = {
+		["action.enter_portal"] = "ادخل",
+		["action.return_to_hub"] = "عودة",
+		["area.glitch_grove"] = "بستان الخلل",
+		["area.hub"] = "مركز الأبحاث",
+		["area.scrap_district"] = "حي الخردة",
+		["area.void_station"] = "محطة الفراغ",
+		["base.direction"] = "قاعدتك مُعلَّمة بشعاع سماوي.",
+		["base.owned_by"] = "قاعدة {name}",
+		["base.vacant"] = "مكان قاعدة فارغ",
+		["base.yours"] = "قاعدتك",
+		["error.translation_fallback"] = "بعض النصوص معروضة باللغة الإنجليزية.",
+		["hint.dismiss"] = "فهمت",
+		["hint.move_touch"] = "استخدم عصا التحكم للتحرك وزر القفز للقفز.",
+		["objective.explore_zone"] = "انظر حولك. تعيش الشذوذات في هذه المنطقة.",
+		["objective.first_capture"] = "أحضر أول شذوذ لك إلى المنزل.",
+		["objective.go_to_portal"] = "امشِ إلى البوابة المضيئة لبدء رحلتك الاستكشافية الأولى.",
+		["portal.not_available"] = "غير متاح بعد",
+		["portal.to_area"] = "بوابة: {area}",
+		["portal.to_hub"] = "بوابة: مركز الأبحاث",
+		["sign.arrival"] = "نقطة الوصول",
+		["sign.extraction"] = "نقطة الاستخراج",
+		["sign.welcome"] = "مرحبًا أيها الباحث",
+		["status.expedition_area"] = "منطقة استكشاف",
+		["status.loading"] = "جارٍ التحميل...",
+		["status.safe_area"] = "منطقة آمنة",
+		["status.traveling"] = "جارٍ الانتقال...",
+	},
+	["de-de"] = {
+		["action.enter_portal"] = "Betreten",
+		["action.return_to_hub"] = "Zurück",
+		["area.glitch_grove"] = "Glitch-Hain",
+		["area.hub"] = "Forschungszentrum",
+		["area.scrap_district"] = "Schrottviertel",
+		["area.void_station"] = "Leerenstation",
+		["base.direction"] = "Deine Basis ist mit einem cyanfarbenen Strahl markiert.",
+		["base.owned_by"] = "Basis von {name}",
+		["base.vacant"] = "Freier Basisplatz",
+		["base.yours"] = "Deine Basis",
+		["error.translation_fallback"] = "Einige Texte werden auf Englisch angezeigt.",
+		["hint.dismiss"] = "Verstanden",
+		["hint.move_touch"] = "Benutze den Stick zum Laufen und die Sprungtaste zum Springen.",
+		["objective.explore_zone"] = "Sieh dich um. In dieser Zone leben Anomalien.",
+		["objective.first_capture"] = "Bring deine erste Anomalie nach Hause.",
+		["objective.go_to_portal"] = "Geh zum leuchtenden Portal, um deine erste Expedition zu starten.",
+		["portal.not_available"] = "Noch nicht verfügbar",
+		["portal.to_area"] = "Portal: {area}",
+		["portal.to_hub"] = "Portal: Forschungszentrum",
+		["sign.arrival"] = "Ankunftspunkt",
+		["sign.extraction"] = "Extraktionspunkt",
+		["sign.welcome"] = "Willkommen, Forscher",
+		["status.expedition_area"] = "Expeditionsgebiet",
+		["status.loading"] = "Wird geladen...",
+		["status.safe_area"] = "Sicherer Bereich",
+		["status.traveling"] = "Unterwegs...",
+	},
+	["es-mx"] = {
+		["action.enter_portal"] = "Entrar",
+		["action.return_to_hub"] = "Volver",
+		["area.glitch_grove"] = "Arboleda Glitch",
+		["area.hub"] = "Centro de Investigación",
+		["area.scrap_district"] = "Distrito Chatarra",
+		["area.void_station"] = "Estación del Vacío",
+		["base.direction"] = "Tu base está marcada con un rayo cian.",
+		["base.owned_by"] = "Base de {name}",
+		["base.vacant"] = "Espacio de base libre",
+		["base.yours"] = "Tu base",
+		["error.translation_fallback"] = "Algunos textos se muestran en inglés.",
+		["hint.dismiss"] = "Entendido",
+		["hint.move_touch"] = "Usa el joystick para moverte y el botón de salto para saltar.",
+		["objective.explore_zone"] = "Mira a tu alrededor. En esta zona viven anomalías.",
+		["objective.first_capture"] = "Lleva tu primera anomalía a casa.",
+		["objective.go_to_portal"] = "Camina hacia el portal brillante para comenzar tu primera expedición.",
+		["portal.not_available"] = "Aún no disponible",
+		["portal.to_area"] = "Portal: {area}",
+		["portal.to_hub"] = "Portal: Centro de Investigación",
+		["sign.arrival"] = "Punto de llegada",
+		["sign.extraction"] = "Punto de extracción",
+		["sign.welcome"] = "Bienvenido, investigador",
+		["status.expedition_area"] = "Zona de expedición",
+		["status.loading"] = "Cargando...",
+		["status.safe_area"] = "Zona segura",
+		["status.traveling"] = "Viajando...",
+	},
+	["fr-fr"] = {
+		["action.enter_portal"] = "Entrer",
+		["action.return_to_hub"] = "Retour",
+		["area.glitch_grove"] = "Bosquet Glitch",
+		["area.hub"] = "Centre de recherche",
+		["area.scrap_district"] = "Quartier de la Ferraille",
+		["area.void_station"] = "Station du Vide",
+		["base.direction"] = "Ta base est indiquée par un rayon cyan.",
+		["base.owned_by"] = "Base de {name}",
+		["base.vacant"] = "Emplacement de base libre",
+		["base.yours"] = "Ta base",
+		["error.translation_fallback"] = "Certains textes sont affichés en anglais.",
+		["hint.dismiss"] = "Compris",
+		["hint.move_touch"] = "Utilise le joystick pour te déplacer et le bouton de saut pour sauter.",
+		["objective.explore_zone"] = "Regarde autour de toi. Des anomalies vivent dans cette zone.",
+		["objective.first_capture"] = "Ramène ta première anomalie à la maison.",
+		["objective.go_to_portal"] = "Marche jusqu'au portail lumineux pour commencer ta première expédition.",
+		["portal.not_available"] = "Pas encore disponible",
+		["portal.to_area"] = "Portail : {area}",
+		["portal.to_hub"] = "Portail : Centre de recherche",
+		["sign.arrival"] = "Point d'arrivée",
+		["sign.extraction"] = "Point d'extraction",
+		["sign.welcome"] = "Bienvenue, chercheur",
+		["status.expedition_area"] = "Zone d'expédition",
+		["status.loading"] = "Chargement...",
+		["status.safe_area"] = "Zone sûre",
+		["status.traveling"] = "Voyage en cours...",
+	},
+	["ja-jp"] = {
+		["action.enter_portal"] = "入る",
+		["action.return_to_hub"] = "戻る",
+		["area.glitch_grove"] = "グリッチの森",
+		["area.hub"] = "研究ハブ",
+		["area.scrap_district"] = "スクラップ地区",
+		["area.void_station"] = "ヴォイド・ステーション",
+		["base.direction"] = "あなたの拠点はシアンの光で示されています。",
+		["base.owned_by"] = "{name}の拠点",
+		["base.vacant"] = "空いている拠点",
+		["base.yours"] = "あなたの拠点",
+		["error.translation_fallback"] = "一部のテキストは英語で表示されます。",
+		["hint.dismiss"] = "OK",
+		["hint.move_touch"] = "スティックで移動し、ジャンプボタンでジャンプします。",
+		["objective.explore_zone"] = "周りを見てみよう。このゾーンにはアノマリーがいる。",
+		["objective.first_capture"] = "最初のアノマリーを持ち帰ろう。",
+		["objective.go_to_portal"] = "光るポータルまで歩いて、最初の探索を始めよう。",
+		["portal.not_available"] = "まだ利用できません",
+		["portal.to_area"] = "ポータル：{area}",
+		["portal.to_hub"] = "ポータル：研究ハブ",
+		["sign.arrival"] = "到着ポイント",
+		["sign.extraction"] = "脱出ポイント",
+		["sign.welcome"] = "ようこそ、研究員",
+		["status.expedition_area"] = "探索エリア",
+		["status.loading"] = "読み込み中...",
+		["status.safe_area"] = "安全エリア",
+		["status.traveling"] = "移動中...",
+	},
+	["pt-br"] = {
+		["action.enter_portal"] = "Entrar",
+		["action.return_to_hub"] = "Voltar",
+		["area.glitch_grove"] = "Bosque Glitch",
+		["area.hub"] = "Centro de Pesquisa",
+		["area.scrap_district"] = "Distrito da Sucata",
+		["area.void_station"] = "Estação do Vazio",
+		["base.direction"] = "Sua base está marcada com um feixe ciano.",
+		["base.owned_by"] = "Base de {name}",
+		["base.vacant"] = "Espaço de base livre",
+		["base.yours"] = "Sua base",
+		["error.translation_fallback"] = "Alguns textos são exibidos em inglês.",
+		["hint.dismiss"] = "Entendi",
+		["hint.move_touch"] = "Use o direcional para se mover e o botão de pulo para pular.",
+		["objective.explore_zone"] = "Olhe ao redor. Anomalias vivem nesta zona.",
+		["objective.first_capture"] = "Leve sua primeira anomalia para casa.",
+		["objective.go_to_portal"] = "Vá até o portal brilhante para começar sua primeira expedição.",
+		["portal.not_available"] = "Ainda não disponível",
+		["portal.to_area"] = "Portal: {area}",
+		["portal.to_hub"] = "Portal: Centro de Pesquisa",
+		["sign.arrival"] = "Ponto de chegada",
+		["sign.extraction"] = "Ponto de extração",
+		["sign.welcome"] = "Bem-vindo, pesquisador",
+		["status.expedition_area"] = "Área de expedição",
+		["status.loading"] = "Carregando...",
+		["status.safe_area"] = "Área segura",
+		["status.traveling"] = "Viajando...",
+	},
+} :: { [string]: { [string]: string } }
+
+-- localeId -> { fallback locale ids (before the source locale), direction }
+Strings.locales = {
+	["sq-al"] = { fallback = {  }, direction = "ltr" },
+	["ar-001"] = { fallback = {  }, direction = "rtl" },
+	["bn-bd"] = { fallback = {  }, direction = "ltr" },
+	["nb-no"] = { fallback = {  }, direction = "ltr" },
+	["bs-ba"] = { fallback = {  }, direction = "ltr" },
+	["bg-bg"] = { fallback = {  }, direction = "ltr" },
+	["my-mm"] = { fallback = {  }, direction = "ltr" },
+	["zh-cn"] = { fallback = {  }, direction = "ltr" },
+	["zh-tw"] = { fallback = {  }, direction = "ltr" },
+	["hr-hr"] = { fallback = {  }, direction = "ltr" },
+	["cs-cz"] = { fallback = {  }, direction = "ltr" },
+	["da-dk"] = { fallback = {  }, direction = "ltr" },
+	["nl-nl"] = { fallback = {  }, direction = "ltr" },
+	["en-us"] = { fallback = {  }, direction = "ltr" },
+	["en-gb"] = { fallback = { "en-us" }, direction = "ltr" },
+	["et-ee"] = { fallback = {  }, direction = "ltr" },
+	["fil-ph"] = { fallback = {  }, direction = "ltr" },
+	["fi-fi"] = { fallback = {  }, direction = "ltr" },
+	["fr-fr"] = { fallback = { "fr-ca" }, direction = "ltr" },
+	["fr-ca"] = { fallback = { "fr-fr" }, direction = "ltr" },
+	["ka-ge"] = { fallback = {  }, direction = "ltr" },
+	["de-de"] = { fallback = {  }, direction = "ltr" },
+	["el-gr"] = { fallback = {  }, direction = "ltr" },
+	["hi-in"] = { fallback = {  }, direction = "ltr" },
+	["hu-hu"] = { fallback = {  }, direction = "ltr" },
+	["id-id"] = { fallback = {  }, direction = "ltr" },
+	["it-it"] = { fallback = {  }, direction = "ltr" },
+	["ja-jp"] = { fallback = {  }, direction = "ltr" },
+	["kk-kz"] = { fallback = {  }, direction = "ltr" },
+	["km-kh"] = { fallback = {  }, direction = "ltr" },
+	["ko-kr"] = { fallback = {  }, direction = "ltr" },
+	["lv-lv"] = { fallback = {  }, direction = "ltr" },
+	["lt-lt"] = { fallback = {  }, direction = "ltr" },
+	["ms-my"] = { fallback = {  }, direction = "ltr" },
+	["pl-pl"] = { fallback = {  }, direction = "ltr" },
+	["pt-br"] = { fallback = { "pt-pt" }, direction = "ltr" },
+	["pt-pt"] = { fallback = { "pt-br" }, direction = "ltr" },
+	["ro-ro"] = { fallback = {  }, direction = "ltr" },
+	["ru-ru"] = { fallback = {  }, direction = "ltr" },
+	["sr-rs"] = { fallback = {  }, direction = "ltr" },
+	["si-lk"] = { fallback = {  }, direction = "ltr" },
+	["sk-sk"] = { fallback = {  }, direction = "ltr" },
+	["sl-sl"] = { fallback = {  }, direction = "ltr" },
+	["es-es"] = { fallback = { "es-mx" }, direction = "ltr" },
+	["es-mx"] = { fallback = { "es-es" }, direction = "ltr" },
+	["sv-se"] = { fallback = {  }, direction = "ltr" },
+	["th-th"] = { fallback = {  }, direction = "ltr" },
+	["tr-tr"] = { fallback = {  }, direction = "ltr" },
+	["uk-ua"] = { fallback = {  }, direction = "ltr" },
+	["vi-vn"] = { fallback = {  }, direction = "ltr" },
+} :: { [string]: { fallback: { string }, direction: string } }
+
+return Strings
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="Folder" referent="14">
+        <Properties>
+          <string name="Name">Net</string>
+        </Properties>
+        <Item class="ModuleScript" referent="15">
+          <Properties>
+            <string name="Name">Contracts</string>
+            <string name="Source"><![CDATA[--!strict
+-- Network contract: every remote the game uses, created by the server and
+-- looked up (with a timeout) by the client. Clients send intent only.
+--
+-- Server -> client
+--   AreaTransition(phase: "start" | "arrived" | "failed", areaId: string, errorCode: string?)
+--   Notice(errorCode: string)
+--
+-- Client -> server: none in M1 (portals use server-side ProximityPrompt
+-- handling). Capture/cargo/extraction requests arrive with M2.
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Contracts = {}
+
+Contracts.FolderName = "AnomalyHeistRemotes"
+Contracts.ReadyAttribute = "AH_ServerReady"
+Contracts.ErrorAttribute = "AH_ServerError"
+
+Contracts.Events = {
+	AreaTransition = "AreaTransition",
+	Notice = "Notice",
+}
+
+local EVENT_NAMES: { string } = { "AreaTransition", "Notice" }
+
+export type TransitionPhase = "start" | "arrived" | "failed"
+
+function Contracts.createServerRemotes(): { [string]: RemoteEvent }
+	local existing = ReplicatedStorage:FindFirstChild(Contracts.FolderName)
+	if existing then
+		existing:Destroy()
+	end
+	local folder = Instance.new("Folder")
+	folder.Name = Contracts.FolderName
+	local remotes: { [string]: RemoteEvent } = {}
+	for _, name in EVENT_NAMES do
+		local remote = Instance.new("RemoteEvent")
+		remote.Name = name
+		remote.Parent = folder
+		remotes[name] = remote
+	end
+	folder.Parent = ReplicatedStorage
+	return remotes
+end
+
+-- Client side: returns nil if the server never created the remotes.
+function Contracts.waitForRemotes(timeoutSeconds: number): { [string]: RemoteEvent }?
+	local folder = ReplicatedStorage:WaitForChild(Contracts.FolderName, timeoutSeconds)
+	if not folder then
+		return nil
+	end
+	local remotes: { [string]: RemoteEvent } = {}
+	for _, name in EVENT_NAMES do
+		local remote = folder:WaitForChild(name, timeoutSeconds)
+		if not remote or not remote:IsA("RemoteEvent") then
+			return nil
+		end
+		remotes[name] = remote
+	end
+	return remotes
+end
+
+return Contracts
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="16">
+          <Properties>
+            <string name="Name">ErrorCodes</string>
+            <string name="Source"><![CDATA[--!strict
+-- Error codes sent from server to client. The client turns them into
+-- localized messages; the server never sends display text.
+
+local ErrorCodes = {
+	PortalCooldown = "error.portal_cooldown",
+	PortalTooFar = "error.portal_too_far",
+	PortalLocked = "error.portal_locked",
+	TravelFailed = "error.travel_failed",
+	ServerFailed = "error.server_failed",
+}
+
+export type Code = "PortalCooldown" | "PortalTooFar" | "PortalLocked" | "TravelFailed" | "ServerFailed"
+
+-- Returns the localization key for a code, or nil for unknown codes.
+function ErrorCodes.keyFor(code: string): string?
+	local value = (ErrorCodes :: any)[code]
+	if type(value) == "string" then
+		return value
+	end
+	return nil
+end
+
+return ErrorCodes
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="ModuleScript" referent="17">
+        <Properties>
+          <string name="Name">Types</string>
+          <string name="Source"><![CDATA[--!strict
+-- Shared type definitions. Identifiers are stable English IDs; display text
+-- always comes from localization keys.
+
+export type AreaId = string -- "hub" or a ZoneId
+export type ZoneId = string
+export type SpeciesId = string
+export type Rarity = "common" | "uncommon" | "rare" | "epic" | "legendary"
+
+export type ZoneDefinition = {
+	id: ZoneId,
+	nameKey: string,
+	center: Vector3,
+	size: Vector2, -- X/Z footprint in studs
+	implemented: boolean, -- false = dormant portal, no travel
+	portalSide: "north" | "east" | "west",
+	spawnTable: { { speciesId: SpeciesId, weight: number } },
+}
+
+export type SpeciesDefinition = {
+	id: SpeciesId,
+	nameKey: string,
+	descriptionKey: string,
+	rarity: Rarity,
+	implemented: boolean,
+}
+
+export type PlotInfo = {
+	index: number,
+	center: Vector3,
+	facing: Vector3, -- unit vector from plot toward the hub center
+}
+
+return nil
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="18">
+        <Properties>
+          <string name="Name">Util</string>
+        </Properties>
+        <Item class="ModuleScript" referent="19">
+          <Properties>
+            <string name="Name">Cleanup</string>
+            <string name="Source"><![CDATA[--!strict
+-- Collects connections, instances, threads and callbacks so a controller or
+-- per-player scope can be torn down in one call (respawn, leave, zone change).
+
+export type Cleanup = {
+	add: (self: Cleanup, item: any) -> any,
+	destroy: (self: Cleanup) -> (),
+	_items: { any },
+	_destroyed: boolean,
+}
+
+local Cleanup = {}
+Cleanup.__index = Cleanup
+
+function Cleanup.new(): Cleanup
+	return setmetatable({ _items = {}, _destroyed = false }, Cleanup) :: any
+end
+
+local function release(item: any)
+	local kind = typeof(item)
+	if kind == "RBXScriptConnection" then
+		item:Disconnect()
+	elseif kind == "Instance" then
+		item:Destroy()
+	elseif kind == "thread" then
+		pcall(function()
+			task.cancel(item)
+		end)
+	elseif kind == "function" then
+		item()
+	elseif kind == "table" and type(item.destroy) == "function" then
+		item:destroy()
+	end
+end
+
+function Cleanup.add(self: Cleanup, item: any): any
+	if self._destroyed then
+		release(item)
+		return item
+	end
+	table.insert(self._items, item)
+	return item
+end
+
+function Cleanup.destroy(self: Cleanup)
+	if self._destroyed then
+		return
+	end
+	self._destroyed = true
+	local items = self._items
+	self._items = {}
+	for i = #items, 1, -1 do
+		xpcall(release, function(err)
+			warn("[Cleanup] release failed:", err)
+		end, items[i])
+	end
+end
+
+return Cleanup
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="20">
+          <Properties>
+            <string name="Name">LocaleResolver</string>
+            <string name="Source"><![CDATA[--!strict
+-- Pure text resolver used by the client LocalizationController and by tests.
+-- Fallback policy (spec 3.3):
+--   selected locale -> configured fallback locales -> en-us source -> diagnostic
+-- Never returns a raw key to the player.
+
+local Strings = require(script.Parent.Parent.Generated.Strings)
+
+local LocaleResolver = {}
+
+export type Result = {
+	text: string,
+	locale: string, -- locale the text actually came from
+	fellBack: boolean, -- true when a non-source player locale used a fallback
+	missing: boolean, -- key unknown: text is empty and a diagnostic is needed
+}
+
+function LocaleResolver.normalize(localeId: string?): string
+	local id = string.lower(localeId or "")
+	id = string.gsub(id, "_", "-")
+	if Strings.locales[id] then
+		return id
+	end
+	-- Roblox may report a bare language ("es") or an unlisted region; map to
+	-- the first manifest locale with that language.
+	local language = string.match(id, "^(%a+)")
+	if language then
+		local candidates = {}
+		for candidate in Strings.locales do
+			if string.match(candidate, "^(%a+)") == language then
+				table.insert(candidates, candidate)
+			end
+		end
+		table.sort(candidates)
+		if #candidates > 0 then
+			return candidates[1]
+		end
+	end
+	return Strings.sourceLocale
+end
+
+function LocaleResolver.isRightToLeft(localeId: string): boolean
+	local entry = Strings.locales[LocaleResolver.normalize(localeId)]
+	return entry ~= nil and entry.direction == "rtl"
+end
+
+-- Ordered list of locales to try for a player locale.
+function LocaleResolver.chain(localeId: string): { string }
+	local id = LocaleResolver.normalize(localeId)
+	local chain = { id }
+	local entry = Strings.locales[id]
+	if entry then
+		for _, fallback in entry.fallback do
+			if not table.find(chain, fallback) then
+				table.insert(chain, fallback)
+			end
+		end
+	end
+	if not table.find(chain, Strings.sourceLocale) then
+		table.insert(chain, Strings.sourceLocale)
+	end
+	return chain
+end
+
+function LocaleResolver.format(template: string, params: { [string]: any }?): string
+	return (string.gsub(template, "{([%w_]+)}", function(name: string)
+		local value = params and params[name]
+		if value == nil then
+			return ""
+		end
+		return tostring(value)
+	end))
+end
+
+-- Makes text ~50% longer with accented letters, for layout stress tests.
+function LocaleResolver.pseudoLong(text: string): string
+	local accents = { a = "á", e = "é", i = "í", o = "ö", u = "ü", A = "Å", E = "É", O = "Ø" }
+	local stretched = string.gsub(text, "[aeiouAEO]", function(c: string)
+		return accents[c] .. c
+	end)
+	return "[" .. stretched .. " ~~]"
+end
+
+function LocaleResolver.resolve(localeId: string, key: string, params: { [string]: any }?): Result
+	local requested = LocaleResolver.normalize(localeId)
+	for _, locale in LocaleResolver.chain(requested) do
+		local text: string?
+		if locale == Strings.sourceLocale then
+			text = Strings.source[key]
+		else
+			local t = Strings.translations[locale]
+			text = t and t[key]
+		end
+		if text then
+			return {
+				text = LocaleResolver.format(text, params),
+				locale = locale,
+				fellBack = locale ~= requested and requested ~= Strings.sourceLocale,
+				missing = false,
+			}
+		end
+	end
+	return { text = "", locale = Strings.sourceLocale, fellBack = true, missing = true }
+end
+
+return LocaleResolver
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="21">
+          <Properties>
+            <string name="Name">NumberFormat</string>
+            <string name="Source"><![CDATA[--!strict
+-- Locale-aware integer/decimal formatting. Luau has no Intl, so separators
+-- are configured per language here and covered by unit tests. Digits stay
+-- Western Arabic (0-9) everywhere; see docs/DECISIONS.md D-008.
+
+local NumberFormat = {}
+
+type Style = { group: string, decimal: string, indian: boolean? }
+
+local NBSP = "\u{00A0}"
+local NNBSP = "\u{202F}"
+
+local DOT_COMMA: Style = { group = ".", decimal = "," }
+local SPACE_COMMA: Style = { group = NBSP, decimal = "," }
+local COMMA_DOT: Style = { group = ",", decimal = "." }
+
+-- Exact locale overrides first, then language-level defaults.
+local BY_LOCALE: { [string]: Style } = {
+	["es-mx"] = COMMA_DOT,
+	["pt-pt"] = SPACE_COMMA,
+	["fr-fr"] = { group = NNBSP, decimal = "," },
+	["fr-ca"] = SPACE_COMMA,
+	["hi-in"] = { group = ",", decimal = ".", indian = true },
+	["bn-bd"] = { group = ",", decimal = ".", indian = true },
+	["de-ch"] = { group = "'", decimal = "." },
+}
+
+local BY_LANGUAGE: { [string]: Style } = {
+	de = DOT_COMMA, es = DOT_COMMA, pt = DOT_COMMA, it = DOT_COMMA, nl = DOT_COMMA, id = DOT_COMMA,
+	tr = DOT_COMMA, da = DOT_COMMA, el = DOT_COMMA, ro = DOT_COMMA, hr = DOT_COMMA, sl = DOT_COMMA,
+	sr = DOT_COMMA, bs = DOT_COMMA, vi = DOT_COMMA,
+	fr = SPACE_COMMA, ru = SPACE_COMMA, uk = SPACE_COMMA, bg = SPACE_COMMA, cs = SPACE_COMMA,
+	sk = SPACE_COMMA, pl = SPACE_COMMA, fi = SPACE_COMMA, sv = SPACE_COMMA, nb = SPACE_COMMA,
+	et = SPACE_COMMA, lv = SPACE_COMMA, lt = SPACE_COMMA, hu = SPACE_COMMA, kk = SPACE_COMMA,
+	ka = SPACE_COMMA, sq = SPACE_COMMA,
+}
+
+function NumberFormat.styleFor(localeId: string): Style
+	local id = string.lower(localeId)
+	return BY_LOCALE[id] or BY_LANGUAGE[string.match(id, "^(%a+)") or ""] or COMMA_DOT
+end
+
+local function groupDigits(digits: string, style: Style): string
+	local n = #digits
+	if n <= 3 then
+		return digits
+	end
+	local parts = {}
+	local last3 = string.sub(digits, n - 2, n)
+	local rest = string.sub(digits, 1, n - 3)
+	local size = if style.indian then 2 else 3
+	while #rest > size do
+		table.insert(parts, 1, string.sub(rest, #rest - size + 1))
+		rest = string.sub(rest, 1, #rest - size)
+	end
+	if #rest > 0 then
+		table.insert(parts, 1, rest)
+	end
+	table.insert(parts, last3)
+	return table.concat(parts, style.group)
+end
+
+-- Formats an integer (rounded toward zero). Non-finite values become "0".
+function NumberFormat.integer(value: number, localeId: string): string
+	if value ~= value or value == math.huge or value == -math.huge then
+		return "0"
+	end
+	local style = NumberFormat.styleFor(localeId)
+	local negative = value < 0
+	local digits = string.format("%d", math.abs(if value < 0 then math.ceil(value) else math.floor(value)))
+	return (if negative then "-" else "") .. groupDigits(digits, style)
+end
+
+function NumberFormat.decimal(value: number, places: number, localeId: string): string
+	if value ~= value or value == math.huge or value == -math.huge then
+		return "0"
+	end
+	local style = NumberFormat.styleFor(localeId)
+	local text = string.format("%." .. math.clamp(places, 0, 6) .. "f", math.abs(value))
+	local whole, fraction = string.match(text, "^(%d+)%.?(%d*)$")
+	local out = groupDigits(whole or text, style)
+	if fraction and #fraction > 0 then
+		out ..= style.decimal .. fraction
+	end
+	return (if value < 0 then "-" else "") .. out
+end
+
+return NumberFormat
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="22">
+          <Properties>
+            <string name="Name">RateLimiter</string>
+            <string name="Source"><![CDATA[--!strict
+-- Per-key cooldown/rate limiting for server-side request handling.
+
+export type RateLimiter = {
+	tryUse: (self: RateLimiter, key: any) -> boolean,
+	remaining: (self: RateLimiter, key: any) -> number,
+	forget: (self: RateLimiter, key: any) -> (),
+	_cooldown: number,
+	_last: { [any]: number },
+	_clock: () -> number,
+}
+
+local RateLimiter = {}
+RateLimiter.__index = RateLimiter
+
+function RateLimiter.new(cooldownSeconds: number, clock: (() -> number)?): RateLimiter
+	return setmetatable({ _cooldown = cooldownSeconds, _last = {}, _clock = clock or os.clock }, RateLimiter) :: any
+end
+
+function RateLimiter.tryUse(self: RateLimiter, key: any): boolean
+	local now = self._clock()
+	local last = self._last[key]
+	if last and now - last < self._cooldown then
+		return false
+	end
+	self._last[key] = now
+	return true
+end
+
+function RateLimiter.remaining(self: RateLimiter, key: any): number
+	local last = self._last[key]
+	if not last then
+		return 0
+	end
+	return math.max(0, self._cooldown - (self._clock() - last))
+end
+
+function RateLimiter.forget(self: RateLimiter, key: any)
+	self._last[key] = nil
+end
+
+return RateLimiter
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="23">
+          <Properties>
+            <string name="Name">Signal</string>
+            <string name="Source"><![CDATA[--!strict
+-- Minimal script signal for in-process events between controllers/services.
+
+export type Connection = { disconnect: (self: Connection) -> (), _connected: boolean }
+export type Signal<T...> = {
+	connect: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
+	fire: (self: Signal<T...>, T...) -> (),
+	destroy: (self: Signal<T...>) -> (),
+	_handlers: { [Connection]: (T...) -> () },
+}
+
+local Signal = {}
+Signal.__index = Signal
+
+function Signal.new<T...>(): Signal<T...>
+	return setmetatable({ _handlers = {} }, Signal) :: any
+end
+
+function Signal.connect<T...>(self: Signal<T...>, fn: (T...) -> ()): Connection
+	local handlers = self._handlers
+	local connection
+	connection = {
+		_connected = true,
+		disconnect = function(c: Connection)
+			c._connected = false
+			handlers[c] = nil
+		end,
+	} :: Connection
+	handlers[connection] = fn
+	return connection
+end
+
+function Signal.fire<T...>(self: Signal<T...>, ...: T...)
+	for connection, fn in table.clone(self._handlers) do
+		if connection._connected then
+			task.spawn(fn, ...)
+		end
+	end
+end
+
+function Signal.destroy<T...>(self: Signal<T...>)
+	table.clear(self._handlers)
+end
+
+return Signal
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="ServerScriptService" referent="24">
+    <Properties>
+      <string name="Name">ServerScriptService</string>
+    </Properties>
+    <Item class="Folder" referent="25">
+      <Properties>
+        <string name="Name">Server</string>
+      </Properties>
+      <Item class="Script" referent="26">
+        <Properties>
+          <string name="Name">Bootstrap</string>
+          <token name="RunContext">0</token>
+          <string name="Source"><![CDATA[--!strict
+-- Server entry point. Initialization order (spec 14.2):
+--   config validation -> remotes -> data layer (M3) -> world -> gameplay services -> ready signal
+-- If anything fails, gameplay stays blocked and clients see a clear error.
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Contracts = require(Shared.Net.Contracts)
+local ConfigValidator = require(Shared.Config.ConfigValidator)
+local GameConfig = require(Shared.Config.GameConfig)
+
+local WorldBuilder = require(script.Parent.World.WorldBuilder)
+local BaseService = require(script.Parent.Services.BaseService)
+local PortalService = require(script.Parent.Services.PortalService)
+
+ReplicatedStorage:SetAttribute(Contracts.ReadyAttribute, false)
+ReplicatedStorage:SetAttribute(Contracts.ErrorAttribute, nil)
+
+local ok, err = xpcall(function()
+	local problems = ConfigValidator.validate()
+	if #problems > 0 then
+		error("invalid configuration:\n  " .. table.concat(problems, "\n  "))
+	end
+
+	local remotes = Contracts.createServerRemotes()
+	-- Data layer (profile repository) arrives with M3; M1 stores nothing.
+	local world = WorldBuilder.build()
+
+	BaseService.init(world)
+	PortalService.init(world, remotes)
+	BaseService.start()
+	PortalService.start()
+end, debug.traceback)
+
+if ok then
+	ReplicatedStorage:SetAttribute(Contracts.ReadyAttribute, true)
+	print(string.format("[AnomalyHeist] server ready (build %s)", GameConfig.version))
+else
+	ReplicatedStorage:SetAttribute(Contracts.ErrorAttribute, "ServerFailed")
+	warn("[AnomalyHeist] server initialization failed - gameplay is blocked:\n" .. tostring(err))
+end
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="27">
+        <Properties>
+          <string name="Name">Services</string>
+        </Properties>
+        <Item class="ModuleScript" referent="28">
+          <Properties>
+            <string name="Name">BaseService</string>
+            <string name="Source"><![CDATA[--!strict
+-- Assigns exactly one of the eight base plots to each player (spec 5.1).
+-- Plots are views of player data, not its storage; nothing is saved here.
+
+local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
+
+local WorldBuilder = require(script.Parent.Parent.World.WorldBuilder)
+
+local BaseService = {}
+
+local plots: { WorldBuilder.Plot } = {}
+local owners: { [number]: Player } = {} -- plot index -> player
+local assigned: { [Player]: number } = {}
+
+local function signLabels(plot: WorldBuilder.Plot): { TextLabel }
+	local labels = {}
+	for _, d in plot.signFolder:GetDescendants() do
+		if d:IsA("TextLabel") and CollectionService:HasTag(d, "AH_LocalizedText") then
+			table.insert(labels, d)
+		end
+	end
+	return labels
+end
+
+local function showOwner(plot: WorldBuilder.Plot, player: Player?)
+	plot.model:SetAttribute("OwnerUserId", if player then player.UserId else nil)
+	for _, label in signLabels(plot) do
+		if player then
+			label:SetAttribute("TextKey", "base.owned_by")
+			label:SetAttribute("Param_name", player.DisplayName)
+			label:SetAttribute("OwnerUserId", player.UserId)
+			label:SetAttribute("SelfKey", "base.yours")
+		else
+			label:SetAttribute("TextKey", "base.vacant")
+			label:SetAttribute("Param_name", nil)
+			label:SetAttribute("OwnerUserId", nil)
+			label:SetAttribute("SelfKey", nil)
+		end
+	end
+	plot.marker.Transparency = if player then 0.35 else 0.85
+end
+
+-- Returns the assigned plot index, or nil when all eight are taken.
+function BaseService.assign(player: Player): number?
+	if assigned[player] then
+		return assigned[player]
+	end
+	for _, plot in plots do
+		if not owners[plot.index] then
+			owners[plot.index] = player
+			assigned[player] = plot.index
+			showOwner(plot, player)
+			player:SetAttribute("PlotIndex", plot.index)
+			return plot.index
+		end
+	end
+	warn("[BaseService] no free plot for", player.Name, "- check MaxPlayers (must be 8)")
+	player:SetAttribute("PlotIndex", 0)
+	return nil
+end
+
+function BaseService.release(player: Player)
+	local index = assigned[player]
+	if not index then
+		return
+	end
+	assigned[player] = nil
+	owners[index] = nil
+	for _, plot in plots do
+		if plot.index == index then
+			showOwner(plot, nil)
+		end
+	end
+end
+
+function BaseService.plotOf(player: Player): number?
+	return assigned[player]
+end
+
+function BaseService.ownerOf(index: number): Player?
+	return owners[index]
+end
+
+function BaseService.init(world: WorldBuilder.World)
+	plots = world.plots
+	for _, plot in plots do
+		showOwner(plot, nil)
+	end
+end
+
+function BaseService.start()
+	Players.PlayerAdded:Connect(function(player)
+		BaseService.assign(player)
+	end)
+	for _, player in Players:GetPlayers() do
+		BaseService.assign(player)
+	end
+	Players.PlayerRemoving:Connect(BaseService.release)
+end
+
+return BaseService
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="29">
+          <Properties>
+            <string name="Name">PortalService</string>
+            <string name="Source"><![CDATA[--!strict
+-- Server-authoritative portal travel between the hub and expedition zones
+-- (spec 5.3). The server validates the request, streams the destination
+-- around the player, moves the character and verifies the arrival. Travel
+-- never touches inventory or ownership.
+
+local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
+
+local Shared = game:GetService("ReplicatedStorage").Shared
+local GameConfig = require(Shared.Config.GameConfig)
+local ZoneDefinitions = require(Shared.Config.ZoneDefinitions)
+local Contracts = require(Shared.Net.Contracts)
+local RateLimiter = require(Shared.Util.RateLimiter)
+local Cleanup = require(Shared.Util.Cleanup)
+local WorldBuilder = require(script.Parent.Parent.World.WorldBuilder)
+local TelemetryService = require(script.Parent.TelemetryService)
+
+local PortalService = {}
+
+local HUB = "hub"
+
+local world: WorldBuilder.World
+local remotes: { [string]: RemoteEvent }
+local limiter = RateLimiter.new(GameConfig.portal.cooldownSeconds)
+local traveling: { [Player]: boolean } = {}
+local scopes: { [Player]: Cleanup.Cleanup } = {}
+
+local function rootOf(player: Player): BasePart?
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not character or not humanoid or humanoid.Health <= 0 then
+		return nil
+	end
+	local root = character:FindFirstChild("HumanoidRootPart")
+	return if root and root:IsA("BasePart") then root else nil
+end
+
+function PortalService.areaOf(player: Player): string
+	local area = player:GetAttribute("AreaId")
+	return if type(area) == "string" then area else HUB
+end
+
+local function hubArrival(): CFrame
+	local spawn = world.spawn
+	return spawn.CFrame * CFrame.new(0, 3.5, 0)
+end
+
+local function notice(player: Player, code: string)
+	remotes[Contracts.Events.Notice]:FireClient(player, code)
+end
+
+-- Moves the player and confirms they did not fall into unloaded space.
+local function travel(player: Player, areaId: string, destination: CFrame)
+	traveling[player] = true
+	local transition = remotes[Contracts.Events.AreaTransition]
+	transition:FireClient(player, "start", areaId)
+
+	local streamed = pcall(function()
+		player:RequestStreamAroundAsync(destination.Position, GameConfig.portal.streamTimeoutSeconds)
+	end)
+	if not streamed then
+		warn("[PortalService] streaming request failed; moving anyway with fall check", player.Name)
+	end
+
+	local root = rootOf(player)
+	local character = player.Character
+	if not root or not character then
+		traveling[player] = nil
+		transition:FireClient(player, "failed", PortalService.areaOf(player), "TravelFailed")
+		return
+	end
+	character:PivotTo(destination)
+	root.AssemblyLinearVelocity = Vector3.zero
+	player:SetAttribute("AreaId", areaId)
+	transition:FireClient(player, "arrived", areaId)
+	if areaId ~= HUB then
+		TelemetryService.custom(player, "zone_entered")
+	end
+
+	-- Safety net: if the character dropped far below the arrival point,
+	-- put it back on the arrival pad (never leave a player in the void).
+	task.delay(GameConfig.portal.fallCheckDelaySeconds, function()
+		traveling[player] = nil
+		local r = rootOf(player)
+		if r and player.Parent and PortalService.areaOf(player) == areaId and r.Position.Y < destination.Position.Y - GameConfig.portal.fallDistance then
+			local c = player.Character
+			if c then
+				c:PivotTo(destination)
+				r.AssemblyLinearVelocity = Vector3.zero
+				notice(player, "TravelFailed")
+			end
+		end
+	end)
+end
+
+-- Validates and executes a portal use. `fromArea` is where the portal is.
+function PortalService.requestTravel(player: Player, portal: Model, fromArea: string, toArea: string): (boolean, string?)
+	if traveling[player] then
+		return false, "PortalCooldown"
+	end
+	if PortalService.areaOf(player) ~= fromArea then
+		return false, "PortalTooFar"
+	end
+	local root = rootOf(player)
+	if not root then
+		return false, "TravelFailed"
+	end
+	local pivot = portal:GetPivot().Position
+	local flat = Vector3.new(root.Position.X - pivot.X, 0, root.Position.Z - pivot.Z)
+	if flat.Magnitude > GameConfig.portal.maxUseDistance then
+		return false, "PortalTooFar"
+	end
+	local destination: CFrame
+	if toArea == HUB then
+		destination = hubArrival()
+	else
+		local zone = ZoneDefinitions[toArea]
+		local info = world.zones[toArea]
+		if not zone or not zone.implemented or not info then
+			return false, "PortalLocked"
+		end
+		destination = info.arrival
+	end
+	if not limiter:tryUse(player) then
+		return false, "PortalCooldown"
+	end
+	task.spawn(travel, player, toArea, destination)
+	return true, nil
+end
+
+local function attachPrompt(portal: Model, actionKey: string, objectKey: string, objectParams: { [string]: string }?, onTriggered: (Player) -> ())
+	-- the prompt lives on the walkable base so it is in reach at ground level
+	local base = portal:FindFirstChild("Base")
+	local holder = if base and base:IsA("BasePart") then base else portal.PrimaryPart
+	assert(holder, "portal has no parts")
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "PortalPrompt"
+	prompt.HoldDuration = 0
+	prompt.MaxActivationDistance = GameConfig.portal.promptDistance
+	prompt.RequiresLineOfSight = false
+	prompt.KeyboardKeyCode = Enum.KeyCode.E
+	prompt.GamepadKeyCode = Enum.KeyCode.ButtonX
+	-- English defaults; the client replaces them with the player's language
+	prompt.ActionText = "Enter"
+	prompt.ObjectText = "Portal"
+	prompt:SetAttribute("ActionKey", actionKey)
+	prompt:SetAttribute("ObjectKey", objectKey)
+	for name, value in (objectParams or {}) :: { [string]: string } do
+		prompt:SetAttribute("ObjectParam_" .. name, value)
+	end
+	CollectionService:AddTag(prompt, "AH_LocalizedPrompt")
+	prompt.Triggered:Connect(onTriggered)
+	prompt.Parent = holder
+end
+
+function PortalService.init(w: WorldBuilder.World, r: { [string]: RemoteEvent })
+	world = w
+	remotes = r
+
+	for zoneId, portal in world.hubPortals do
+		local zone = ZoneDefinitions[zoneId]
+		if zone and zone.implemented and world.zones[zoneId] then
+			attachPrompt(portal, "action.enter_portal", "portal.to_area", { area = "@" .. zone.nameKey }, function(player)
+				local ok, code = PortalService.requestTravel(player, portal, HUB, zoneId)
+				if not ok and code then
+					notice(player, code)
+				end
+			end)
+		end
+	end
+	for zoneId, info in world.zones do
+		local portal = info.returnPortal
+		attachPrompt(portal, "action.return_to_hub", "portal.to_hub", nil, function(player)
+			local ok, code = PortalService.requestTravel(player, portal, zoneId, HUB)
+			if not ok and code then
+				notice(player, code)
+			end
+		end)
+	end
+end
+
+function PortalService.start()
+	local function onPlayer(player: Player)
+		player:SetAttribute("AreaId", HUB)
+		local scope = Cleanup.new()
+		scopes[player] = scope
+		scope:add(player.CharacterAdded:Connect(function()
+			-- respawning always happens at the hub spawn
+			traveling[player] = nil
+			player:SetAttribute("AreaId", HUB)
+		end))
+		TelemetryService.custom(player, "onboarding_started")
+	end
+	Players.PlayerAdded:Connect(onPlayer)
+	for _, player in Players:GetPlayers() do
+		onPlayer(player)
+	end
+	Players.PlayerRemoving:Connect(function(player)
+		traveling[player] = nil
+		limiter:forget(player)
+		local scope = scopes[player]
+		if scope then
+			scope:destroy()
+			scopes[player] = nil
+		end
+	end)
+end
+
+return PortalService
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="30">
+          <Properties>
+            <string name="Name">TelemetryService</string>
+            <string name="Source"><![CDATA[--!strict
+-- Thin analytics wrapper (spec section 21). Missing or failing analytics
+-- must never break gameplay, so every call is protected.
+
+local AnalyticsService = game:GetService("AnalyticsService")
+
+local TelemetryService = {}
+
+local ALLOWED = {
+	onboarding_started = true,
+	zone_entered = true,
+	localization_fallback = true,
+}
+
+function TelemetryService.custom(player: Player, eventName: string)
+	if not ALLOWED[eventName] then
+		warn("[Telemetry] unknown event name:", eventName)
+		return
+	end
+	local ok, err = pcall(function()
+		AnalyticsService:LogCustomEvent(player, eventName)
+	end)
+	if not ok then
+		warn("[Telemetry] event failed (gameplay continues):", eventName, err)
+	end
+end
+
+return TelemetryService
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="Folder" referent="31">
+        <Properties>
+          <string name="Name">World</string>
+        </Properties>
+        <Item class="ModuleScript" referent="32">
+          <Properties>
+            <string name="Name">Kit</string>
+            <string name="Source"><![CDATA[--!strict
+-- Modular primitive art kit (spec 4.3). Every piece is built from anchored
+-- Parts so the first build needs no uploaded assets. Pieces return their
+-- root Model or Part; callers parent them.
+
+local CollectionService = game:GetService("CollectionService")
+
+local Kit = {}
+
+Kit.Palette = {
+	stone = Color3.fromRGB(226, 221, 210),
+	stoneDark = Color3.fromRGB(196, 190, 178),
+	concrete = Color3.fromRGB(176, 174, 168),
+	metal = Color3.fromRGB(118, 124, 132),
+	metalDark = Color3.fromRGB(70, 74, 82),
+	wood = Color3.fromRGB(150, 108, 70),
+	grass = Color3.fromRGB(104, 170, 84),
+	grassDark = Color3.fromRGB(82, 140, 68),
+	leaf = Color3.fromRGB(86, 158, 72),
+	leafDark = Color3.fromRGB(64, 128, 58),
+	trunk = Color3.fromRGB(112, 82, 58),
+	rock = Color3.fromRGB(140, 138, 132),
+	safe = Color3.fromRGB(64, 200, 228), -- cyan: safe equipment
+	anomaly = Color3.fromRGB(150, 92, 232), -- violet: anomalies
+	hazard = Color3.fromRGB(240, 142, 52), -- orange: hazards
+	path = Color3.fromRGB(206, 200, 186),
+	white = Color3.fromRGB(240, 240, 238),
+}
+
+local P = Kit.Palette
+
+export type PartProps = { [string]: any }
+
+function Kit.part(props: PartProps, parent: Instance?): Part
+	local p = Instance.new("Part")
+	p.Anchored = true
+	p.TopSurface = Enum.SurfaceType.Smooth
+	p.BottomSurface = Enum.SurfaceType.Smooth
+	p.Material = Enum.Material.SmoothPlastic
+	for key, value in props do
+		(p :: any)[key] = value
+	end
+	p.Parent = parent
+	return p
+end
+
+function Kit.wedge(props: PartProps, parent: Instance?): WedgePart
+	local p = Instance.new("WedgePart")
+	p.Anchored = true
+	p.TopSurface = Enum.SurfaceType.Smooth
+	p.BottomSurface = Enum.SurfaceType.Smooth
+	p.Material = Enum.Material.SmoothPlastic
+	for key, value in props do
+		(p :: any)[key] = value
+	end
+	p.Parent = parent
+	return p
+end
+
+function Kit.model(name: string, parent: Instance?): Model
+	local m = Instance.new("Model")
+	m.Name = name
+	m.Parent = parent
+	return m
+end
+
+-- Invisible marker used by gameplay (spawn points, waypoints...).
+function Kit.marker(name: string, cf: CFrame, parent: Instance, attributes: { [string]: any }?): Part
+	local p = Kit.part({
+		Name = name, Size = Vector3.new(2, 2, 2), CFrame = cf, Transparency = 1,
+		CanCollide = false, CanQuery = false, CanTouch = false,
+	}, parent)
+	for key, value in (attributes or {}) :: { [string]: any } do
+		p:SetAttribute(key, value)
+	end
+	return p
+end
+
+---------------------------------------------------------------------------
+-- Ground & architecture
+---------------------------------------------------------------------------
+function Kit.floor(cf: CFrame, size: Vector2, color: Color3, material: Enum.Material?, parent: Instance?): Part
+	return Kit.part({
+		Name = "Floor", Size = Vector3.new(size.X, 2, size.Y), CFrame = cf * CFrame.new(0, -1, 0),
+		Color = color, Material = material or Enum.Material.Slate,
+	}, parent)
+end
+
+function Kit.wall(cf: CFrame, length: number, height: number, color: Color3?, parent: Instance?): Part
+	return Kit.part({
+		Name = "Wall", Size = Vector3.new(length, height, 1.5), CFrame = cf * CFrame.new(0, height / 2, 0),
+		Color = color or P.concrete, Material = Enum.Material.Concrete,
+	}, parent)
+end
+
+-- Wall with a centered doorway gap.
+function Kit.doorway(cf: CFrame, length: number, height: number, gap: number, parent: Instance?): Model
+	local m = Kit.model("Doorway", parent)
+	local side = (length - gap) / 2
+	Kit.wall(cf * CFrame.new(-(gap + side) / 2, 0, 0), side, height, nil, m)
+	Kit.wall(cf * CFrame.new((gap + side) / 2, 0, 0), side, height, nil, m)
+	Kit.part({
+		Name = "Lintel", Size = Vector3.new(gap, 2, 1.5), CFrame = cf * CFrame.new(0, height - 1, 0),
+		Color = P.concrete, Material = Enum.Material.Concrete,
+	}, m)
+	return m
+end
+
+-- Ramp rising along the CFrame's -Z (LookVector) by `rise` over `run`.
+function Kit.ramp(cf: CFrame, width: number, run: number, rise: number, parent: Instance?): WedgePart
+	return Kit.wedge({
+		Name = "Ramp", Size = Vector3.new(width, rise, run), CFrame = cf * CFrame.new(0, rise / 2, -run / 2) * CFrame.Angles(0, math.pi, 0),
+		Color = P.stoneDark, Material = Enum.Material.Slate,
+	}, parent)
+end
+
+function Kit.stairs(cf: CFrame, width: number, steps: number, stepRise: number, stepRun: number, parent: Instance?): Model
+	local m = Kit.model("Stairs", parent)
+	for i = 1, steps do
+		Kit.part({
+			Name = "Step", Size = Vector3.new(width, stepRise * i, stepRun),
+			CFrame = cf * CFrame.new(0, stepRise * i / 2, -(i - 0.5) * stepRun),
+			Color = P.stoneDark, Material = Enum.Material.Slate,
+		}, m)
+	end
+	return m
+end
+
+function Kit.railing(cf: CFrame, length: number, parent: Instance?): Model
+	local m = Kit.model("Railing", parent)
+	local posts = math.max(2, math.floor(length / 6) + 1)
+	for i = 0, posts - 1 do
+		local x = -length / 2 + (length / (posts - 1)) * i
+		Kit.part({ Name = "Post", Size = Vector3.new(0.4, 3, 0.4), CFrame = cf * CFrame.new(x, 1.5, 0), Color = P.metal, Material = Enum.Material.Metal }, m)
+	end
+	Kit.part({ Name = "Rail", Size = Vector3.new(length, 0.3, 0.3), CFrame = cf * CFrame.new(0, 3, 0), Color = P.metal, Material = Enum.Material.Metal }, m)
+	Kit.part({ Name = "Rail", Size = Vector3.new(length, 0.2, 0.2), CFrame = cf * CFrame.new(0, 1.8, 0), Color = P.metal, Material = Enum.Material.Metal }, m)
+	return m
+end
+
+---------------------------------------------------------------------------
+-- Props
+---------------------------------------------------------------------------
+function Kit.tree(cf: CFrame, scale: number, parent: Instance?): Model
+	local m = Kit.model("Tree", parent)
+	local h = 7 * scale
+	Kit.part({ Name = "Trunk", Size = Vector3.new(1.4 * scale, h, 1.4 * scale), CFrame = cf * CFrame.new(0, h / 2, 0), Color = P.trunk, Material = Enum.Material.Wood }, m)
+	Kit.part({ Name = "Leaves", Size = Vector3.new(7, 5, 7) * scale, CFrame = cf * CFrame.new(0, h + 1.5 * scale, 0), Color = P.leaf, Material = Enum.Material.Grass }, m)
+	Kit.part({ Name = "Leaves", Size = Vector3.new(4.5, 3.5, 4.5) * scale, CFrame = cf * CFrame.new(0.6 * scale, h + 4.8 * scale, -0.4 * scale), Color = P.leafDark, Material = Enum.Material.Grass }, m)
+	return m
+end
+
+function Kit.rock(cf: CFrame, size: Vector3, parent: Instance?): Part
+	return Kit.part({ Name = "Rock", Size = size, CFrame = cf * CFrame.new(0, size.Y / 2 - 0.4, 0), Color = P.rock, Material = Enum.Material.Slate }, parent)
+end
+
+function Kit.planter(cf: CFrame, size: Vector2, parent: Instance?): Model
+	local m = Kit.model("Planter", parent)
+	Kit.part({ Name = "Box", Size = Vector3.new(size.X, 2, size.Y), CFrame = cf * CFrame.new(0, 1, 0), Color = P.stoneDark, Material = Enum.Material.Concrete }, m)
+	Kit.part({ Name = "Soil", Size = Vector3.new(size.X - 1, 0.2, size.Y - 1), CFrame = cf * CFrame.new(0, 2.05, 0), Color = P.grassDark, Material = Enum.Material.Grass }, m)
+	for i = -1, 1, 2 do
+		Kit.part({ Name = "Bush", Size = Vector3.new(2.5, 2, 2.5), CFrame = cf * CFrame.new(i * size.X / 4, 3, 0), Color = P.leaf, Material = Enum.Material.Grass }, m)
+	end
+	return m
+end
+
+function Kit.bench(cf: CFrame, parent: Instance?): Model
+	local m = Kit.model("Bench", parent)
+	Kit.part({ Name = "Seat", Size = Vector3.new(6, 0.5, 2), CFrame = cf * CFrame.new(0, 2, 0), Color = P.wood, Material = Enum.Material.WoodPlanks }, m)
+	Kit.part({ Name = "Back", Size = Vector3.new(6, 2, 0.4), CFrame = cf * CFrame.new(0, 3.2, 0.8), Color = P.wood, Material = Enum.Material.WoodPlanks }, m)
+	for i = -1, 1, 2 do
+		Kit.part({ Name = "Leg", Size = Vector3.new(0.4, 2, 1.8), CFrame = cf * CFrame.new(i * 2.6, 1, 0), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	end
+	return m
+end
+
+function Kit.crate(cf: CFrame, size: number, parent: Instance?): Model
+	local m = Kit.model("Crate", parent)
+	Kit.part({ Name = "Box", Size = Vector3.one * size, CFrame = cf * CFrame.new(0, size / 2, 0), Color = Color3.fromRGB(176, 140, 92), Material = Enum.Material.WoodPlanks }, m)
+	Kit.part({ Name = "Band", Size = Vector3.new(size + 0.1, 0.3, size + 0.1), CFrame = cf * CFrame.new(0, size * 0.75, 0), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	return m
+end
+
+function Kit.lamp(cf: CFrame, color: Color3, parent: Instance?): Model
+	local m = Kit.model("Lamp", parent)
+	Kit.part({ Name = "Pole", Size = Vector3.new(0.6, 10, 0.6), CFrame = cf * CFrame.new(0, 5, 0), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	local head = Kit.part({ Name = "Head", Size = Vector3.new(1.6, 1, 1.6), CFrame = cf * CFrame.new(0, 10.4, 0), Color = color, Material = Enum.Material.Neon }, m)
+	local light = Instance.new("PointLight")
+	light.Range = 18
+	light.Brightness = 1.2
+	light.Color = color
+	light.Shadows = false
+	light.Parent = head
+	return m
+end
+
+-- Workshop machine / research device; `damaged` tilts it and adds scrap.
+function Kit.machine(cf: CFrame, accent: Color3, damaged: boolean, parent: Instance?): Model
+	local m = Kit.model("Machine", parent)
+	local tilt = if damaged then CFrame.Angles(0, 0, math.rad(9)) else CFrame.identity
+	local base = cf * tilt
+	Kit.part({ Name = "Body", Size = Vector3.new(5, 4, 3), CFrame = base * CFrame.new(0, 2, 0), Color = P.metal, Material = Enum.Material.Metal }, m)
+	Kit.part({ Name = "Panel", Size = Vector3.new(3.4, 1.6, 0.2), CFrame = base * CFrame.new(0, 2.6, -1.55), Color = Color3.fromRGB(30, 34, 40), Material = Enum.Material.SmoothPlastic }, m)
+	Kit.part({ Name = "Light", Size = Vector3.new(0.6, 0.6, 0.2), CFrame = base * CFrame.new(1.2, 2.6, -1.62), Color = accent, Material = Enum.Material.Neon }, m)
+	Kit.part({ Name = "Vent", Size = Vector3.new(1.6, 1.4, 1.6), CFrame = base * CFrame.new(-1.2, 4.7, 0.4), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	if damaged then
+		Kit.part({ Name = "Scrap", Size = Vector3.new(1.5, 0.3, 2), CFrame = cf * CFrame.new(3.6, 0.15, 0.8) * CFrame.Angles(0, 0.7, 0), Color = P.metalDark, Material = Enum.Material.CorrodedMetal }, m)
+		Kit.part({ Name = "Cable", Size = Vector3.new(0.3, 0.3, 4), CFrame = cf * CFrame.new(-3, 0.15, 1) * CFrame.Angles(0, 0.4, 0), Color = Color3.fromRGB(30, 30, 30), Material = Enum.Material.Rubber }, m)
+	end
+	return m
+end
+
+-- Ground cables between two points (decoration).
+function Kit.cable(from: Vector3, to: Vector3, parent: Instance?): Part
+	local mid = (from + to) / 2
+	return Kit.part({
+		Name = "Cable", Size = Vector3.new(0.35, 0.35, (to - from).Magnitude), CFrame = CFrame.lookAt(mid, to),
+		Color = Color3.fromRGB(34, 34, 38), Material = Enum.Material.Rubber, CanCollide = false,
+	}, parent)
+end
+
+---------------------------------------------------------------------------
+-- Signs and portals (localized text is applied by the client)
+---------------------------------------------------------------------------
+-- A world sign whose text is a localization key. Optional `params` are set
+-- as attributes "Param_<name>"; a value starting with "@" is itself a key.
+function Kit.sign(cf: CFrame, size: Vector2, key: string, accent: Color3, parent: Instance?, params: { [string]: string }?): Model
+	local m = Kit.model("Sign", parent)
+	local board = Kit.part({
+		Name = "Board", Size = Vector3.new(size.X, size.Y, 0.4), CFrame = cf,
+		Color = Color3.fromRGB(34, 38, 46), Material = Enum.Material.SmoothPlastic,
+	}, m)
+	Kit.part({ Name = "Trim", Size = Vector3.new(size.X + 0.4, 0.3, 0.5), CFrame = cf * CFrame.new(0, -size.Y / 2 - 0.15, 0), Color = accent, Material = Enum.Material.Neon }, m)
+	for _, face in { Enum.NormalId.Front, Enum.NormalId.Back } do
+		local gui = Instance.new("SurfaceGui")
+		gui.Face = face
+		gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+		gui.PixelsPerStud = 40
+		gui.LightInfluence = 0
+		gui.Parent = board
+		local label = Instance.new("TextLabel")
+		label.Name = "Text"
+		label.Size = UDim2.fromScale(1, 1)
+		label.BackgroundTransparency = 1
+		label.TextScaled = true
+		label.TextWrapped = true
+		label.Font = Enum.Font.GothamBold
+		label.TextColor3 = Color3.fromRGB(240, 240, 238)
+		label.AutoLocalize = false -- the LocalizationController sets the text
+		label.Text = ""
+		label:SetAttribute("TextKey", key)
+		for name, value in (params or {}) :: { [string]: string } do
+			label:SetAttribute("Param_" .. name, value)
+		end
+		local padding = Instance.new("UIPadding")
+		padding.PaddingLeft = UDim.new(0.05, 0)
+		padding.PaddingRight = UDim.new(0.05, 0)
+		padding.PaddingTop = UDim.new(0.1, 0)
+		padding.PaddingBottom = UDim.new(0.1, 0)
+		padding.Parent = label
+		label.Parent = gui
+		CollectionService:AddTag(label, "AH_LocalizedText")
+	end
+	return m
+end
+
+-- Large ring portal. `active` portals glow violet; dormant ones are gray.
+function Kit.portal(cf: CFrame, active: boolean, parent: Instance?): Model
+	local m = Kit.model("Portal", parent)
+	local radius, segments = 9, 20
+	local frameColor = if active then P.safe else P.metal
+	for i = 0, segments - 1 do
+		local a = (i / segments) * math.pi * 2
+		local pos = cf * CFrame.new(math.cos(a) * radius, radius + 1 + math.sin(a) * radius, 0)
+		-- rotate each segment so its long side follows the ring
+		Kit.part({
+			Name = "Ring", Size = Vector3.new(3.2, 1.6, 2), CFrame = pos * CFrame.Angles(0, 0, a + math.pi / 2),
+			Color = frameColor, Material = Enum.Material.Metal,
+		}, m)
+	end
+	Kit.part({ Name = "Base", Size = Vector3.new(radius * 2 + 6, 1, 8), CFrame = cf * CFrame.new(0, 0.5, 0), Color = P.stoneDark, Material = Enum.Material.Slate }, m)
+	local surface = Kit.part({
+		Name = "Surface", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, radius * 2 - 1, radius * 2 - 1),
+		CFrame = cf * CFrame.new(0, radius + 1, 0) * CFrame.Angles(0, math.rad(90), 0),
+		Color = if active then P.anomaly else Color3.fromRGB(60, 62, 68),
+		Material = if active then Enum.Material.Neon else Enum.Material.SmoothPlastic,
+		Transparency = if active then 0.35 else 0.1, CanCollide = false,
+	}, m)
+	if active then
+		local light = Instance.new("PointLight")
+		light.Range = 24
+		light.Brightness = 1.5
+		light.Color = P.anomaly
+		light.Shadows = false
+		light.Parent = surface
+	end
+	m.PrimaryPart = surface
+	return m
+end
+
+-- Circular pad (arrival / extraction / base marker).
+function Kit.pad(cf: CFrame, radius: number, color: Color3, parent: Instance?): Part
+	return Kit.part({
+		Name = "Pad", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, radius * 2, radius * 2),
+		CFrame = cf * CFrame.new(0, 0.2, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = color, Material = Enum.Material.Neon,
+		Transparency = 0.35, CanCollide = false,
+	}, parent)
+end
+
+-- Base pedestal (displays a creature from M2 on).
+function Kit.pedestal(cf: CFrame, parent: Instance?): Model
+	local m = Kit.model("Pedestal", parent)
+	Kit.part({ Name = "Column", Shape = Enum.PartType.Cylinder, Size = Vector3.new(2.4, 4, 4), CFrame = cf * CFrame.new(0, 1.2, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.stoneDark, Material = Enum.Material.Slate }, m)
+	Kit.part({ Name = "Top", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.3, 4.4, 4.4), CFrame = cf * CFrame.new(0, 2.55, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.safe, Material = Enum.Material.Metal }, m)
+	return m
+end
+
+return Kit
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="33">
+          <Properties>
+            <string name="Name">PrimitiveCreatureFactory</string>
+            <string name="Source"><![CDATA[--!strict
+-- Primitive fallback models for the first three species. Each has one
+-- memorable silhouette feature (spec section 8). Models are cosmetic: they
+-- never decide ownership. Final meshes can replace them later via the asset
+-- manifest without changing gameplay code.
+
+local CollectionService = game:GetService("CollectionService")
+
+local Kit = require(script.Parent.Kit)
+
+local Factory = {}
+
+local function build(speciesId: string, cf: CFrame, parent: Instance?): (Model, (props: { [string]: any }) -> BasePart)
+	local model = Instance.new("Model")
+	model.Name = speciesId
+	model:SetAttribute("SpeciesId", speciesId)
+	local root = Kit.part({
+		Name = "Root", Size = Vector3.new(1, 1, 1), CFrame = cf, Transparency = 1,
+		CanCollide = false, CanQuery = false, CanTouch = false,
+	}, model)
+	model.PrimaryPart = root
+	local function add(props: { [string]: any }): BasePart
+		props.CanCollide = false
+		props.CanTouch = false
+		local offset = props.Offset :: CFrame
+		props.Offset = nil
+		props.CFrame = cf * offset
+		local part = Kit.part(props, model)
+		return part
+	end
+	model.Parent = parent
+	return model, add
+end
+
+local function eye(add: (props: { [string]: any }) -> BasePart, offset: CFrame, size: number)
+	add({ Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * size, Offset = offset, Color = Color3.fromRGB(245, 245, 245) })
+	add({ Name = "Pupil", Shape = Enum.PartType.Ball, Size = Vector3.one * size * 0.5, Offset = offset * CFrame.new(0, 0, -size * 0.35), Color = Color3.fromRGB(20, 20, 24) })
+end
+
+-- Gray pigeon with ONE segmented violet wing.
+function Factory.glitchPigeon(cf: CFrame, parent: Instance?): Model
+	local model, add = build("glitch_pigeon", cf, parent)
+	local gray = Color3.fromRGB(150, 154, 162)
+	add({ Name = "Body", Size = Vector3.new(1.8, 1.6, 2.6), Offset = CFrame.new(0, 1.6, 0), Color = gray })
+	add({ Name = "Chest", Size = Vector3.new(1.6, 1.2, 0.6), Offset = CFrame.new(0, 1.7, -1.3), Color = Color3.fromRGB(120, 150, 150) })
+	add({ Name = "Head", Size = Vector3.new(1.2, 1.2, 1.2), Offset = CFrame.new(0, 2.9, -1.1), Color = gray })
+	add({ Name = "Beak", Size = Vector3.new(0.4, 0.3, 0.6), Offset = CFrame.new(0, 2.8, -1.9), Color = Color3.fromRGB(230, 180, 70) })
+	eye(add, CFrame.new(-0.45, 3.05, -1.6), 0.35)
+	eye(add, CFrame.new(0.45, 3.05, -1.6), 0.35)
+	add({ Name = "Tail", Size = Vector3.new(1.2, 0.3, 1.2), Offset = CFrame.new(0, 1.9, 1.7) * CFrame.Angles(math.rad(20), 0, 0), Color = Color3.fromRGB(110, 114, 122) })
+	add({ Name = "Wing", Size = Vector3.new(0.3, 1.2, 2), Offset = CFrame.new(-1, 1.7, 0.1), Color = Color3.fromRGB(130, 134, 142) })
+	-- the glitch wing: three offset violet segments
+	for i = 0, 2 do
+		add({
+			Name = "GlitchWing", Size = Vector3.new(0.3, 0.45, 0.8), Material = Enum.Material.Neon,
+			Offset = CFrame.new(1.05 + i * 0.12, 1.3 + i * 0.45, 0.6 - i * 0.55), Color = Kit.Palette.anomaly,
+		})
+	end
+	for x = -1, 1, 2 do
+		add({ Name = "Leg", Size = Vector3.new(0.2, 0.8, 0.2), Offset = CFrame.new(x * 0.45, 0.4, -0.2), Color = Color3.fromRGB(220, 120, 110) })
+	end
+	return model
+end
+
+-- Small dog whose body is a white refrigerator.
+function Factory.fridgeDog(cf: CFrame, parent: Instance?): Model
+	local model, add = build("fridge_dog", cf, parent)
+	local white = Color3.fromRGB(236, 238, 240)
+	local fur = Color3.fromRGB(170, 112, 70)
+	add({ Name = "Fridge", Size = Vector3.new(2.6, 3.2, 3.4), Offset = CFrame.new(0, 2.6, 0.4), Color = white, Material = Enum.Material.Metal })
+	add({ Name = "DoorLine", Size = Vector3.new(2.62, 0.1, 3.42), Offset = CFrame.new(0, 3.2, 0.4), Color = Color3.fromRGB(180, 184, 190) })
+	add({ Name = "Handle", Size = Vector3.new(0.2, 1.2, 0.2), Offset = CFrame.new(1.35, 2.6, -0.6), Color = Color3.fromRGB(160, 164, 170), Material = Enum.Material.Metal })
+	add({ Name = "Head", Size = Vector3.new(1.8, 1.6, 1.6), Offset = CFrame.new(0, 3.4, -1.9), Color = fur })
+	add({ Name = "Snout", Size = Vector3.new(1, 0.8, 0.9), Offset = CFrame.new(0, 3.0, -2.9), Color = Color3.fromRGB(230, 210, 180) })
+	add({ Name = "Nose", Size = Vector3.new(0.4, 0.3, 0.2), Offset = CFrame.new(0, 3.3, -3.4), Color = Color3.fromRGB(30, 26, 26) })
+	add({ Name = "Tongue", Size = Vector3.new(0.4, 0.1, 0.5), Offset = CFrame.new(0.15, 2.55, -3.1) * CFrame.Angles(math.rad(-20), 0, 0), Color = Color3.fromRGB(230, 110, 130) })
+	eye(add, CFrame.new(-0.45, 3.75, -2.7), 0.35)
+	eye(add, CFrame.new(0.45, 3.75, -2.7), 0.35)
+	for x = -1, 1, 2 do
+		add({ Name = "Ear", Size = Vector3.new(0.4, 1.2, 0.8), Offset = CFrame.new(x * 1.0, 3.5, -1.8) * CFrame.Angles(0, 0, x * math.rad(15)), Color = Color3.fromRGB(120, 80, 50) })
+		for z = -1, 1, 2 do
+			add({ Name = "Leg", Size = Vector3.new(0.6, 1.0, 0.6), Offset = CFrame.new(x * 0.9, 0.5, 0.4 + z * 1.2), Color = fur })
+		end
+	end
+	add({ Name = "Tail", Size = Vector3.new(0.3, 0.3, 1.0), Offset = CFrame.new(0, 3.4, 2.4) * CFrame.Angles(math.rad(35), 0, 0), Color = fur })
+	-- frost vents (cold-air mechanic in M2)
+	add({ Name = "Vent", Size = Vector3.new(1.6, 0.2, 0.6), Offset = CFrame.new(0, 1.15, 1.6), Color = Kit.Palette.safe, Material = Enum.Material.Neon })
+	return model
+end
+
+-- Green toad with a speaker-like throat.
+function Factory.sirenToad(cf: CFrame, parent: Instance?): Model
+	local model, add = build("siren_toad", cf, parent)
+	local green = Color3.fromRGB(96, 168, 82)
+	add({ Name = "Body", Size = Vector3.new(2.8, 1.6, 2.6), Offset = CFrame.new(0, 1.0, 0), Color = green })
+	add({ Name = "Back", Size = Vector3.new(2.2, 0.6, 2.0), Offset = CFrame.new(0, 2.0, 0.2), Color = Color3.fromRGB(78, 140, 66) })
+	eye(add, CFrame.new(-0.8, 2.3, -0.8), 0.7)
+	eye(add, CFrame.new(0.8, 2.3, -0.8), 0.7)
+	-- speaker throat: grille cone with rings
+	add({
+		Name = "Speaker", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.6, 1.6, 1.6),
+		Offset = CFrame.new(0, 0.9, -1.45) * CFrame.Angles(0, math.rad(90), 0), Color = Color3.fromRGB(40, 42, 48), Material = Enum.Material.Metal,
+	})
+	add({
+		Name = "SpeakerCone", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.2, 1.1, 1.1),
+		Offset = CFrame.new(0, 0.9, -1.8) * CFrame.Angles(0, math.rad(90), 0), Color = Kit.Palette.hazard, Material = Enum.Material.Neon,
+	})
+	for x = -1, 1, 2 do
+		add({ Name = "Leg", Size = Vector3.new(0.9, 0.5, 1.4), Offset = CFrame.new(x * 1.4, 0.25, 0.6), Color = green })
+		add({ Name = "Foot", Size = Vector3.new(0.9, 0.2, 0.7), Offset = CFrame.new(x * 1.1, 0.1, -1.0), Color = green })
+	end
+	return model
+end
+
+local BUILDERS: { [string]: (CFrame, Instance?) -> Model } = {
+	glitch_pigeon = Factory.glitchPigeon,
+	fridge_dog = Factory.fridgeDog,
+	siren_toad = Factory.sirenToad,
+}
+
+-- Builds a creature by species id; returns nil for species without a model.
+function Factory.create(speciesId: string, cf: CFrame, parent: Instance?): Model?
+	local builder = BUILDERS[speciesId]
+	if not builder then
+		return nil
+	end
+	local model = builder(cf, parent)
+	CollectionService:AddTag(model, "AH_CreatureIdle")
+	return model
+end
+
+function Factory.has(speciesId: string): boolean
+	return BUILDERS[speciesId] ~= nil
+end
+
+return Factory
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="34">
+          <Properties>
+            <string name="Name">WorldBuilder</string>
+            <string name="Source"><![CDATA[--!strict
+-- Deterministic world construction (spec 15.1). Everything lives inside one
+-- owned folder, workspace.AnomalyHeistWorld. Re-running build() replaces only
+-- that folder, so it never duplicates the map or touches other Studio work.
+--
+-- Edit-time bake (optional): in Studio's command bar run
+--   require(game.ServerScriptService.Server.World.WorldBuilder).build()
+-- to inspect the geometry without pressing Play. The running game rebuilds
+-- the folder on start, so a baked copy is never the source of truth.
+
+local Lighting = game:GetService("Lighting")
+
+local GameConfig = require(game:GetService("ReplicatedStorage").Shared.Config.GameConfig)
+local ZoneDefinitions = require(game:GetService("ReplicatedStorage").Shared.Config.ZoneDefinitions)
+local Types = require(game:GetService("ReplicatedStorage").Shared.Types)
+local Kit = require(script.Parent.Kit)
+local ZoneLayouts = require(script.Parent.ZoneLayouts)
+
+local WorldBuilder = {}
+
+WorldBuilder.RootName = "AnomalyHeistWorld"
+WorldBuilder.BuildVersion = GameConfig.version
+
+local P = Kit.Palette
+
+export type Plot = Types.PlotInfo & {
+	model: Model,
+	signFolder: Model,
+	marker: BasePart,
+}
+
+export type World = {
+	root: Folder,
+	spawn: SpawnLocation,
+	plots: { Plot },
+	hubPortals: { [string]: Model }, -- zoneId -> portal model in the hub
+	zones: { [string]: ZoneLayouts.ZoneInfo },
+}
+
+local function setupLighting()
+	Lighting.ClockTime = 14
+	Lighting.Brightness = 2.2
+	Lighting.Ambient = Color3.fromRGB(70, 72, 80)
+	Lighting.OutdoorAmbient = Color3.fromRGB(150, 152, 160)
+	Lighting.EnvironmentDiffuseScale = 0.6
+	Lighting.EnvironmentSpecularScale = 0.4
+	local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
+	atmosphere.Density = 0.22
+	atmosphere.Offset = 0.1
+	atmosphere.Haze = 0.6
+	atmosphere.Glare = 0
+	atmosphere.Color = Color3.fromRGB(200, 214, 230)
+	atmosphere.Decay = Color3.fromRGB(110, 130, 160)
+	atmosphere.Parent = Lighting
+end
+
+-- Plot positions: 8 plots on a ring, offset by 22.5 degrees so the four main
+-- axes stay free for the spawn and the portals.
+function WorldBuilder.plotLayout(): { Types.PlotInfo }
+	local plots = {}
+	for i = 1, GameConfig.plotCount do
+		local angle = math.rad(22.5 + (i - 1) * (360 / GameConfig.plotCount))
+		local center = Vector3.new(math.sin(angle), 0, math.cos(angle)) * GameConfig.hub.plotRingRadius
+		table.insert(plots, { index = i, center = center, facing = -center.Unit })
+	end
+	return plots
+end
+
+local function ringPath(parent: Instance, radius: number, width: number)
+	local segments = 32
+	local length = 2 * math.pi * radius / segments + 1.2
+	for i = 0, segments - 1 do
+		local a = (i + 0.5) / segments * math.pi * 2
+		local pos = Vector3.new(math.sin(a) * radius, 0.05, math.cos(a) * radius)
+		Kit.part({
+			Name = "RingPath", Size = Vector3.new(width, 0.1, length),
+			CFrame = CFrame.lookAt(pos, pos + Vector3.new(math.cos(a), 0, -math.sin(a))),
+			Color = P.path, Material = Enum.Material.Pavement, CanCollide = false,
+		}, parent)
+	end
+end
+
+local function buildLandmark(parent: Instance)
+	local m = Kit.model("ResearchTower", parent)
+	Kit.part({ Name = "Plaza", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.3, 48, 48), CFrame = CFrame.new(0, 0.15, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.stoneDark, Material = Enum.Material.Slate, CanCollide = false }, m)
+	Kit.part({ Name = "Base", Shape = Enum.PartType.Cylinder, Size = Vector3.new(3, 18, 18), CFrame = CFrame.new(0, 1.5, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.concrete, Material = Enum.Material.Concrete }, m)
+	Kit.part({ Name = "Column", Shape = Enum.PartType.Cylinder, Size = Vector3.new(22, 7, 7), CFrame = CFrame.new(0, 14, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.white, Material = Enum.Material.SmoothPlastic }, m)
+	Kit.part({ Name = "Band", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1, 7.6, 7.6), CFrame = CFrame.new(0, 9, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.safe, Material = Enum.Material.Metal }, m)
+	Kit.part({ Name = "Cap", Shape = Enum.PartType.Cylinder, Size = Vector3.new(2, 12, 12), CFrame = CFrame.new(0, 26, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.metal, Material = Enum.Material.Metal }, m)
+	local core = Kit.part({ Name = "AnomalyCore", Shape = Enum.PartType.Ball, Size = Vector3.one * 6, CFrame = CFrame.new(0, 31, 0), Color = P.anomaly, Material = Enum.Material.Neon }, m)
+	core:SetAttribute("SpinSpeed", 0.6)
+	local light = Instance.new("PointLight")
+	light.Range = 30
+	light.Brightness = 1
+	light.Color = P.anomaly
+	light.Shadows = false
+	light.Parent = core
+	-- four support arms holding the core
+	for i = 0, 3 do
+		local a = i * math.pi / 2 + math.pi / 4
+		local foot = Vector3.new(math.cos(a) * 7, 26, math.sin(a) * 7)
+		local top = Vector3.new(math.cos(a) * 3, 33, math.sin(a) * 3)
+		Kit.part({ Name = "Arm", Size = Vector3.new(0.8, 0.8, (top - foot).Magnitude), CFrame = CFrame.lookAt((foot + top) / 2, top), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	end
+end
+
+local function buildPlot(parent: Instance, info: Types.PlotInfo): Plot
+	local size = GameConfig.hub.plotSize
+	local m = Kit.model("Plot" .. info.index, parent)
+	m:SetAttribute("PlotIndex", info.index)
+	m.ModelStreamingMode = Enum.ModelStreamingMode.Atomic
+	-- the plot's local -Z points toward the hub center (its entrance side)
+	local cf = CFrame.lookAt(info.center, info.center + info.facing)
+	Kit.part({ Name = "Slab", Size = Vector3.new(size, 1, size), CFrame = cf * CFrame.new(0, 0.5, 0), Color = Color3.fromRGB(214, 218, 212), Material = Enum.Material.Concrete }, m)
+	Kit.part({ Name = "Lawn", Size = Vector3.new(size - 6, 0.2, size - 10), CFrame = cf * CFrame.new(0, 1.1, 3), Color = P.grass, Material = Enum.Material.Grass, CanCollide = false }, m)
+	-- low back and side walls, open front
+	Kit.wall(cf * CFrame.new(0, 1, size / 2 - 0.75), size, 3, P.stoneDark, m)
+	Kit.wall(cf * CFrame.new(-size / 2 + 0.75, 1, 4) * CFrame.Angles(0, math.rad(90), 0), size - 8, 3, P.stoneDark, m)
+	Kit.wall(cf * CFrame.new(size / 2 - 0.75, 1, 4) * CFrame.Angles(0, math.rad(90), 0), size - 8, 3, P.stoneDark, m)
+	-- 3 active pedestal sockets (spec 10.2 starts with 3) and 5 dim locked sockets
+	for i = 0, 7 do
+		local row = if i < 4 then 0 else 1
+		local col = i % 4
+		local pos = cf * CFrame.new(-9 + col * 6, 1, 2 + row * 7)
+		if i < 3 then
+			Kit.pedestal(pos, m)
+		else
+			Kit.part({ Name = "LockedSocket", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.3, 4, 4), CFrame = pos * CFrame.new(0, 0.15, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = P.stoneDark, Material = Enum.Material.Slate, CanCollide = false }, m)
+		end
+	end
+	Kit.machine(cf * CFrame.new(10, 1, 11) * CFrame.Angles(0, math.rad(180), 0), P.safe, false, m)
+	local marker: BasePart = Kit.pad(cf * CFrame.new(0, 1, -size / 2 + 4), 3, P.safe, m)
+	marker.Name = "EntranceMarker"
+	local signFolder = Kit.sign(cf * CFrame.new(0, 6.5, -size / 2 + 1.2), Vector2.new(14, 3), "base.vacant", P.safe, m)
+	signFolder.Name = "BaseSign"
+	for x = -1, 1, 2 do
+		Kit.part({ Name = "SignPost", Size = Vector3.new(0.5, 5, 0.5), CFrame = cf * CFrame.new(x * 6.5, 3.5, -size / 2 + 1.2), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	end
+	return {
+		index = info.index,
+		center = info.center,
+		facing = info.facing,
+		model = m,
+		signFolder = signFolder,
+		marker = marker,
+	}
+end
+
+local function buildHub(root: Folder): (SpawnLocation, { Plot }, { [string]: Model })
+	local hub = Instance.new("Folder")
+	hub.Name = "Hub"
+	hub.Parent = root
+	local half = GameConfig.hub.size / 2
+	local width = GameConfig.hub.pathWidth + 2
+
+	-- ground: grass apron + pale stone hub floor
+	Kit.floor(CFrame.new(0, -0.2, 0), Vector2.new(GameConfig.hub.size + 96, GameConfig.hub.size + 96), P.grass, Enum.Material.Grass, hub)
+	Kit.floor(CFrame.new(0, 0, 0), Vector2.new(GameConfig.hub.size, GameConfig.hub.size), P.stone, Enum.Material.Slate, hub)
+	-- outer boundary (invisible) so nobody wanders off the island
+	local outer = (GameConfig.hub.size + 96) / 2
+	for i = 0, 3 do
+		local a = i * math.pi / 2
+		Kit.part({
+			Name = "Boundary", Size = Vector3.new(GameConfig.hub.size + 96, 60, 2), Transparency = 1,
+			CFrame = CFrame.new(math.sin(a) * outer, 30, math.cos(a) * outer) * CFrame.Angles(0, a, 0),
+		}, hub)
+	end
+
+	buildLandmark(hub)
+	ringPath(hub, 70, width)
+	-- four spokes from the plaza to the edges
+	for i = 0, 3 do
+		local a = i * math.pi / 2
+		local dir = Vector3.new(math.sin(a), 0, math.cos(a))
+		local from, to = dir * 24, dir * (half - 4)
+		Kit.part({
+			Name = "Spoke", Size = Vector3.new(width, 0.1, (to - from).Magnitude), CFrame = CFrame.lookAt((from + to) / 2 + Vector3.new(0, 0.05, 0), to + Vector3.new(0, 0.05, 0)),
+			Color = P.path, Material = Enum.Material.Pavement, CanCollide = false,
+		}, hub)
+	end
+
+	-- spawn faces the beginner portal (+Z)
+	local spawnPos = GameConfig.hub.spawnOffset
+	local spawn = Instance.new("SpawnLocation")
+	spawn.Name = "HubSpawn"
+	spawn.Anchored = true
+	spawn.Neutral = true
+	spawn.Duration = 0
+	spawn.Size = Vector3.new(10, 1, 10)
+	spawn.CFrame = CFrame.lookAt(spawnPos + Vector3.new(0, 0.5, 0), spawnPos + Vector3.new(0, 0.5, 1))
+	spawn.Color = P.safe
+	spawn.Material = Enum.Material.SmoothPlastic
+	spawn.TopSurface = Enum.SurfaceType.Smooth
+	spawn.Parent = hub
+	Kit.sign(CFrame.new(0, 8, -26) * CFrame.Angles(0, math.pi, 0), Vector2.new(20, 4), "sign.welcome", P.safe, hub)
+	for x = -1, 1, 2 do
+		Kit.part({ Name = "SignPost", Size = Vector3.new(0.6, 6, 0.6), CFrame = CFrame.new(x * 9.5, 3, -26), Color = P.metalDark, Material = Enum.Material.Metal }, hub)
+	end
+
+	-- plots
+	local plots = {}
+	for _, info in WorldBuilder.plotLayout() do
+		local plot = buildPlot(hub, info)
+		table.insert(plots, plot)
+		-- short connector from the ring path to the plot entrance
+		local from = info.center.Unit * 77
+		local to = info.center.Unit * (GameConfig.hub.plotRingRadius - GameConfig.hub.plotSize / 2)
+		Kit.part({
+			Name = "Connector", Size = Vector3.new(10, 0.1, (to - from).Magnitude + 1), CFrame = CFrame.lookAt((from + to) / 2 + Vector3.new(0, 0.06, 0), to + Vector3.new(0, 0.06, 0)),
+			Color = P.path, Material = Enum.Material.Pavement, CanCollide = false,
+		}, hub)
+	end
+
+	-- portals on the north, east and west axes
+	local portals: { [string]: Model } = {}
+	local sides = { north = 0, east = math.pi / 2, west = -math.pi / 2 }
+	for id, zone in ZoneDefinitions do
+		local a = sides[zone.portalSide]
+		local pos = Vector3.new(math.sin(a), 0, math.cos(a)) * (half - 12)
+		local cf = CFrame.lookAt(pos, Vector3.zero)
+		local portal = Kit.portal(cf, zone.implemented, hub)
+		portal.Name = "Portal_" .. id
+		portal:SetAttribute("ZoneId", id)
+		portals[id] = portal
+		Kit.sign(cf * CFrame.new(0, 23, 0), Vector2.new(16, 3), zone.nameKey, if zone.implemented then P.anomaly else P.metal, portal)
+		if not zone.implemented then
+			Kit.sign(cf * CFrame.new(0, 4, -3), Vector2.new(10, 2), "portal.not_available", P.metal, portal)
+		end
+	end
+
+	-- social seating (the future trading area is ordinary seating for now)
+	for _, a in { 135, 225 } do
+		local r = math.rad(a)
+		local center = Vector3.new(math.sin(r), 0, math.cos(r)) * 46
+		for k = -1, 1 do
+			local pos = center + Vector3.new(math.cos(r) * k * 7, 0, -math.sin(r) * k * 7)
+			Kit.bench(CFrame.lookAt(pos, Vector3.zero), hub)
+		end
+		Kit.planter(CFrame.lookAt(center * 1.3, Vector3.zero), Vector2.new(10, 4), hub)
+	end
+	-- lamps around the ring, trees and planters between plots
+	for i = 0, 7 do
+		-- lamps sit between the spokes, trees between the plots
+		local lampAngle = math.rad(i * 45 + 22.5)
+		Kit.lamp(CFrame.new(math.sin(lampAngle) * 58, 0, math.cos(lampAngle) * 58), Color3.fromRGB(255, 236, 200), hub)
+		if i % 2 == 1 then
+			local a = math.rad(i * 45)
+			Kit.tree(CFrame.new(math.sin(a) * 112, 0, math.cos(a) * 112), 1.3, hub)
+		end
+	end
+	for i = 0, 15 do
+		local a = math.rad(i * 22.5 + 11.25)
+		Kit.tree(CFrame.new(math.sin(a) * 150, 0, math.cos(a) * 150), 1.1 + (i % 3) * 0.2, hub)
+	end
+	-- small workshop corners inside the ring (away from paths and seating)
+	local workshop = Vector3.new(math.sin(math.rad(45)), 0, math.cos(math.rad(45))) * 42
+	Kit.machine(CFrame.lookAt(workshop, Vector3.zero), P.safe, false, hub)
+	Kit.cable(workshop + Vector3.new(0, 0.2, 0), Vector3.new(4, 0.2, 18), hub)
+	local storage = Vector3.new(math.sin(math.rad(315)), 0, math.cos(math.rad(315))) * 42
+	Kit.crate(CFrame.new(storage), 3, hub)
+	Kit.crate(CFrame.new(storage + Vector3.new(3.5, 0, 1)) * CFrame.Angles(0, 0.4, 0), 2.5, hub)
+	Kit.crate(CFrame.new(storage + Vector3.new(1, 3, 0)) * CFrame.Angles(0, 0.2, 0), 2.5, hub)
+	return spawn, plots, portals
+end
+
+function WorldBuilder.build(): World
+	local existing = workspace:FindFirstChild(WorldBuilder.RootName)
+	if existing then
+		existing:Destroy()
+	end
+	local root = Instance.new("Folder")
+	root.Name = WorldBuilder.RootName
+	root:SetAttribute("BuildVersion", WorldBuilder.BuildVersion)
+
+	setupLighting()
+	local spawn, plots, portals = buildHub(root)
+	local zones: { [string]: ZoneLayouts.ZoneInfo } = {}
+	for id, zone in ZoneDefinitions do
+		if zone.implemented then
+			zones[id] = ZoneLayouts.build(zone, root)
+		end
+	end
+	root.Parent = workspace
+	return { root = root, spawn = spawn, plots = plots, hubPortals = portals, zones = zones }
+end
+
+return WorldBuilder
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="35">
+          <Properties>
+            <string name="Name">ZoneLayouts</string>
+            <string name="Source"><![CDATA[--!strict
+-- Authored expedition-zone layouts (spec 5.2). Layouts are hand-placed in
+-- code (deterministic), not procedurally assembled. Random decoration uses a
+-- fixed seed so every server is identical.
+
+local Types = require(game:GetService("ReplicatedStorage").Shared.Types)
+local Kit = require(script.Parent.Kit)
+local Factory = require(script.Parent.PrimitiveCreatureFactory)
+
+local ZoneLayouts = {}
+
+local P = Kit.Palette
+
+export type ZoneInfo = {
+	id: string,
+	folder: Folder,
+	center: Vector3,
+	arrival: CFrame, -- where travelers are placed (safe)
+	returnPortal: Model,
+	extractionPoints: { BasePart },
+	creatureSpawns: { BasePart },
+	guardianWaypoints: { [string]: { BasePart } },
+	recoveryPoints: { BasePart },
+	wildCreatures: Folder,
+}
+
+-- Distance from point p to segment ab on the XZ plane.
+local function distToSegment(p: Vector3, a: Vector3, b: Vector3): number
+	local ab = Vector3.new(b.X - a.X, 0, b.Z - a.Z)
+	local ap = Vector3.new(p.X - a.X, 0, p.Z - a.Z)
+	local t = math.clamp(ap:Dot(ab) / math.max(ab:Dot(ab), 1e-6), 0, 1)
+	return (ap - ab * t).Magnitude
+end
+
+local function pathStrip(parent: Instance, a: Vector3, b: Vector3, width: number, color: Color3)
+	local mid = (a + b) / 2
+	Kit.part({
+		Name = "Path", Size = Vector3.new(width, 0.1, (b - a).Magnitude + width * 0.6),
+		CFrame = CFrame.lookAt(mid + Vector3.new(0, 0.06, 0), b + Vector3.new(0, 0.06, 0)),
+		Color = color, Material = Enum.Material.Ground, CanCollide = false,
+	}, parent)
+end
+
+local function glitchAccent(parent: Instance, position: Vector3, rng: Random)
+	-- restrained violet glitch: a couple of small floating cubes
+	for _ = 1, 2 do
+		local p = Kit.part({
+			Name = "Glitch", Size = Vector3.one * rng:NextNumber(0.5, 1.1),
+			CFrame = CFrame.new(position + Vector3.new(rng:NextNumber(-2, 2), rng:NextNumber(3, 6), rng:NextNumber(-2, 2)))
+				* CFrame.Angles(rng:NextNumber(0, 3), rng:NextNumber(0, 3), 0),
+			Color = P.anomaly, Material = Enum.Material.Neon, CanCollide = false, CanQuery = false,
+		}, parent)
+		p:SetAttribute("Bob", true)
+	end
+end
+
+local function extractionPoint(parent: Instance, cf: CFrame, id: string): BasePart
+	local m = Kit.model("Extraction_" .. id, parent)
+	local pad = Kit.pad(cf, 7, P.safe, m)
+	pad.Name = "ExtractionZone"
+	pad:SetAttribute("ExtractionId", id)
+	Kit.part({ Name = "Beacon", Size = Vector3.new(1.2, 26, 1.2), CFrame = cf * CFrame.new(8, 13, 0), Color = P.safe, Material = Enum.Material.Neon, CanCollide = false }, m)
+	for i = 0, 3 do
+		local a = i * math.pi / 2 + math.pi / 4
+		Kit.part({ Name = "Post", Size = Vector3.new(0.8, 3, 0.8), CFrame = cf * CFrame.new(math.cos(a) * 7.5, 1.5, math.sin(a) * 7.5), Color = P.metal, Material = Enum.Material.Metal }, m)
+	end
+	Kit.sign(cf * CFrame.new(0, 7, 8) * CFrame.Angles(0, math.pi, 0), Vector2.new(12, 2.5), "sign.extraction", P.safe, m)
+	Kit.part({ Name = "SignPost", Size = Vector3.new(0.5, 6, 0.5), CFrame = cf * CFrame.new(0, 3, 8), Color = P.metalDark, Material = Enum.Material.Metal }, m)
+	return pad
+end
+
+function ZoneLayouts.buildGlitchGrove(zone: Types.ZoneDefinition, root: Instance): ZoneInfo
+	local folder = Instance.new("Folder")
+	folder.Name = "Zone_" .. zone.id
+	folder.Parent = root
+	local c = zone.center
+	local hx, hz = zone.size.X / 2, zone.size.Y / 2
+	local rng = Random.new(20261002)
+	local function at(x: number, z: number): Vector3
+		return c + Vector3.new(x, 0, z)
+	end
+
+	-- Ground and a soft border of hills
+	Kit.floor(CFrame.new(c), Vector2.new(zone.size.X + 40, zone.size.Y + 40), P.grass, Enum.Material.Grass, folder)
+	for _ = 1, 14 do
+		local x, z = rng:NextNumber(-hx, hx), rng:NextNumber(-hz, hz)
+		Kit.part({
+			Name = "GrassPatch", Size = Vector3.new(rng:NextNumber(12, 30), 0.1, rng:NextNumber(12, 30)),
+			CFrame = CFrame.new(at(x, z) + Vector3.new(0, 0.03, 0)) * CFrame.Angles(0, rng:NextNumber(0, 3), 0),
+			Color = P.grassDark, Material = Enum.Material.Grass, CanCollide = false,
+		}, folder)
+	end
+
+	-- Routes. Main: arrival -> clearing -> both exits. East: through the
+	-- ruined lab and over the plateau. West: forest trail.
+	local arrivalPos = at(0, -104)
+	local clearing = at(0, 10)
+	local exitA = at(-80, 100) -- north-west
+	local exitB = at(84, 92) -- north-east
+	local labCenter = at(62, -30)
+	local labDoor = at(62, -50) -- just outside the lab's south doorway
+	local plateauTop = at(70, 30)
+	local westTrail = at(-70, -30)
+	local routes = {
+		{ arrivalPos, clearing }, { clearing, exitA }, { clearing, exitB },
+		{ at(0, -70), labDoor }, { labDoor, at(70, 0) }, { at(70, 66), exitB },
+		{ at(0, -80), westTrail }, { westTrail, at(-80, 40) }, { at(-80, 40), exitA },
+	}
+	for _, seg in routes do
+		pathStrip(folder, seg[1], seg[2], 14, Color3.fromRGB(176, 156, 120))
+	end
+
+	-- Arrival point (safe) + return portal behind it
+	local arrivalPad = Kit.pad(CFrame.new(arrivalPos), 8, P.safe, folder)
+	arrivalPad.Name = "ArrivalPad"
+	Kit.sign(CFrame.new(arrivalPos + Vector3.new(-12, 6, 0)) * CFrame.Angles(0, math.rad(90), 0), Vector2.new(10, 2.5), "sign.arrival", P.safe, folder)
+	Kit.part({ Name = "SignPost", Size = Vector3.new(0.5, 5, 0.5), CFrame = CFrame.new(arrivalPos + Vector3.new(-12, 2.5, 0)), Color = P.metalDark, Material = Enum.Material.Metal }, folder)
+	local portalPos = at(0, -122)
+	local returnPortal = Kit.portal(CFrame.lookAt(portalPos, arrivalPos), true, folder)
+	returnPortal.Name = "ReturnPortal"
+	Kit.sign(CFrame.lookAt(portalPos, arrivalPos) * CFrame.new(0, 23, 0), Vector2.new(16, 3), "area.hub", P.safe, returnPortal)
+
+	-- Ruined research lab on the east route (walk-through doorways)
+	local labCf = CFrame.lookAt(labCenter, labCenter + Vector3.new(0, 0, 1))
+	local lab = Kit.model("RuinedLab", folder)
+	Kit.part({ Name = "LabFloor", Size = Vector3.new(30, 0.6, 26), CFrame = labCf * CFrame.new(0, 0.3, 0), Color = P.concrete, Material = Enum.Material.Concrete }, lab)
+	Kit.doorway(labCf * CFrame.new(0, 0, 13), 30, 10, 14, lab)
+	Kit.doorway(labCf * CFrame.new(0, 0, -13), 30, 10, 14, lab)
+	Kit.wall(labCf * CFrame.new(-15, 0, 0) * CFrame.Angles(0, math.rad(90), 0), 26, 7, nil, lab)
+	Kit.wall(labCf * CFrame.new(15, 0, 4) * CFrame.Angles(0, math.rad(90), 0), 14, 9, nil, lab)
+	Kit.machine(labCf * CFrame.new(-11, 0.6, 4), P.anomaly, true, lab)
+	Kit.machine(labCf * CFrame.new(11.5, 0.6, -5) * CFrame.Angles(0, math.rad(160), 0), P.hazard, true, lab)
+	Kit.crate(labCf * CFrame.new(-10, 0.6, -8), 3, lab)
+	glitchAccent(lab, (labCf * CFrame.new(-11, 0, 4)).Position, rng)
+
+	-- Plateau with a ramp up and stairs down (alternative route height)
+	local plateau = Kit.model("Plateau", folder)
+	local plateauHeight = 6
+	Kit.part({ Name = "PlateauTop", Size = Vector3.new(30, plateauHeight, 30), CFrame = CFrame.new(plateauTop + Vector3.new(0, plateauHeight / 2, 0)), Color = P.rock, Material = Enum.Material.Slate }, plateau)
+	Kit.part({ Name = "PlateauGrass", Size = Vector3.new(28, 0.2, 28), CFrame = CFrame.new(plateauTop + Vector3.new(0, plateauHeight + 0.1, 0)), Color = P.grass, Material = Enum.Material.Grass, CanCollide = false }, plateau)
+	-- ramp from z=-15 up to the plateau's south edge (z=15)
+	Kit.ramp(CFrame.lookAt(at(70, -15), at(70, 15)), 14, 30, plateauHeight, plateau)
+	-- stairs from z=63 up to the plateau's north edge (z=45): 6 steps x 3 studs
+	Kit.stairs(CFrame.lookAt(at(70, 63), at(70, 45)), 14, 6, plateauHeight / 6, 3, plateau)
+	Kit.railing(CFrame.new(plateauTop + Vector3.new(-15, plateauHeight, 0)) * CFrame.Angles(0, math.rad(90), 0), 30, plateau)
+	Kit.machine(CFrame.new(plateauTop + Vector3.new(6, plateauHeight, -6)) * CFrame.Angles(0, 2.4, 0), P.anomaly, true, plateau)
+	glitchAccent(plateau, plateauTop + Vector3.new(6, plateauHeight, -6), rng)
+
+	-- Clearing: damaged research devices and cables
+	Kit.machine(CFrame.new(clearing + Vector3.new(-14, 0, 6)) * CFrame.Angles(0, 0.5, 0), P.anomaly, true, folder)
+	Kit.machine(CFrame.new(clearing + Vector3.new(16, 0, -4)) * CFrame.Angles(0, -0.9, 0), P.safe, false, folder)
+	Kit.cable(clearing + Vector3.new(-12, 0.2, 6), clearing + Vector3.new(14, 0.2, -4), folder)
+	glitchAccent(folder, clearing + Vector3.new(-14, 0, 6), rng)
+
+	-- Extraction points
+	local extractions = {
+		extractionPoint(folder, CFrame.new(exitA), "A"),
+		extractionPoint(folder, CFrame.new(exitB), "B"),
+	}
+
+	-- Forest: trees avoid all routes, the arrival area, structures and exits
+	local avoid = { arrivalPos, clearing, exitA, exitB, plateauTop, labCenter }
+	local trees = 0
+	local attempts = 0
+	while trees < 70 and attempts < 1500 do
+		attempts += 1
+		local p = at(rng:NextNumber(-hx + 6, hx - 6), rng:NextNumber(-hz + 6, hz - 6))
+		local ok = true
+		for _, seg in routes do
+			if distToSegment(p, seg[1], seg[2]) < 12 then
+				ok = false
+				break
+			end
+		end
+		for _, a in avoid do
+			if ok and (Vector3.new(p.X, 0, p.Z) - Vector3.new(a.X, 0, a.Z)).Magnitude < 22 then
+				ok = false
+			end
+		end
+		if ok then
+			trees += 1
+			if rng:NextNumber() < 0.8 then
+				Kit.tree(CFrame.new(p) * CFrame.Angles(0, rng:NextNumber(0, 6), 0), rng:NextNumber(0.9, 1.5), folder)
+			else
+				Kit.rock(CFrame.new(p) * CFrame.Angles(0, rng:NextNumber(0, 6), 0), Vector3.new(rng:NextNumber(3, 7), rng:NextNumber(2, 4), rng:NextNumber(3, 6)), folder)
+			end
+		end
+	end
+
+	-- Clear boundaries: rock border + invisible walls
+	for i = 0, 3 do
+		local a = i * math.pi / 2
+		local dir = Vector3.new(math.sin(a), 0, math.cos(a))
+		local span = (if i % 2 == 0 then zone.size.X else zone.size.Y) + 40
+		local dist = (if i % 2 == 0 then hz else hx) + 6
+		local cf = CFrame.lookAt(c + dir * dist, c + dir * (dist + 1))
+		for k = -span / 2, span / 2, 12 do
+			Kit.rock(cf * CFrame.new(k, 0, rng:NextNumber(-2, 2)), Vector3.new(rng:NextNumber(10, 14), rng:NextNumber(6, 12), rng:NextNumber(6, 9)), folder)
+		end
+		Kit.part({ Name = "Boundary", Size = Vector3.new(span, 80, 2), CFrame = cf * CFrame.new(0, 40, 4), Transparency = 1 }, folder)
+	end
+
+	-- Gameplay markers (invisible)
+	local markers = Instance.new("Folder")
+	markers.Name = "Markers"
+	markers.Parent = folder
+	local spawnPoints = {
+		at(-20, -20), at(24, 30), at(-40, 60), at(30, 70), at(-60, 0), at(60, -60), at(-30, -60), at(0, 60),
+	}
+	local creatureSpawns: { BasePart } = {}
+	for i, p in spawnPoints do
+		table.insert(creatureSpawns, Kit.marker("CreatureSpawn" .. i, CFrame.new(p), markers, { Kind = "CreatureSpawn" }))
+	end
+	local guardianWaypoints: { [string]: { BasePart } } = { west = {}, east = {} }
+	for i, p in { at(-50, -10), at(-50, 50), at(-15, 70), at(-15, 0) } do
+		table.insert(guardianWaypoints.west, Kit.marker("GuardianWest" .. i, CFrame.new(p), markers, { Kind = "GuardianWaypoint", Path = "west", Order = i }))
+	end
+	for i, p in { at(30, -30), at(45, 10), at(30, 60), at(15, 20) } do
+		table.insert(guardianWaypoints.east, Kit.marker("GuardianEast" .. i, CFrame.new(p), markers, { Kind = "GuardianWaypoint", Path = "east", Order = i }))
+	end
+	local recoveryPoints: { BasePart } = {}
+	for i, p in { arrivalPos + Vector3.new(0, 0, 8), clearing + Vector3.new(0, 0, -16), at(70, -20) } do
+		table.insert(recoveryPoints, Kit.marker("Recovery" .. i, CFrame.new(p + Vector3.new(0, 3, 0)), markers, { Kind = "Recovery" }))
+	end
+
+	-- First three species shown in the zone (idle display in M1; capture
+	-- arrives with M2 behind FeatureFlags.capture).
+	local wild = Instance.new("Folder")
+	wild.Name = "WildCreatures"
+	wild.Parent = folder
+	local showcase = { "glitch_pigeon", "fridge_dog", "siren_toad" }
+	for i, speciesId in showcase do
+		local spot = spawnPoints[i]
+		Factory.create(speciesId, CFrame.lookAt(spot, arrivalPos * Vector3.new(1, 0, 1) + Vector3.new(0, spot.Y, 0)), wild)
+	end
+
+	return {
+		id = zone.id,
+		folder = folder,
+		center = c,
+		arrival = CFrame.lookAt(arrivalPos + Vector3.new(0, 3, 0), clearing + Vector3.new(0, 3, 0)),
+		returnPortal = returnPortal,
+		extractionPoints = extractions,
+		creatureSpawns = creatureSpawns,
+		guardianWaypoints = guardianWaypoints,
+		recoveryPoints = recoveryPoints,
+		wildCreatures = wild,
+	}
+end
+
+local LAYOUTS: { [string]: (Types.ZoneDefinition, Instance) -> ZoneInfo } = {
+	glitch_grove = ZoneLayouts.buildGlitchGrove,
+}
+
+function ZoneLayouts.build(zone: Types.ZoneDefinition, root: Instance): ZoneInfo
+	local builder = LAYOUTS[zone.id]
+	assert(builder, "no authored layout for implemented zone " .. zone.id)
+	return builder(zone, root)
+end
+
+function ZoneLayouts.has(zoneId: string): boolean
+	return LAYOUTS[zoneId] ~= nil
+end
+
+return ZoneLayouts
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="StarterPlayer" referent="36">
+    <Properties>
+      <string name="Name">StarterPlayer</string>
+    </Properties>
+    <Item class="StarterPlayerScripts" referent="37">
+      <Properties>
+        <string name="Name">StarterPlayerScripts</string>
+      </Properties>
+      <Item class="Folder" referent="38">
+        <Properties>
+          <string name="Name">Client</string>
+        </Properties>
+        <Item class="LocalScript" referent="39">
+          <Properties>
+            <string name="Name">Bootstrap</string>
+            <string name="Source"><![CDATA[--!strict
+-- Client entry point: shows a localized loading state, waits for the server
+-- ready signal (with a timeout and a clear error), then starts controllers.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Contracts = require(Shared.Net.Contracts)
+
+local Controllers = script.Parent:WaitForChild("Controllers")
+local LocalizationController = require(Controllers.LocalizationController)
+local InputController = require(Controllers.InputController)
+local HUDController = require(Controllers.HUDController)
+local EffectsController = require(Controllers.EffectsController)
+local Theme = require(script.Parent:WaitForChild("UI"):WaitForChild("Theme"))
+
+local player = Players.LocalPlayer
+local READY_TIMEOUT = 60
+
+LocalizationController.init()
+InputController.init()
+
+-- Loading screen
+local loadingGui = Instance.new("ScreenGui")
+loadingGui.Name = "AnomalyHeistLoading"
+loadingGui.ResetOnSpawn = false
+loadingGui.DisplayOrder = 10
+loadingGui.Parent = player:WaitForChild("PlayerGui")
+local loadingText = Theme.label({
+	AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -40), Size = UDim2.new(0.8, 0, 0, 30),
+	TextSize = 20, Text = LocalizationController.t("status.loading"), Parent = loadingGui,
+})
+
+local function serverState(): string
+	if ReplicatedStorage:GetAttribute(Contracts.ErrorAttribute) then
+		return "error"
+	elseif ReplicatedStorage:GetAttribute(Contracts.ReadyAttribute) == true then
+		return "ready"
+	end
+	return "waiting"
+end
+
+local started = os.clock()
+while serverState() == "waiting" do
+	if os.clock() - started > 5 then
+		loadingText.Text = LocalizationController.t("error.server_starting")
+	end
+	if os.clock() - started > READY_TIMEOUT then
+		break
+	end
+	task.wait(0.25)
+end
+
+local remotes = if serverState() == "ready" then Contracts.waitForRemotes(15) else nil
+if not remotes then
+	loadingText.Text = LocalizationController.t("error.server_failed")
+	warn("[AnomalyHeist] client could not start: server state =", serverState())
+	return
+end
+
+loadingGui:Destroy()
+LocalizationController.start()
+InputController.start()
+HUDController.init(remotes)
+HUDController.start()
+EffectsController.init()
+EffectsController.start()
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="Folder" referent="40">
+          <Properties>
+            <string name="Name">Controllers</string>
+          </Properties>
+          <Item class="ModuleScript" referent="41">
+            <Properties>
+              <string name="Name">EffectsController</string>
+              <string name="Source"><![CDATA[--!strict
+-- Client-only cosmetic motion: creature idle bobbing, the hub's spinning
+-- anomaly core, floating glitch cubes, and a local beam marking the
+-- player's own base. Purely visual, distance-limited, and tolerant of
+-- instances streaming in and out. Gameplay never depends on it.
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local CollectionService = game:GetService("CollectionService")
+
+local Shared = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
+local Cleanup = require(Shared.Util.Cleanup)
+
+local EffectsController = {}
+
+local player = Players.LocalPlayer
+local MAX_DISTANCE = 180
+
+local creatures: { [Model]: CFrame } = {} -- model -> base pivot
+local spinners: { [BasePart]: CFrame } = {}
+local bobbers: { [BasePart]: CFrame } = {}
+local beamScope = Cleanup.new()
+
+local function near(position: Vector3): boolean
+	local camera = workspace.CurrentCamera
+	return camera ~= nil and (camera.CFrame.Position - position).Magnitude < MAX_DISTANCE
+end
+
+local function trackCreature(instance: Instance)
+	if instance:IsA("Model") and not creatures[instance] then
+		creatures[instance] = instance:GetPivot()
+	end
+end
+
+local function scanDecor(root: Instance)
+	for _, d in root:GetDescendants() do
+		if d:IsA("BasePart") then
+			if d:GetAttribute("SpinSpeed") and not spinners[d] then
+				spinners[d] = d.CFrame
+			elseif d:GetAttribute("Bob") and not bobbers[d] then
+				bobbers[d] = d.CFrame
+			end
+		end
+	end
+end
+
+local function updateBaseBeam()
+	beamScope:destroy()
+	beamScope = Cleanup.new()
+	local index = player:GetAttribute("PlotIndex")
+	if type(index) ~= "number" or index < 1 then
+		return
+	end
+	local scope = beamScope
+	task.spawn(function()
+		-- the plot may not be streamed in yet; wait for it without blocking
+		while scope == beamScope do
+			local world = workspace:FindFirstChild("AnomalyHeistWorld")
+			local hub = world and world:FindFirstChild("Hub")
+			local plot = hub and hub:FindFirstChild("Plot" .. index)
+			local marker = plot and plot:FindFirstChild("EntranceMarker")
+			if marker and marker:IsA("BasePart") then
+				local beam = Instance.new("Part")
+				beam.Name = "AH_OwnBaseBeam"
+				beam.Anchored = true
+				beam.CanCollide = false
+				beam.CanQuery = false
+				beam.CanTouch = false
+				beam.CastShadow = false
+				beam.Material = Enum.Material.Neon
+				beam.Color = Color3.fromRGB(64, 200, 228)
+				beam.Transparency = 0.55
+				beam.Size = Vector3.new(1.5, 70, 1.5)
+				beam.CFrame = CFrame.new(marker.Position + Vector3.new(0, 35, 0))
+				beam.Parent = workspace
+				scope:add(beam)
+				scope:add(marker.AncestryChanged:Connect(function(_, parent)
+					if parent == nil then
+						updateBaseBeam() -- streamed out: rebuild when it returns
+					end
+				end))
+				return
+			end
+			task.wait(1)
+		end
+	end)
+end
+
+function EffectsController.init() end
+
+function EffectsController.start()
+	for _, m in CollectionService:GetTagged("AH_CreatureIdle") do
+		trackCreature(m)
+	end
+	CollectionService:GetInstanceAddedSignal("AH_CreatureIdle"):Connect(trackCreature)
+	CollectionService:GetInstanceRemovedSignal("AH_CreatureIdle"):Connect(function(instance)
+		creatures[instance :: Model] = nil
+	end)
+	local world = workspace:WaitForChild("AnomalyHeistWorld", 30)
+	if world then
+		scanDecor(world)
+		world.DescendantAdded:Connect(function(d: Instance)
+			if d:IsA("BasePart") then
+				local parent: Instance = d.Parent or d
+				scanDecor(parent)
+			end
+		end)
+		world.DescendantRemoving:Connect(function(d)
+			if d:IsA("BasePart") then
+				spinners[d] = nil
+				bobbers[d] = nil
+			end
+		end)
+	end
+
+	player:GetAttributeChangedSignal("PlotIndex"):Connect(updateBaseBeam)
+	updateBaseBeam()
+
+	RunService.RenderStepped:Connect(function()
+		local t = os.clock()
+		for model, base in creatures do
+			if model.Parent and near(base.Position) then
+				model:PivotTo(base * CFrame.new(0, math.abs(math.sin(t * 2.2)) * 0.3, 0) * CFrame.Angles(0, math.sin(t * 0.6) * 0.25, 0))
+			end
+		end
+		for part, base in spinners do
+			if near(base.Position) then
+				local speed = part:GetAttribute("SpinSpeed")
+				part.CFrame = base * CFrame.Angles(0, t * (if type(speed) == "number" then speed else 0.5), 0)
+			end
+		end
+		for part, base in bobbers do
+			if near(base.Position) then
+				part.CFrame = base * CFrame.new(0, math.sin(t * 1.5 + base.Position.X) * 0.4, 0) * CFrame.Angles(0, t * 0.8, 0)
+			end
+		end
+	end)
+end
+
+return EffectsController
+]]></string>
+            </Properties>
+          </Item>
+          <Item class="ModuleScript" referent="42">
+            <Properties>
+              <string name="Name">HUDController</string>
+              <string name="Source"><![CDATA[--!strict
+-- Gameplay HUD for M1 (spec 13.1): area + safety badge, current objective,
+-- device-aware movement hint, portal transition overlay, notices and the
+-- honest "some text is in English" note. Everything is localized, wraps for
+-- long translations, mirrors for right-to-left locales and keeps 48 px touch
+-- targets. No shop, collection or trade buttons exist until they work.
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local Shared = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
+local Contracts = require(Shared.Net.Contracts)
+local ErrorCodes = require(Shared.Net.ErrorCodes)
+local GameConfig = require(Shared.Config.GameConfig)
+local ZoneDefinitions = require(Shared.Config.ZoneDefinitions)
+local Theme = require(script.Parent.Parent.UI.Theme)
+local Loc = require(script.Parent.LocalizationController)
+local InputController = require(script.Parent.InputController)
+
+local HUDController = {}
+
+local player = Players.LocalPlayer
+local gui: ScreenGui
+local textScale = 1
+local hasTraveled = false
+local hintDismissed = false
+local transitionToken = 0
+
+-- label -> function that produces its current text (re-run on language change)
+type TextObject = TextLabel | TextButton
+local bindings: { [Instance]: { label: TextObject, producer: () -> string } } = {}
+local sized: { { label: TextObject, base: number } } = {}
+
+local areaBadge: Frame
+local areaIcon: TextLabel
+local areaName: TextLabel
+local areaStatus: TextLabel
+local objective: Frame
+local hintCard: Frame
+local fallbackNote: TextLabel
+local toast: TextLabel
+local overlay: Frame
+local overlayText: TextLabel
+
+local function bind(label: TextObject, producer: () -> string)
+	bindings[label] = { label = label, producer = producer }
+	local obj: any = label
+	obj.Text = producer()
+end
+
+local function sizedText(label: TextObject, base: number)
+	table.insert(sized, { label = label, base = base })
+	local obj: any = label
+	obj.TextSize = math.floor(base * textScale)
+end
+
+local function refreshText()
+	for _, binding in bindings do
+		local obj: any = binding.label
+		obj.Text = binding.producer()
+	end
+end
+
+local function areaKey(areaId: string): string
+	if areaId == "hub" then
+		return "area.hub"
+	end
+	local zone = ZoneDefinitions[areaId]
+	return if zone then zone.nameKey else "area.hub"
+end
+
+local function currentArea(): string
+	local area = player:GetAttribute("AreaId")
+	return if type(area) == "string" then area else "hub"
+end
+
+---------------------------------------------------------------------------
+-- Layout
+---------------------------------------------------------------------------
+local function applyDirection()
+	local rtl = Loc.isRightToLeft()
+	local align = if rtl then Enum.TextXAlignment.Right else Enum.TextXAlignment.Left
+	areaBadge.AnchorPoint = if rtl then Vector2.new(1, 0) else Vector2.new(0, 0)
+	areaBadge.Position = if rtl then UDim2.new(1, -12, 0, 12) else UDim2.new(0, 12, 0, 12)
+	local layout = areaBadge:FindFirstChildOfClass("UIListLayout")
+	if layout then
+		layout.HorizontalAlignment = if rtl then Enum.HorizontalAlignment.Right else Enum.HorizontalAlignment.Left
+	end
+	areaIcon.LayoutOrder = if rtl then 2 else 1
+	local textColumn = areaName.Parent :: Frame
+	textColumn.LayoutOrder = if rtl then 1 else 2
+	areaName.TextXAlignment = align
+	areaStatus.TextXAlignment = align
+	fallbackNote.TextXAlignment = align
+	fallbackNote.AnchorPoint = if rtl then Vector2.new(1, 1) else Vector2.new(0, 1)
+	fallbackNote.Position = if rtl then UDim2.new(1, -12, 1, -12) else UDim2.new(0, 12, 1, -12)
+	for _, d in gui:GetDescendants() do
+		if d:IsA("TextLabel") and d.Parent == objective then
+			d.TextXAlignment = Enum.TextXAlignment.Center
+		end
+	end
+end
+
+local function rescale()
+	local camera = workspace.CurrentCamera
+	if not camera then
+		return
+	end
+	textScale = math.clamp(camera.ViewportSize.Y / 720, 0.8, 1.2)
+	for _, entry in sized do
+		local obj: any = entry.label
+		obj.TextSize = math.floor(entry.base * textScale)
+	end
+end
+
+local function build()
+	gui = Instance.new("ScreenGui")
+	gui.Name = "AnomalyHeistHUD"
+	gui.ResetOnSpawn = false
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	gui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
+	gui.Parent = player:WaitForChild("PlayerGui")
+
+	-- Area + safety badge -------------------------------------------------
+	areaBadge = Theme.panel({ Name = "AreaBadge", AutomaticSize = Enum.AutomaticSize.XY, Position = UDim2.new(0, 12, 0, 12), Parent = gui })
+	Theme.padding(8).Parent = areaBadge
+	local badgeLayout = Instance.new("UIListLayout")
+	badgeLayout.FillDirection = Enum.FillDirection.Horizontal
+	badgeLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	badgeLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	badgeLayout.Padding = UDim.new(0, 8)
+	badgeLayout.Parent = areaBadge
+	-- icon + text: color is never the only signal (spec 3.4)
+	areaIcon = Theme.label({ Name = "Icon", Size = UDim2.fromOffset(32, 32), Text = "", TextScaled = true, LayoutOrder = 1, Parent = areaBadge })
+	local column = Instance.new("Frame")
+	column.Name = "Text"
+	column.BackgroundTransparency = 1
+	column.AutomaticSize = Enum.AutomaticSize.XY
+	column.LayoutOrder = 2
+	column.Parent = areaBadge
+	local columnLayout = Instance.new("UIListLayout")
+	columnLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	columnLayout.Parent = column
+	areaName = Theme.label({ Name = "AreaName", AutomaticSize = Enum.AutomaticSize.XY, TextWrapped = false, LayoutOrder = 1, Parent = column })
+	sizedText(areaName, 18)
+	areaStatus = Theme.label({ Name = "AreaStatus", AutomaticSize = Enum.AutomaticSize.XY, TextWrapped = false, Font = Theme.bodyFont, LayoutOrder = 2, Parent = column })
+	sizedText(areaStatus, 14)
+	local maxWidth = Instance.new("UISizeConstraint")
+	maxWidth.MaxSize = Vector2.new(320, math.huge)
+	maxWidth.Parent = areaBadge
+
+	-- Objective -----------------------------------------------------------
+	objective = Theme.panel({
+		Name = "Objective", AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 12),
+		Size = UDim2.new(0.5, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, Parent = gui,
+	})
+	Theme.padding(10).Parent = objective
+	local objectiveWidth = Instance.new("UISizeConstraint")
+	objectiveWidth.MinSize = Vector2.new(220, 0)
+	objectiveWidth.MaxSize = Vector2.new(520, math.huge)
+	objectiveWidth.Parent = objective
+	local objectiveText = Theme.label({
+		Name = "ObjectiveText", Size = UDim2.fromScale(1, 0), AutomaticSize = Enum.AutomaticSize.Y,
+		TextXAlignment = Enum.TextXAlignment.Center, Parent = objective,
+	})
+	sizedText(objectiveText, 18)
+	bind(objectiveText, function()
+		local area = currentArea()
+		local key = if area ~= "hub" then "objective.explore_zone"
+			elseif hasTraveled then "objective.first_capture"
+			else "objective.go_to_portal"
+		return "◎  " .. Loc.t(key)
+	end)
+
+	-- Movement hint (dismissible) ------------------------------------------
+	hintCard = Theme.panel({
+		Name = "Hint", AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -24),
+		Size = UDim2.new(0.6, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, Parent = gui,
+	})
+	Theme.padding(10).Parent = hintCard
+	local hintWidth = Instance.new("UISizeConstraint")
+	hintWidth.MinSize = Vector2.new(240, 0)
+	hintWidth.MaxSize = Vector2.new(560, math.huge)
+	hintWidth.Parent = hintCard
+	local hintLayout = Instance.new("UIListLayout")
+	hintLayout.Padding = UDim.new(0, 8)
+	hintLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	hintLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	hintLayout.Parent = hintCard
+	local hintText = Theme.label({ Name = "HintText", Size = UDim2.fromScale(1, 0), AutomaticSize = Enum.AutomaticSize.Y, Font = Theme.bodyFont, LayoutOrder = 1, Parent = hintCard })
+	sizedText(hintText, 16)
+	bind(hintText, function()
+		local device = InputController.device()
+		if device == "touch" then
+			return Loc.t("hint.move_touch")
+		elseif device == "gamepad" then
+			return Loc.t("hint.move_gamepad")
+		end
+		return Loc.t("hint.move_keyboard", {
+			up = InputController.keyName(Enum.KeyCode.W),
+			left = InputController.keyName(Enum.KeyCode.A),
+			down = InputController.keyName(Enum.KeyCode.S),
+			right = InputController.keyName(Enum.KeyCode.D),
+			jump = InputController.keyName(Enum.KeyCode.Space),
+		}) .. "\n" .. Loc.t("base.direction")
+	end)
+	local dismiss = Instance.new("TextButton")
+	dismiss.Name = "Dismiss"
+	dismiss.AutoLocalize = false
+	dismiss.Size = UDim2.new(0, 0, 0, Theme.touchTarget)
+	dismiss.AutomaticSize = Enum.AutomaticSize.X
+	dismiss.BackgroundColor3 = Theme.safe
+	dismiss.TextColor3 = Color3.fromRGB(10, 30, 40)
+	dismiss.Font = Theme.font
+	dismiss.LayoutOrder = 2
+	dismiss.Parent = hintCard
+	local dismissCorner = Instance.new("UICorner")
+	dismissCorner.CornerRadius = Theme.corner
+	dismissCorner.Parent = dismiss
+	local dismissPad = Theme.padding(12)
+	dismissPad.Parent = dismiss
+	sizedText(dismiss, 16)
+	bind(dismiss, function()
+		return Loc.t("hint.dismiss")
+	end)
+	dismiss.Activated:Connect(function()
+		hintDismissed = true
+		hintCard.Visible = false
+	end)
+
+	-- Fallback note, toast, travel overlay ---------------------------------
+	fallbackNote = Theme.label({
+		Name = "FallbackNote", AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 12, 1, -12),
+		AutomaticSize = Enum.AutomaticSize.XY, TextWrapped = false, Font = Theme.bodyFont, TextColor3 = Theme.muted,
+		Visible = false, Parent = gui,
+	})
+	sizedText(fallbackNote, 12)
+	bind(fallbackNote, function()
+		return "ⓘ " .. Loc.t("error.translation_fallback")
+	end)
+
+	toast = Theme.label({
+		Name = "Toast", AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 90),
+		Size = UDim2.new(0.5, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 0.2,
+		BackgroundColor3 = Color3.fromRGB(60, 30, 20), Visible = false, Parent = gui,
+	})
+	local toastCorner = Instance.new("UICorner")
+	toastCorner.CornerRadius = Theme.corner
+	toastCorner.Parent = toast
+	Theme.padding(8).Parent = toast
+	sizedText(toast, 16)
+
+	overlay = Instance.new("Frame")
+	overlay.Name = "TravelOverlay"
+	overlay.Size = UDim2.fromScale(1, 1)
+	overlay.BackgroundColor3 = Color3.fromRGB(12, 10, 20)
+	overlay.BackgroundTransparency = 1
+	overlay.Visible = false
+	overlay.ZIndex = 10
+	overlay.Parent = gui
+	overlayText = Theme.label({ Name = "Text", AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.new(0.8, 0, 0, 40), ZIndex = 11, Parent = overlay })
+	sizedText(overlayText, 24)
+	bind(overlayText, function()
+		return Loc.t("status.traveling")
+	end)
+end
+
+---------------------------------------------------------------------------
+-- State updates
+---------------------------------------------------------------------------
+local function updateArea()
+	local area = currentArea()
+	local safe = area == "hub"
+	areaIcon.Text = if safe then "🛡" else "🧭"
+	areaBadge.BackgroundColor3 = if safe then Color3.fromRGB(18, 48, 58) else Color3.fromRGB(40, 26, 60)
+	bind(areaName, function()
+		return Loc.t(areaKey(currentArea()))
+	end)
+	bind(areaStatus, function()
+		return Loc.t(if currentArea() == "hub" then "status.safe_area" else "status.expedition_area")
+	end)
+	refreshText()
+end
+
+function HUDController.showNotice(code: string)
+	local key = ErrorCodes.keyFor(code)
+	if not key then
+		return
+	end
+	bind(toast, function()
+		return "⚠ " .. Loc.t(key)
+	end)
+	toast.Visible = true
+	local token = {}
+	toast:SetAttribute("Token", tostring(token))
+	task.delay(4, function()
+		if toast:GetAttribute("Token") == tostring(token) then
+			toast.Visible = false
+		end
+	end)
+end
+
+local function setOverlay(visible: boolean)
+	local reduced = false -- reduced-motion setting arrives with the settings screen (M5)
+	if visible then
+		overlay.Visible = true
+		if reduced then
+			overlay.BackgroundTransparency = 0
+		else
+			TweenService:Create(overlay, TweenInfo.new(0.25), { BackgroundTransparency = 0 }):Play()
+		end
+	else
+		if reduced then
+			overlay.Visible = false
+			overlay.BackgroundTransparency = 1
+		else
+			local tween = TweenService:Create(overlay, TweenInfo.new(0.35), { BackgroundTransparency = 1 })
+			tween.Completed:Connect(function()
+				if overlay.BackgroundTransparency >= 0.99 then
+					overlay.Visible = false
+				end
+			end)
+			tween:Play()
+		end
+	end
+end
+
+local function onTransition(phase: string, areaId: string, errorCode: string?)
+	if phase == "start" then
+		transitionToken += 1
+		local token = transitionToken
+		setOverlay(true)
+		-- client-side safety timeout: never leave the screen covered
+		task.delay(GameConfig.portal.clientTimeoutSeconds, function()
+			if transitionToken == token and overlay.Visible then
+				setOverlay(false)
+				HUDController.showNotice("TravelFailed")
+			end
+		end)
+	elseif phase == "arrived" then
+		transitionToken += 1
+		if areaId ~= "hub" then
+			hasTraveled = true
+		end
+		setOverlay(false)
+		updateArea()
+	elseif phase == "failed" then
+		transitionToken += 1
+		setOverlay(false)
+		if errorCode then
+			HUDController.showNotice(errorCode)
+		end
+	end
+end
+
+function HUDController.init(remotes: { [string]: RemoteEvent })
+	build()
+	rescale()
+	updateArea()
+	applyDirection()
+	remotes[Contracts.Events.AreaTransition].OnClientEvent:Connect(onTransition)
+	remotes[Contracts.Events.Notice].OnClientEvent:Connect(function(code)
+		if type(code) == "string" then
+			HUDController.showNotice(code)
+		end
+	end)
+end
+
+function HUDController.start()
+	player:GetAttributeChangedSignal("AreaId"):Connect(updateArea)
+	Loc.changed:connect(function()
+		refreshText()
+		applyDirection()
+	end)
+	Loc.fallbackNoticed:connect(function()
+		fallbackNote.Visible = true
+	end)
+	fallbackNote.Visible = Loc.usedFallback()
+	InputController.deviceChanged:connect(function()
+		refreshText()
+	end)
+	local camera = workspace.CurrentCamera
+	if camera then
+		camera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
+	end
+	hintCard.Visible = not hintDismissed
+end
+
+return HUDController
+]]></string>
+            </Properties>
+          </Item>
+          <Item class="ModuleScript" referent="43">
+            <Properties>
+              <string name="Name">InputController</string>
+              <string name="Source"><![CDATA[--!strict
+-- Tracks the player's current input device so hints match what they hold
+-- (spec 13.2). Movement, camera and jump stay native Roblox controls.
+-- Gameplay actions (Dash, Pulse, Drop, Collection) are added with M2/M4.
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local Shared = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
+local Signal = require(Shared.Util.Signal)
+local GameConfig = require(Shared.Config.GameConfig)
+
+export type Device = "keyboard" | "touch" | "gamepad"
+
+local InputController = {}
+
+InputController.deviceChanged = Signal.new()
+
+local device: Device = "keyboard"
+
+local function classify(inputType: Enum.UserInputType): Device?
+	if inputType == Enum.UserInputType.Touch then
+		return "touch"
+	elseif string.find(inputType.Name, "Gamepad") then
+		return "gamepad"
+	elseif inputType == Enum.UserInputType.Keyboard
+		or inputType == Enum.UserInputType.MouseButton1
+		or inputType == Enum.UserInputType.MouseButton2
+		or inputType == Enum.UserInputType.MouseMovement
+		or inputType == Enum.UserInputType.MouseWheel then
+		return "keyboard"
+	end
+	return nil
+end
+
+function InputController.device(): Device
+	return device
+end
+
+-- Layout-aware key label (e.g. Z instead of W on AZERTY keyboards).
+function InputController.keyName(keyCode: Enum.KeyCode): string
+	local ok, text = pcall(function()
+		return UserInputService:GetStringForKeyCode(keyCode)
+	end)
+	if ok and type(text) == "string" and string.match(text, "%S") then
+		return string.upper(text)
+	end
+	return keyCode.Name
+end
+
+function InputController.init()
+	local initial: Device? = classify(UserInputService:GetLastInputType())
+	if initial then
+		device = initial
+	elseif UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+		device = "touch"
+	end
+	local player = Players.LocalPlayer
+	player.CameraMinZoomDistance = GameConfig.camera.minZoom
+	player.CameraMaxZoomDistance = GameConfig.camera.maxZoom
+end
+
+function InputController.start()
+	UserInputService.LastInputTypeChanged:Connect(function(inputType)
+		local newDevice: Device? = classify(inputType)
+		if newDevice and newDevice ~= device then
+			device = newDevice
+			InputController.deviceChanged:fire(device)
+		end
+	end)
+end
+
+return InputController
+]]></string>
+            </Properties>
+          </Item>
+          <Item class="ModuleScript" referent="44">
+            <Properties>
+              <string name="Name">LocalizationController</string>
+              <string name="Source"><![CDATA[--!strict
+-- Resolves player-facing text (spec 3.3). Order:
+--   bundled translation for the player's locale -> configured fallback locales
+--   -> Roblox Translator (cloud/automatic translations, if any) -> en-us source.
+-- Also localizes world signs and proximity prompts that carry text keys, and
+-- refreshes everything when the player changes language.
+--
+-- Studio-only stress test: set the Workspace attribute "AH_PseudoLocale" to
+-- "long" (+50% length) or "rtl" (Arabic draft + mirrored HUD) before Play,
+-- or FeatureFlags.studioPseudoLocale. Ignored in live servers.
+
+local Players = game:GetService("Players")
+local LocalizationService = game:GetService("LocalizationService")
+local CollectionService = game:GetService("CollectionService")
+local RunService = game:GetService("RunService")
+
+local Shared = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
+local LocaleResolver = require(Shared.Util.LocaleResolver)
+local Strings = require(Shared.Generated.Strings)
+local FeatureFlags = require(Shared.Config.FeatureFlags)
+local Signal = require(Shared.Util.Signal)
+local Cleanup = require(Shared.Util.Cleanup)
+
+local LocalizationController = {}
+
+local player = Players.LocalPlayer
+local translator: Translator? = nil
+local currentLocale = "en-us"
+local pseudo = "off"
+local fallbackUsed = false
+local warnedMissing: { [string]: boolean } = {}
+
+LocalizationController.changed = Signal.new()
+LocalizationController.fallbackNoticed = Signal.new()
+
+local function pseudoMode(): string
+	if not RunService:IsStudio() then
+		return "off"
+	end
+	local attr = workspace:GetAttribute("AH_PseudoLocale")
+	if attr == "long" or attr == "rtl" then
+		return attr
+	end
+	return FeatureFlags.studioPseudoLocale
+end
+
+local function detectLocale(): string
+	if translator then
+		return LocaleResolver.normalize(translator.LocaleId)
+	end
+	local ok, id = pcall(function()
+		return player.LocaleId
+	end)
+	return LocaleResolver.normalize(if ok then id else nil)
+end
+
+function LocalizationController.locale(): string
+	return if pseudo == "rtl" then "ar-001" else currentLocale
+end
+
+function LocalizationController.isRightToLeft(): boolean
+	return LocaleResolver.isRightToLeft(LocalizationController.locale())
+end
+
+-- Main lookup. Never returns a raw key; an unknown key yields "".
+function LocalizationController.t(key: string, params: { [string]: any }?): string
+	local locale = LocalizationController.locale()
+	local result = LocaleResolver.resolve(locale, key, params)
+	if result.missing then
+		if not warnedMissing[key] then
+			warnedMissing[key] = true
+			warn("[Localization] unknown string key:", key)
+		end
+		return ""
+	end
+	local text = result.text
+	if result.fellBack and translator and pseudo == "off" then
+		-- the platform may hold cloud or automatic translations we don't bundle
+		local ok, platformText = pcall(function()
+			return (translator :: Translator):FormatByKey(key, params or {})
+		end)
+		local englishText = LocaleResolver.format(Strings.source[key] or "", params)
+		if ok and type(platformText) == "string" and platformText ~= "" and platformText ~= englishText then
+			text = platformText
+		elseif not fallbackUsed then
+			fallbackUsed = true
+			LocalizationController.fallbackNoticed:fire()
+		end
+	end
+	if pseudo == "long" then
+		text = LocaleResolver.pseudoLong(text)
+	end
+	return text
+end
+
+function LocalizationController.usedFallback(): boolean
+	return fallbackUsed
+end
+
+-- Resolves "@key" parameter references into localized text.
+local function resolveParams(instance: Instance, prefix: string): { [string]: any }
+	local params: { [string]: any } = {}
+	for name, value in instance:GetAttributes() do
+		local paramName = string.match(name, "^" .. prefix .. "(.+)$")
+		if paramName then
+			local text = if type(value) == "string" then value else nil
+			if text and string.sub(text, 1, 1) == "@" then
+				params[paramName] = LocalizationController.t(string.sub(text, 2))
+			else
+				params[paramName] = value
+			end
+		end
+	end
+	return params
+end
+
+---------------------------------------------------------------------------
+-- World text (signs) and proximity prompts
+---------------------------------------------------------------------------
+local worldScopes: { [Instance]: Cleanup.Cleanup } = {}
+
+local function applyWorldText(label: Instance)
+	if not label:IsA("TextLabel") then
+		return
+	end
+	local key = label:GetAttribute("TextKey")
+	local selfKey = label:GetAttribute("SelfKey")
+	if type(selfKey) == "string" and label:GetAttribute("OwnerUserId") == player.UserId then
+		key = selfKey
+	end
+	if type(key) == "string" then
+		label.Text = LocalizationController.t(key, resolveParams(label, "Param_"))
+	end
+end
+
+local function applyPrompt(prompt: Instance)
+	if not prompt:IsA("ProximityPrompt") then
+		return
+	end
+	local actionKey = prompt:GetAttribute("ActionKey")
+	local objectKey = prompt:GetAttribute("ObjectKey")
+	if type(actionKey) == "string" then
+		prompt.ActionText = LocalizationController.t(actionKey, resolveParams(prompt, "ActionParam_"))
+	end
+	if type(objectKey) == "string" then
+		prompt.ObjectText = LocalizationController.t(objectKey, resolveParams(prompt, "ObjectParam_"))
+	end
+end
+
+local function track(instance: Instance, apply: (Instance) -> ())
+	if worldScopes[instance] then
+		return
+	end
+	local scope = Cleanup.new()
+	worldScopes[instance] = scope
+	scope:add(instance.AttributeChanged:Connect(function()
+		apply(instance)
+	end))
+	apply(instance)
+end
+
+local function untrack(instance: Instance)
+	local scope = worldScopes[instance]
+	if scope then
+		scope:destroy()
+		worldScopes[instance] = nil
+	end
+end
+
+local function watchTag(tag: string, apply: (Instance) -> ())
+	-- instances stream in and out; handle both directions
+	for _, instance in CollectionService:GetTagged(tag) do
+		track(instance, apply)
+	end
+	CollectionService:GetInstanceAddedSignal(tag):Connect(function(instance)
+		track(instance, apply)
+	end)
+	CollectionService:GetInstanceRemovedSignal(tag):Connect(untrack)
+end
+
+local function refreshAll()
+	for _, label in CollectionService:GetTagged("AH_LocalizedText") do
+		applyWorldText(label)
+	end
+	for _, prompt in CollectionService:GetTagged("AH_LocalizedPrompt") do
+		applyPrompt(prompt)
+	end
+	LocalizationController.changed:fire()
+end
+
+function LocalizationController.init()
+	pseudo = pseudoMode()
+	local ok, result = pcall(function()
+		return LocalizationService:GetTranslatorForPlayerAsync(player)
+	end)
+	if ok then
+		translator = result
+	else
+		warn("[Localization] translator unavailable, using bundled strings:", result)
+	end
+	currentLocale = detectLocale()
+	if pseudo ~= "off" then
+		print("[Localization] Studio pseudo-locale active:", pseudo)
+	end
+end
+
+function LocalizationController.start()
+	watchTag("AH_LocalizedText", applyWorldText)
+	watchTag("AH_LocalizedPrompt", applyPrompt)
+
+	local function onLocaleChanged()
+		local newLocale = detectLocale()
+		if newLocale ~= currentLocale then
+			currentLocale = newLocale
+			fallbackUsed = false
+			refreshAll()
+		end
+	end
+	if translator then
+		translator:GetPropertyChangedSignal("LocaleId"):Connect(onLocaleChanged)
+	end
+	player:GetPropertyChangedSignal("LocaleId"):Connect(onLocaleChanged)
+	if RunService:IsStudio() then
+		workspace:GetAttributeChangedSignal("AH_PseudoLocale"):Connect(function()
+			pseudo = pseudoMode()
+			refreshAll()
+		end)
+	end
+end
+
+return LocalizationController
+]]></string>
+            </Properties>
+          </Item>
+        </Item>
+        <Item class="Folder" referent="45">
+          <Properties>
+            <string name="Name">UI</string>
+          </Properties>
+          <Item class="ModuleScript" referent="46">
+            <Properties>
+              <string name="Name">Theme</string>
+              <string name="Source"><![CDATA[--!strict
+-- Shared UI look: readable, high-contrast, touch-sized (48 px targets).
+
+local Theme = {
+	font = Enum.Font.GothamBold,
+	bodyFont = Enum.Font.Gotham,
+	panelColor = Color3.fromRGB(24, 28, 36),
+	panelTransparency = 0.15,
+	text = Color3.fromRGB(242, 244, 246),
+	muted = Color3.fromRGB(178, 186, 198),
+	safe = Color3.fromRGB(64, 200, 228),
+	anomaly = Color3.fromRGB(170, 120, 240),
+	hazard = Color3.fromRGB(240, 142, 52),
+	touchTarget = 48,
+	corner = UDim.new(0, 10),
+}
+
+function Theme.panel(props: { [string]: any }): Frame
+	local frame = Instance.new("Frame")
+	frame.BackgroundColor3 = Theme.panelColor
+	frame.BackgroundTransparency = Theme.panelTransparency
+	frame.BorderSizePixel = 0
+	for k, v in props do
+		(frame :: any)[k] = v
+	end
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = Theme.corner
+	corner.Parent = frame
+	return frame
+end
+
+function Theme.label(props: { [string]: any }): TextLabel
+	local label = Instance.new("TextLabel")
+	label.BackgroundTransparency = 1
+	label.Font = Theme.font
+	label.TextColor3 = Theme.text
+	label.TextWrapped = true
+	label.AutoLocalize = false -- text comes from the LocalizationController
+	for k, v in props do
+		(label :: any)[k] = v
+	end
+	return label
+end
+
+function Theme.padding(px: number): UIPadding
+	local p = Instance.new("UIPadding")
+	p.PaddingTop = UDim.new(0, px)
+	p.PaddingBottom = UDim.new(0, px)
+	p.PaddingLeft = UDim.new(0, px)
+	p.PaddingRight = UDim.new(0, px)
+	return p
+end
+
+return Theme
+]]></string>
+            </Properties>
+          </Item>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="Workspace" referent="47">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <bool name="NeedsPivotMigration">false</bool>
+      <bool name="StreamingEnabled">true</bool>
+      <int name="StreamingMinRadius">128</int>
+      <int name="StreamingTargetRadius">384</int>
+    </Properties>
+  </Item>
+</roblox>

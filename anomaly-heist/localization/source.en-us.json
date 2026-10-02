@@ -1,0 +1,257 @@
+{
+  "_meta": {
+    "sourceLocale": "en-us",
+    "format": "key -> { text, context, critical }. Parameters use {name} placeholders. Never concatenate fragments.",
+    "version": 1
+  },
+  "objective.first_capture": {
+    "text": "Bring your first anomaly home.",
+    "context": "First objective shown in the HUD.",
+    "critical": true
+  },
+  "objective.go_to_portal": {
+    "text": "Walk to the glowing portal to start your first expedition.",
+    "context": "Onboarding hint in the hub before the first expedition.",
+    "critical": true
+  },
+  "objective.explore_zone": {
+    "text": "Look around. Anomalies live in this zone.",
+    "context": "Shown on arrival in an expedition zone during the first build (capture arrives in a later update).",
+    "critical": false
+  },
+  "action.capture": {
+    "text": "Capture",
+    "context": "Interaction label for capturing a creature.",
+    "critical": true
+  },
+  "action.extract": {
+    "text": "Extract",
+    "context": "Extraction interaction.",
+    "critical": true
+  },
+  "action.drop": {
+    "text": "Drop cargo",
+    "context": "Intentional cargo release.",
+    "critical": true
+  },
+  "action.enter_portal": {
+    "text": "Enter",
+    "context": "Proximity prompt action on a portal. Short verb.",
+    "critical": true
+  },
+  "action.return_to_hub": {
+    "text": "Return",
+    "context": "Proximity prompt action on the return portal. Short verb.",
+    "critical": true
+  },
+  "portal.to_area": {
+    "text": "Portal: {area}",
+    "context": "Proximity prompt object text. {area} is a localized area name.",
+    "critical": false
+  },
+  "portal.to_hub": {
+    "text": "Portal: Research Hub",
+    "context": "Return portal object text.",
+    "critical": false
+  },
+  "portal.not_available": {
+    "text": "Not available yet",
+    "context": "Sign on a dormant portal for a zone that is not built yet.",
+    "critical": false
+  },
+  "area.hub": {
+    "text": "Research Hub",
+    "context": "Name of the safe social hub.",
+    "critical": false
+  },
+  "area.glitch_grove": {
+    "text": "Glitch Grove",
+    "context": "Name of the beginner expedition zone. Green forest with violet glitches.",
+    "critical": false
+  },
+  "area.scrap_district": {
+    "text": "Scrap District",
+    "context": "Name of the second zone: containers and repair bays.",
+    "critical": false
+  },
+  "area.void_station": {
+    "text": "Void Station",
+    "context": "Name of the third zone: dark laboratory.",
+    "critical": false
+  },
+  "status.safe_area": {
+    "text": "Safe area",
+    "context": "HUD badge: no PvP or cargo theft here.",
+    "critical": true
+  },
+  "status.expedition_area": {
+    "text": "Expedition area",
+    "context": "HUD badge while inside an expedition zone.",
+    "critical": false
+  },
+  "status.loading": {
+    "text": "Loading...",
+    "context": "Shown while the game starts.",
+    "critical": false
+  },
+  "status.traveling": {
+    "text": "Traveling...",
+    "context": "Shown during a portal transition.",
+    "critical": false
+  },
+  "status.saving": {
+    "text": "Saving your anomaly...",
+    "context": "Persistence not yet confirmed.",
+    "critical": true
+  },
+  "status.secured": {
+    "text": "Anomaly secured!",
+    "context": "Display only after confirmed ownership.",
+    "critical": true
+  },
+  "warning.risk_zone": {
+    "text": "Unsecured cargo can be stolen here.",
+    "context": "Before entering a PvP area.",
+    "critical": true
+  },
+  "info.safe_collection": {
+    "text": "Your secured collection is safe.",
+    "context": "Ownership explanation.",
+    "critical": true
+  },
+  "error.inventory_full": {
+    "text": "Your collection is full. Make room before capturing.",
+    "context": "No automatic item destruction.",
+    "critical": true
+  },
+  "error.translation_fallback": {
+    "text": "Some text is shown in English.",
+    "context": "Honest note when a translation is missing for the player's language.",
+    "critical": false
+  },
+  "error.server_starting": {
+    "text": "The server is still starting. Please wait.",
+    "context": "Client waiting for the server ready signal.",
+    "critical": true
+  },
+  "error.server_failed": {
+    "text": "Something went wrong while starting. Please rejoin.",
+    "context": "Server initialization failed; gameplay is blocked.",
+    "critical": true
+  },
+  "error.portal_cooldown": {
+    "text": "Please wait a moment before using the portal again.",
+    "context": "Portal rate limit.",
+    "critical": false
+  },
+  "error.portal_too_far": {
+    "text": "Move closer to the portal.",
+    "context": "Portal request from too far away.",
+    "critical": false
+  },
+  "error.portal_locked": {
+    "text": "This zone is not available yet.",
+    "context": "Portal for a locked or unbuilt zone.",
+    "critical": false
+  },
+  "error.travel_failed": {
+    "text": "Travel failed. You are back in a safe place.",
+    "context": "Portal fallback after a timeout.",
+    "critical": true
+  },
+  "evolution.requirement": {
+    "text": "Extract this species {count} times.",
+    "context": "Parameterized evolution requirement.",
+    "critical": false
+  },
+  "settings.reduced_motion": {
+    "text": "Reduced motion",
+    "context": "Accessibility toggle.",
+    "critical": false
+  },
+  "base.yours": {
+    "text": "Your base",
+    "context": "Sign above the local player's own base plot.",
+    "critical": false
+  },
+  "base.owned_by": {
+    "text": "{name}'s base",
+    "context": "Sign above another player's base. {name} is a Roblox display name.",
+    "critical": false
+  },
+  "base.vacant": {
+    "text": "Free base slot",
+    "context": "Sign above an unassigned base plot.",
+    "critical": false
+  },
+  "base.direction": {
+    "text": "Your base is marked with a cyan beam.",
+    "context": "Onboarding hint pointing out the base marker.",
+    "critical": false
+  },
+  "sign.extraction": {
+    "text": "Extraction point",
+    "context": "World sign at an extraction zone.",
+    "critical": false
+  },
+  "sign.arrival": {
+    "text": "Arrival point",
+    "context": "World sign at the safe arrival pad of a zone.",
+    "critical": false
+  },
+  "sign.welcome": {
+    "text": "Welcome, researcher",
+    "context": "Large sign in the hub center.",
+    "critical": false
+  },
+  "hint.move_keyboard": {
+    "text": "Move with {up} {left} {down} {right}. Jump with {jump}.",
+    "context": "Key names are filled in for the player's keyboard layout.",
+    "critical": false
+  },
+  "hint.move_touch": {
+    "text": "Use the thumbstick to move and the jump button to jump.",
+    "context": "Movement hint on touch devices.",
+    "critical": false
+  },
+  "hint.move_gamepad": {
+    "text": "Use the left stick to move and the jump button to jump.",
+    "context": "Movement hint on gamepads. No button names: they differ between controller brands.",
+    "critical": false
+  },
+  "hint.dismiss": {
+    "text": "Got it",
+    "context": "Button that hides an onboarding hint.",
+    "critical": false
+  },
+  "species.glitch_pigeon.name": {
+    "text": "Glitch Pigeon",
+    "context": "Creature name. Gray pigeon with one segmented violet wing.",
+    "critical": false
+  },
+  "species.glitch_pigeon.description": {
+    "text": "A pigeon that sometimes slips sideways through space.",
+    "context": "Creature description.",
+    "critical": false
+  },
+  "species.fridge_dog.name": {
+    "text": "Fridge Dog",
+    "context": "Creature name. A small dog whose body is a refrigerator.",
+    "critical": false
+  },
+  "species.fridge_dog.description": {
+    "text": "Its cold breath makes the ground slippery.",
+    "context": "Creature description.",
+    "critical": false
+  },
+  "species.siren_toad.name": {
+    "text": "Siren Toad",
+    "context": "Creature name. Green toad with a speaker-like throat.",
+    "critical": false
+  },
+  "species.siren_toad.description": {
+    "text": "Its loud call alerts nearby guardians.",
+    "context": "Creature description.",
+    "critical": false
+  }
+}
