@@ -70,9 +70,206 @@ local function visual(model: Model, root: BasePart, props)
 end
 
 ---------------------------------------------------------------------------
--- Building robot models (simple shapes, original designs)
+-- Building robot models. A custom model in GameAssets/Robots/<Type> replaces
+-- the built-in look. Only visible parts can be hit (the root is invisible
+-- and not hittable), so hitboxes match what you see.
 ---------------------------------------------------------------------------
-local function buildGround(def, position: Vector3)
+local function glow(part: BasePart, color: Color3, range: number)
+	local light = Instance.new("PointLight")
+	light.Color = color
+	light.Range = range
+	light.Brightness = 2
+	light.Parent = part
+end
+
+local function ellipsoid(model, root, name, size: Vector3, cf: CFrame, color: Color3, material)
+	-- a block with a sphere mesh: looks round, hit box matches the shape's bounds
+	local p = visual(model, root, {
+		Name = name, Size = size, CFrame = cf, Color = color, Material = material or Enum.Material.Metal,
+	})
+	local mesh = Instance.new("SpecialMesh")
+	mesh.MeshType = Enum.MeshType.Sphere
+	mesh.Parent = p
+	return p
+end
+
+local function cylinder(model, root, name, length: number, radius: number, from: Vector3, to: Vector3, color: Color3, material)
+	local mid = (from + to) / 2
+	return visual(model, root, {
+		Name = name, Shape = Enum.PartType.Cylinder, Size = Vector3.new(length, radius * 2, radius * 2),
+		CFrame = CFrame.lookAt(mid, to) * CFrame.Angles(0, math.rad(90), 0), Color = color, Material = material or Enum.Material.Metal,
+	})
+end
+
+-- Two-segment leg from a hip point out to a foot on the ground.
+local function leg(model, root, hip: Vector3, foot: Vector3, thickness: number, color: Color3)
+	local knee = (hip + foot) / 2 + Vector3.new(0, (hip - foot).Magnitude * 0.45, 0) + (foot - hip) * Vector3.new(0.25, 0, 0.25)
+	cylinder(model, root, "Leg", (knee - hip).Magnitude, thickness, hip, knee, color)
+	cylinder(model, root, "Leg", (foot - knee).Magnitude, thickness * 0.8, knee, foot, color:Lerp(Color3.new(0, 0, 0), 0.25))
+	visual(model, root, {
+		Name = "Joint", Shape = Enum.PartType.Ball, Size = Vector3.one * thickness * 2.6, CFrame = CFrame.new(knee),
+		Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal,
+	})
+end
+
+local ARMOR = Color3.fromRGB(200, 195, 185)
+
+local function decorate(typeName: string, def, model: Model, root: BasePart)
+	local cf = root.CFrame
+	local size = def.size
+	local dark = def.color:Lerp(Color3.new(0, 0, 0), 0.35)
+	if typeName == "Crawler" then
+		ellipsoid(model, root, "Shell", Vector3.new(size.X, size.Y, size.Z * 1.2), cf, def.color)
+		ellipsoid(model, root, "ShellPlate", Vector3.new(size.X * 0.8, size.Y * 0.5, size.Z * 0.9), cf * CFrame.new(0, size.Y * 0.35, 0.1), ARMOR, Enum.Material.SmoothPlastic)
+		for i = -1, 1 do
+			local eye = visual(model, root, {
+				Name = if i == 0 then "Eye" else "EyeSmall", Shape = Enum.PartType.Ball, Size = Vector3.one * (if i == 0 then 0.7 else 0.4),
+				CFrame = cf * CFrame.new(i * 0.55, 0.1, -size.Z * 0.62), Color = def.eye, Material = Enum.Material.Neon,
+			})
+			if i == 0 then
+				glow(eye, def.eye, 10)
+			end
+		end
+		for side = -1, 1, 2 do
+			for j = -1, 1 do
+				local hip = (cf * CFrame.new(side * size.X * 0.4, 0, j * size.Z * 0.35)).Position
+				local foot = (cf * CFrame.new(side * size.X * 1.1, -(def.hipHeight + size.Y / 2), j * size.Z * 0.55)).Position
+				leg(model, root, hip, foot, 0.18, dark)
+			end
+		end
+	elseif typeName == "Buzzer" then
+		visual(model, root, {
+			Name = "Hull", Shape = Enum.PartType.Cylinder, Size = Vector3.new(size.Y, size.X, size.Z),
+			CFrame = cf * CFrame.Angles(0, 0, math.rad(90)), Color = def.color, Material = Enum.Material.Metal,
+		})
+		ellipsoid(model, root, "Dome", Vector3.new(size.X * 0.6, size.Y * 1.2, size.Z * 0.6), cf * CFrame.new(0, size.Y * 0.4, 0), ARMOR, Enum.Material.SmoothPlastic)
+		for i = 1, 4 do
+			local a = (i / 4) * math.pi * 2 + math.pi / 4
+			local tip = cf * CFrame.new(math.cos(a) * size.X * 0.95, 0.2, math.sin(a) * size.Z * 0.95)
+			cylinder(model, root, "Arm", size.X * 0.6, 0.18, (cf * CFrame.new(math.cos(a) * size.X * 0.35, 0.1, math.sin(a) * size.Z * 0.35)).Position, tip.Position, dark)
+			visual(model, root, {
+				Name = "Rotor", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.15, 2.6, 2.6),
+				CFrame = tip * CFrame.new(0, 0.3, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = Color3.fromRGB(30, 30, 35),
+				Material = Enum.Material.Glass, Transparency = 0.5,
+			})
+			local thruster = visual(model, root, {
+				Name = "Thruster", Shape = Enum.PartType.Ball, Size = Vector3.one * 0.5, CFrame = tip * CFrame.new(0, -0.3, 0),
+				Color = Color3.fromRGB(120, 200, 255), Material = Enum.Material.Neon,
+			})
+			if i == 1 then
+				glow(thruster, Color3.fromRGB(120, 200, 255), 8)
+			end
+		end
+		cylinder(model, root, "Gun", 1.6, 0.18, (cf * CFrame.new(0, -0.5, -0.4)).Position, (cf * CFrame.new(0, -0.6, -2)).Position, Color3.fromRGB(30, 30, 30))
+		local eye = visual(model, root, {
+			Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * 0.8, CFrame = cf * CFrame.new(0, -0.1, -size.Z * 0.5),
+			Color = def.eye, Material = Enum.Material.Neon,
+		})
+		glow(eye, def.eye, 14)
+	elseif typeName == "Watcher" then
+		ellipsoid(model, root, "Body", size, cf, ARMOR, Enum.Material.SmoothPlastic)
+		visual(model, root, {
+			Name = "Ring", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, size.X * 1.6, size.X * 1.6),
+			CFrame = cf * CFrame.Angles(0, 0, math.rad(90)), Color = Color3.fromRGB(50, 50, 55), Material = Enum.Material.Metal,
+		})
+		local eye = visual(model, root, {
+			Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * 1.3, CFrame = cf * CFrame.new(0, 0, -size.Z * 0.42),
+			Color = def.eye, Material = Enum.Material.Neon,
+		})
+		glow(eye, def.eye, 18)
+		visual(model, root, {
+			Name = "Siren", Shape = Enum.PartType.Ball, Size = Vector3.one * 0.9, CFrame = cf * CFrame.new(0, size.Y * 0.55, 0),
+			Color = Color3.fromRGB(255, 40, 40), Material = Enum.Material.Neon,
+		})
+		for _, x in { -1, 1 } do
+			cylinder(model, root, "Antenna", 1.6, 0.06, (cf * CFrame.new(x * 0.6, size.Y * 0.4, 0)).Position, (cf * CFrame.new(x * 0.9, size.Y * 0.4 + 1.5, 0.3)).Position, dark)
+		end
+	elseif typeName == "Sentinel" or typeName == "Colossus" then
+		local boss = typeName == "Colossus"
+		visual(model, root, {
+			Name = "Torso", Size = size * Vector3.new(1, 0.7, 1.1), CFrame = cf, Color = def.color, Material = Enum.Material.Metal,
+		})
+		visual(model, root, {
+			Name = "Armor", Size = size * Vector3.new(1.08, 0.25, 0.9), CFrame = cf * CFrame.new(0, size.Y * 0.42, -size.Z * 0.05),
+			Color = ARMOR, Material = Enum.Material.SmoothPlastic,
+		})
+		local head = visual(model, root, {
+			Name = "Head", Size = size * Vector3.new(0.5, 0.35, 0.45), CFrame = cf * CFrame.new(0, size.Y * 0.2, -size.Z * 0.62),
+			Color = dark, Material = Enum.Material.Metal,
+		})
+		local eye = visual(model, root, {
+			Name = "Eye", Size = Vector3.new(size.X * 0.4, size.Y * 0.08, 0.3), CFrame = head.CFrame * CFrame.new(0, 0, -size.Z * 0.23),
+			Color = def.eye, Material = Enum.Material.Neon,
+		})
+		glow(eye, def.eye, if boss then 40 else 18)
+		for _, x in { -1, 1 } do
+			cylinder(model, root, "Barrel", size.Z * 0.5, size.X * 0.05, (head.CFrame * CFrame.new(x * size.X * 0.15, -size.Y * 0.12, 0)).Position,
+				(head.CFrame * CFrame.new(x * size.X * 0.15, -size.Y * 0.12, -size.Z * 0.5)).Position, Color3.fromRGB(30, 30, 30))
+		end
+		for sx = -1, 1, 2 do
+			for sz = -1, 1, 2 do
+				local hip = (cf * CFrame.new(sx * size.X * 0.45, -size.Y * 0.2, sz * size.Z * 0.4)).Position
+				local foot = (cf * CFrame.new(sx * size.X * 0.85, -(def.hipHeight + size.Y / 2), sz * size.Z * 0.75)).Position
+				leg(model, root, hip, foot, if boss then 0.9 else 0.4, dark)
+				visual(model, root, {
+					Name = "Foot", Size = Vector3.new(1, 0.4, 1) * (if boss then 3 else 1.4), CFrame = CFrame.new(foot),
+					Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal,
+				})
+			end
+		end
+		local core = visual(model, root, {
+			Name = "WeakPoint", Shape = Enum.PartType.Ball, Size = Vector3.one * math.max(1.4, size.X * 0.22),
+			CFrame = cf * CFrame.new(0, size.Y * 0.2, size.Z * 0.58), Color = Color3.fromRGB(255, 140, 30), Material = Enum.Material.Neon,
+		})
+		glow(core, Color3.fromRGB(255, 140, 30), if boss then 24 else 10)
+		if boss then
+			for _, x in { -1, 1 } do
+				local pod = visual(model, root, {
+					Name = "RocketPod", Size = Vector3.new(3, 3.4, 5), CFrame = cf * CFrame.new(x * (size.X / 2 + 1.8), size.Y * 0.35, 0),
+					Color = Color3.fromRGB(90, 40, 30), Material = Enum.Material.CorrodedMetal,
+				})
+				for r = -1, 1, 2 do
+					for c = -1, 1, 2 do
+						visual(model, root, {
+							Name = "Tube", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, 1, 1),
+							CFrame = pod.CFrame * CFrame.new(c * 0.7, r * 0.8, -2.55) * CFrame.Angles(0, math.rad(90), 0),
+							Color = Color3.fromRGB(255, 90, 40), Material = Enum.Material.Neon,
+						})
+					end
+				end
+			end
+		end
+	end
+end
+
+-- Puts a custom model from GameAssets/Robots on the root. Returns true if used.
+local function useCustomModel(typeName: string, def, model: Model, root: BasePart): boolean
+	local custom = S.Assets.Get("Robots", typeName)
+	if not custom then
+		return false
+	end
+	if not custom:IsA("Model") then
+		custom:Destroy()
+		return false
+	end
+	S.Assets.Fit(custom, math.max(def.size.X, def.size.Z) * 1.4, root.CFrame)
+	for _, d in custom:GetDescendants() do
+		if d:IsA("BasePart") then
+			d.Anchored = false
+			d.CanCollide = false
+			d.Massless = true
+			weld(root, d)
+		end
+	end
+	custom.Name = "Visual"
+	custom.Parent = model
+	if not custom:FindFirstChild("Eye", true) then
+		visual(model, root, { Name = "Eye", Size = Vector3.one * 0.2, CFrame = root.CFrame * CFrame.new(0, 0, -def.size.Z / 2), Transparency = 1 })
+	end
+	return true
+end
+
+local function buildGround(typeName: string, def, position: Vector3)
 	local model = Instance.new("Model")
 	model.Name = def.name
 	local size = def.size
@@ -80,46 +277,12 @@ local function buildGround(def, position: Vector3)
 	root.Name = "HumanoidRootPart"
 	root.Size = size
 	root.Transparency = 1
+	root.CanQuery = false -- only visible parts count as hits
 	root.CFrame = CFrame.new(position + Vector3.new(0, def.hipHeight + size.Y / 2 + 0.5, 0))
 	root.Parent = model
 	model.PrimaryPart = root
-
-	visual(model, root, {
-		Name = "Body", Size = size * Vector3.new(1, 0.8, 1), CFrame = root.CFrame,
-		Color = def.color, Material = Enum.Material.Metal,
-	})
-	visual(model, root, {
-		Name = "Plate", Size = size * Vector3.new(0.8, 0.25, 0.8), CFrame = root.CFrame * CFrame.new(0, size.Y * 0.45, 0),
-		Color = def.color:Lerp(Color3.new(1, 1, 1), 0.2), Material = Enum.Material.DiamondPlate,
-	})
-	visual(model, root, {
-		Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * math.max(0.8, size.X * 0.22),
-		CFrame = root.CFrame * CFrame.new(0, size.Y * 0.1, -size.Z / 2), Color = def.eye, Material = Enum.Material.Neon,
-	})
-	-- legs
-	local legLength = def.hipHeight + size.Y * 0.3
-	for i = 1, 4 do
-		local sx = if i <= 2 then -1 else 1
-		local sz = if i % 2 == 0 then -1 else 1
-		visual(model, root, {
-			Name = "Leg", Size = Vector3.new(size.X * 0.12 + 0.3, legLength, size.X * 0.12 + 0.3),
-			CFrame = root.CFrame * CFrame.new(sx * size.X * 0.55, -legLength / 2 - size.Y * 0.1, sz * size.Z * 0.45) * CFrame.Angles(sz * 0.25, 0, -sx * 0.3),
-			Color = def.color:Lerp(Color3.new(0, 0, 0), 0.3), Material = Enum.Material.Metal,
-		})
-	end
-	if def.weakPoint then
-		visual(model, root, {
-			Name = "WeakPoint", Shape = Enum.PartType.Ball, Size = Vector3.one * math.max(1.4, size.X * 0.22),
-			CFrame = root.CFrame * CFrame.new(0, size.Y * 0.2, size.Z / 2), Color = Color3.fromRGB(255, 140, 30), Material = Enum.Material.Neon,
-		})
-	end
-	if def.boss then
-		for _, x in { -1, 1 } do
-			visual(model, root, {
-				Name = "RocketPod", Size = Vector3.new(3, 3, 5), CFrame = root.CFrame * CFrame.new(x * (size.X / 2 + 1.5), size.Y * 0.3, 0),
-				Color = Color3.fromRGB(90, 40, 30), Material = Enum.Material.CorrodedMetal,
-			})
-		end
+	if not useCustomModel(typeName, def, model, root) then
+		decorate(typeName, def, model, root)
 	end
 
 	local humanoid = Instance.new("Humanoid")
@@ -138,37 +301,23 @@ local function buildGround(def, position: Vector3)
 	return model, root, humanoid
 end
 
-local function buildAir(def, position: Vector3)
+local function buildAir(typeName: string, def, position: Vector3)
 	local model = Instance.new("Model")
 	model.Name = def.name
 	local size = def.size
 	local root = Instance.new("Part")
 	root.Name = "Core"
 	root.Size = size
-	root.Color = def.color
-	root.Material = Enum.Material.Metal
+	root.Transparency = 1
+	root.CanQuery = false
 	root.CFrame = CFrame.new(position + Vector3.new(0, def.hoverHeight, 0))
 	root.CanCollide = false
 	root.Parent = model
 	model.PrimaryPart = root
-	visual(model, root, {
-		Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * 1.2,
-		CFrame = root.CFrame * CFrame.new(0, -size.Y / 2, -size.Z / 2 + 0.5), Color = def.eye, Material = Enum.Material.Neon,
-	})
-	if def.attack == "scout" then
-		visual(model, root, {
-			Name = "Siren", Shape = Enum.PartType.Ball, Size = Vector3.one * 1.6,
-			CFrame = root.CFrame * CFrame.new(0, size.Y / 2 + 0.6, 0), Color = Color3.fromRGB(255, 40, 40), Material = Enum.Material.Neon,
-		})
+	if not useCustomModel(typeName, def, model, root) then
+		decorate(typeName, def, model, root)
 	end
-	for i = 1, 4 do
-		local a = (i / 4) * math.pi * 2 + math.pi / 4
-		visual(model, root, {
-			Name = "Rotor", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.2, 2.4, 2.4),
-			CFrame = root.CFrame * CFrame.new(math.cos(a) * size.X * 0.7, size.Y * 0.3, math.sin(a) * size.Z * 0.7) * CFrame.Angles(0, 0, math.rad(90)),
-			Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal, Transparency = 0.3,
-		})
-	end
+
 	local attachment = Instance.new("Attachment")
 	attachment.Parent = root
 	local align = Instance.new("AlignPosition")
@@ -228,9 +377,9 @@ function Robots.Spawn(typeName: string, mapId: string, position: Vector3)
 	end
 	local model, root, humanoid, align, orient
 	if def.kind == "air" then
-		model, root, humanoid, align, orient = buildAir(def, position)
+		model, root, humanoid, align, orient = buildAir(typeName, def, position)
 	else
-		model, root, humanoid = buildGround(def, position)
+		model, root, humanoid = buildGround(typeName, def, position)
 	end
 	nextId += 1
 	local robot = {
@@ -268,12 +417,7 @@ local function die(robot, killer)
 	robots[robot.id] = nil
 	robot.dead = true
 	local pos = robot.root.Position
-	local explosion = Instance.new("Explosion")
-	explosion.Position = pos
-	explosion.BlastRadius = 0
-	explosion.BlastPressure = 0
-	explosion.DestroyJointRadiusPercent = 0
-	explosion.Parent = workspace
+	S.Remotes.Effect:FireAllClients("Explosion", pos, if robot.def.boss then 3 else 1)
 	robot.model:Destroy()
 
 	local drops = {}
@@ -343,12 +487,7 @@ local projParams = RaycastParams.new()
 projParams.FilterType = Enum.RaycastFilterType.Exclude
 
 local function explode(position: Vector3, radius: number, damage: number, mapId: string, owner)
-	local explosion = Instance.new("Explosion")
-	explosion.Position = position
-	explosion.BlastRadius = 0
-	explosion.BlastPressure = 0
-	explosion.DestroyJointRadiusPercent = 0
-	explosion.Parent = workspace
+	S.Remotes.Effect:FireAllClients("Explosion", position, 1.5)
 	for _, r in raidersIn(mapId) do
 		local dist = (r.root.Position - position).Magnitude
 		if dist <= radius then
@@ -474,6 +613,7 @@ local function attack(robot, target: Player, targetRoot: BasePart)
 			telegraphBeam(robot, targetRoot, def.telegraph)
 			task.wait(def.telegraph)
 			if not robot.dead and targetRoot.Parent then
+				S.Remotes.Effect:FireAllClients("Sound", "Bolt", eyePosition(robot))
 				local lead = targetRoot.AssemblyLinearVelocity * 0.3
 				fireProjectile(robot, eyePosition(robot), targetRoot.Position + lead, def.boltSpeed, def.damage)
 			end
@@ -490,6 +630,7 @@ local function attack(robot, target: Player, targetRoot: BasePart)
 			end
 		elseif def.attack == "scout" then
 			S.Notify(target, "🚨 A Watcher spotted you - reinforcements incoming!", "Red", true)
+			S.Remotes.Effect:FireAllClients("Sound", "Spotted", robot.root.Position)
 			local siren = robot.model:FindFirstChild("Siren")
 			if siren then
 				local light = Instance.new("PointLight")

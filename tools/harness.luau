@@ -171,6 +171,12 @@ ProxyMT.__index = function(p, key)
 	if key == "Position" and real:IsA("BasePart") then
 		return real.CFrame.Position
 	end
+	if key == "SetAttribute" then
+		return function(_, name, value)
+			real:SetAttribute(name, unwrap(value))
+			signalOf(real, "attr_" .. name):Fire()
+		end
+	end
 	local ok, value = pcall(function()
 		return real[key]
 	end)
@@ -352,6 +358,20 @@ m("Tween", "Play", function(self)
 	end
 end)
 m("Debris", "AddItem", function() end)
+m("Terrain", "FillBlock", function() end)
+m("Terrain", "FillBall", function() end)
+m("Terrain", "FillCylinder", function() end)
+m("Terrain", "FillWedge", function() end)
+m("ParticleEmitter", "Emit", function() end)
+m("Sound", "Play", function() end)
+m("Sound", "Stop", function() end)
+m("RunService", "BindToRenderStep", function(self, name, priority, fn)
+	_G.renderSteps = _G.renderSteps or {}
+	table.insert(_G.renderSteps, fn)
+end)
+m("Model", "ScaleTo", function() end)
+m("Model", "GetScale", function() return 1 end)
+m("Model", "GetExtentsSize", function() return roblox.Vector3.new(4, 4, 4) end)
 m("ContextActionService", "BindAction", function() end)
 m("PathfindingService", "CreatePath", function()
 	local path = I.new("Path")
@@ -576,6 +596,17 @@ if fs.isFile(scenarioPath) then
 	local scenarioEnv = {
 		game = wrap(game), workspace = wrap(workspace), player = wrap(player), I = I, roblox = roblox, task = task, makeCharacter = makeCharacter,
 		Vector3 = roblox.Vector3, CFrame = roblox.CFrame, requireModule = makeRequire(),
+		renderFrame = function()
+			for _, fn in _G.renderSteps or {} do
+				local ok, err = pcall(fn, 1 / 60)
+				if not ok then
+					failures += 1
+					print("❌ render step: " .. tostring(err))
+				end
+			end
+			wrap(game):GetService("RunService").RenderStepped:Fire(1 / 60)
+			task.wait(0.05)
+		end,
 		fail = function(msg) failures += 1 print("❌ " .. msg) end,
 	}
 	local scenario = luau.load(fs.readFile(scenarioPath), { debugName = scenarioPath, environment = scenarioEnv })

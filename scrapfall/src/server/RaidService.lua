@@ -168,6 +168,7 @@ function Raid.Extract(player: Player)
 	if humanoid then
 		humanoid.Health = humanoid.MaxHealth
 	end
+	S.Remotes.Effect:FireClient(player, "Sound", "Extract")
 	S.Notify(player, string.format("✅ EXTRACTED! Loot worth %d credits is in your stash.", value), "Green", true)
 	S.Analytics.Funnel(player, 4)
 	S.Analytics.Custom(player, "ExtractValue", value)
@@ -258,6 +259,7 @@ local function runLift(mapId: string, lift, caller: Player)
 	lift.endsAt = os.clock() + Config.ExtractCountdown
 	setLiftLook(lift)
 	S.Robots.Noise(mapId, lift.info.position, Config.ExtractAlertRadius)
+	S.Remotes.Effect:FireAllClients("Sound", "LiftAlarm", lift.info.position)
 	for player, st in raidState do
 		if st.mapId == mapId then
 			S.Notify(player, string.format("🛗 %s called Extraction %d! Lift arrives in %ds.", caller.DisplayName, lift.info.index, Config.ExtractCountdown), "Orange")

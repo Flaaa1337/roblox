@@ -5,6 +5,21 @@
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
+      },
+      "GameAssets": {
+        "$className": "Folder",
+        "Robots": {
+          "$className": "Folder"
+        },
+        "Weapons": {
+          "$className": "Folder"
+        },
+        "Props": {
+          "$className": "Folder"
+        },
+        "Sounds": {
+          "$className": "Folder"
+        }
       }
     },
     "ServerScriptService": {
@@ -25,6 +40,20 @@
     "Workspace": {
       "$properties": {
         "StreamingEnabled": false
+      },
+      "Terrain": {
+        "$properties": {
+          "Decoration": true
+        }
+      }
+    },
+    "Lighting": {
+      "$properties": {
+        "Technology": "Future",
+        "ShadowSoftness": 0.15,
+        "EnvironmentDiffuseScale": 1,
+        "EnvironmentSpecularScale": 1,
+        "GlobalShadows": true
       }
     }
   }

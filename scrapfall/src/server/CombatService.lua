@@ -31,6 +31,53 @@ end
 ---------------------------------------------------------------------------
 -- Weapon models (simple part guns welded to the right hand)
 ---------------------------------------------------------------------------
+local function gunPart(model, hand, name, size: Vector3, offset: CFrame, color: Color3, material, shape)
+	local p = Instance.new("Part")
+	p.Name = name
+	p.Size = size
+	p.Color = color
+	p.Material = material or Enum.Material.Metal
+	if shape then
+		p.Shape = shape
+	end
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CanTouch = false
+	p.Massless = true
+	-- with the arm held out, the hand's -Y axis points forward
+	p.CFrame = hand.CFrame * CFrame.Angles(math.rad(-90), 0, 0) * offset
+	p.Parent = model
+	local w = Instance.new("WeldConstraint")
+	w.Part0 = hand
+	w.Part1 = p
+	w.Parent = p
+	return p
+end
+
+-- Built-in gun shapes; replaced by GameAssets/Weapons/<ItemId> if present.
+local function buildGun(model: Model, hand: BasePart, id: string, def)
+	local w = def.weapon
+	local length = if w.range > 400 then 4.6 elseif w.pellets > 1 then 3.6 elseif w.auto then 3 else 1.6
+	local body = def.color or Color3.fromRGB(80, 80, 80)
+	local dark = Color3.fromRGB(28, 28, 32)
+	local base = CFrame.new(0, 0.3, -length / 2 + 0.35)
+	gunPart(model, hand, "Body", Vector3.new(0.35, 0.55, length), base, body)
+	gunPart(model, hand, "Grip", Vector3.new(0.3, 0.7, 0.4), base * CFrame.new(0, -0.5, length / 2 - 0.5) * CFrame.Angles(math.rad(-15), 0, 0), dark)
+	if w.mag > 6 then
+		gunPart(model, hand, "Mag", Vector3.new(0.25, 0.8, 0.4), base * CFrame.new(0, -0.6, -0.2) * CFrame.Angles(math.rad(10), 0, 0), dark)
+	end
+	gunPart(model, hand, "Barrel", Vector3.new(length * 0.55, 0.22, 0.22), base * CFrame.new(0, 0.1, -length / 2 - length * 0.2) * CFrame.Angles(0, math.rad(90), 0), dark, nil, Enum.PartType.Cylinder)
+	if w.range > 250 then
+		gunPart(model, hand, "Scope", Vector3.new(1.2, 0.3, 0.3), base * CFrame.new(0, 0.45, 0) * CFrame.Angles(0, math.rad(90), 0), dark, nil, Enum.PartType.Cylinder)
+		gunPart(model, hand, "Lens", Vector3.new(0.05, 0.26, 0.26), base * CFrame.new(0, 0.45, -0.62) * CFrame.Angles(0, math.rad(90), 0), Color3.fromRGB(80, 180, 255), Enum.Material.Neon, Enum.PartType.Cylinder)
+	end
+	if w.auto or w.range > 250 then
+		gunPart(model, hand, "Stock", Vector3.new(0.3, 0.45, 0.9), base * CFrame.new(0, -0.05, length / 2 + 0.4), body:Lerp(dark, 0.4))
+	end
+	gunPart(model, hand, "Stripe", Vector3.new(0.37, 0.08, length * 0.6), base * CFrame.new(0, 0.1, 0), Color3.fromRGB(255, 150, 40), Enum.Material.Neon)
+	gunPart(model, hand, "Muzzle", Vector3.new(0.2, 0.2, 0.2), base * CFrame.new(0, 0.1, -length / 2 - length * 0.5), dark)
+end
+
 function Combat.RefreshWeaponModel(player: Player)
 	local char = player.Character
 	if not char then
@@ -47,37 +94,32 @@ function Combat.RefreshWeaponModel(player: Player)
 		return
 	end
 	local def = Items.Get(weapon.id)
-	local length = if def.weapon.range > 300 then 4.5 elseif def.weapon.pellets > 1 then 3.6 elseif def.weapon.auto then 3 else 1.8
-	local model = Instance.new("Model")
+	local custom = S.Assets.Get("Weapons", weapon.id)
+	local model
+	if custom and custom:IsA("Model") then
+		model = custom
+		local handle = model:FindFirstChild("Handle", true) or model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart", true)
+		if handle then
+			model.PrimaryPart = handle
+			model:PivotTo(hand.CFrame * CFrame.Angles(math.rad(-90), 0, 0))
+		end
+		for _, d in model:GetDescendants() do
+			if d:IsA("BasePart") then
+				d.Anchored = false
+				d.CanCollide = false
+				d.CanQuery = false
+				d.Massless = true
+				local w = Instance.new("WeldConstraint")
+				w.Part0 = hand
+				w.Part1 = d
+				w.Parent = d
+			end
+		end
+	else
+		model = Instance.new("Model")
+		buildGun(model, hand, weapon.id, def)
+	end
 	model.Name = "HeldWeapon"
-	local body = Instance.new("Part")
-	body.Name = "Body"
-	body.Size = Vector3.new(0.4, 0.7, length)
-	body.Color = def.color or Color3.fromRGB(80, 80, 80)
-	body.Material = Enum.Material.Metal
-	body.CanCollide = false
-	body.CanQuery = false
-	body.Massless = true
-	body.CFrame = hand.CFrame * CFrame.new(0, -0.3, -length / 2 + 0.4)
-	body.Parent = model
-	local barrel = Instance.new("Part")
-	barrel.Name = "Muzzle"
-	barrel.Size = Vector3.new(0.25, 0.25, 0.8)
-	barrel.Color = Color3.fromRGB(30, 30, 30)
-	barrel.Material = Enum.Material.Metal
-	barrel.CanCollide = false
-	barrel.CanQuery = false
-	barrel.Massless = true
-	barrel.CFrame = body.CFrame * CFrame.new(0, 0.15, -length / 2 - 0.4)
-	barrel.Parent = model
-	local w1 = Instance.new("WeldConstraint")
-	w1.Part0 = hand
-	w1.Part1 = body
-	w1.Parent = body
-	local w2 = Instance.new("WeldConstraint")
-	w2.Part0 = body
-	w2.Part1 = barrel
-	w2.Parent = barrel
 	model.Parent = char
 end
 
@@ -155,10 +197,10 @@ local function spreadDirection(dir: Vector3, degrees: number): Vector3
 	return (cf * CFrame.Angles(0, 0, roll) * CFrame.Angles(angle, 0, 0)).LookVector
 end
 
-local function broadcastTracer(shooter: Player, from: Vector3, to: Vector3)
+local function broadcastTracer(shooter: Player, from: Vector3, to: Vector3, ammo: string?)
 	for _, other in Players:GetPlayers() do
 		if other ~= shooter and other:GetAttribute("MapId") == shooter:GetAttribute("MapId") then
-			S.Remotes.Effect:FireClient(other, "Tracer", from, to)
+			S.Remotes.Effect:FireClient(other, "Tracer", from, to, ammo)
 		end
 	end
 end
@@ -240,11 +282,11 @@ function Combat.Fire(player: Player, origin, direction)
 	end
 	baseDir = baseDir.Unit
 
-	for _ = 1, def.pellets do
+	for pellet = 1, def.pellets do
 		local dir = spreadDirection(baseDir, def.spread)
 		local result = workspace:Raycast(from, dir * def.range, params)
 		local to = if result then result.Position else from + dir * def.range
-		broadcastTracer(player, from, to)
+		broadcastTracer(player, from, to, if pellet == 1 then def.ammo else nil)
 		if result then
 			hitSomething(player, result, def.damage)
 		end

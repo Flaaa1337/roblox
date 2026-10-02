@@ -19,8 +19,20 @@ remotes.Parent = ReplicatedStorage
 
 local S = {
 	Config = require(Shared.Config),
+	Assets = require(Shared.Assets),
 	Remotes = remotes,
 }
+
+-- Safety: scripts hidden inside downloaded models must never run.
+local gameAssets = ReplicatedStorage:FindFirstChild("GameAssets")
+if gameAssets then
+	for _, d in gameAssets:GetDescendants() do
+		if d:IsA("Script") or d:IsA("LocalScript") or d:IsA("ModuleScript") then
+			warn("[GameAssets] removed a script from a model:", d:GetFullName())
+			d:Destroy()
+		end
+	end
+end
 
 function S.Notify(target: Player?, text: string, color: string?, big: boolean?)
 	if target then

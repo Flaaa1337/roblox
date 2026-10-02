@@ -1,13 +1,138 @@
 <roblox version="4">
-  <Item class="ReplicatedStorage" referent="0">
+  <Item class="Lighting" referent="0">
+    <Properties>
+      <string name="Name">Lighting</string>
+      <float name="EnvironmentDiffuseScale">1</float>
+      <float name="EnvironmentSpecularScale">1</float>
+      <bool name="GlobalShadows">true</bool>
+      <float name="ShadowSoftness">0.15</float>
+      <token name="Technology">4</token>
+    </Properties>
+  </Item>
+  <Item class="ReplicatedStorage" referent="1">
     <Properties>
       <string name="Name">ReplicatedStorage</string>
     </Properties>
-    <Item class="Folder" referent="1">
+    <Item class="Folder" referent="2">
+      <Properties>
+        <string name="Name">GameAssets</string>
+      </Properties>
+      <Item class="Folder" referent="3">
+        <Properties>
+          <string name="Name">Props</string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="4">
+        <Properties>
+          <string name="Name">Robots</string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="5">
+        <Properties>
+          <string name="Name">Sounds</string>
+        </Properties>
+      </Item>
+      <Item class="Folder" referent="6">
+        <Properties>
+          <string name="Name">Weapons</string>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Folder" referent="7">
       <Properties>
         <string name="Name">Shared</string>
       </Properties>
-      <Item class="ModuleScript" referent="2">
+      <Item class="ModuleScript" referent="8">
+        <Properties>
+          <string name="Name">Assets</string>
+          <string name="Source"><![CDATA[-- Asset slots. Drop real models / sounds into ReplicatedStorage.GameAssets
+-- (Robots, Weapons, Props, Sounds) with the names listed below and the game
+-- uses them automatically instead of the built-in shapes.
+--
+-- Robots:  Crawler, Buzzer, Watcher, Sentinel, Colossus
+--          (optional part named "WeakPoint" = bonus damage, "Eye" = laser origin)
+-- Weapons: ScrapPistol, Rattler, Hammer, Breacher, Longshot
+--          (part named "Handle" is held in the hand, part named "Muzzle" = barrel tip)
+-- Props:   Crate, Toolbox, MedCabinet, WeaponCase, RobotCache, DeathCache, Wreck
+-- Sounds:  Shot_LightAmmo, Shot_HeavyAmmo, Shot_Shells, Laser, Bolt, Explosion,
+--          Hit, Kill, Hurt, LiftAlarm, Extract, Spotted, Reload, Heal
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Assets = {}
+
+-- Built-in Roblox sounds used until you add your own.
+Assets.FallbackSounds = {
+	Shot_LightAmmo = { id = "rbxasset://sounds/paintball.wav", volume = 0.6, speed = 1.4 },
+	Shot_HeavyAmmo = { id = "rbxasset://sounds/paintball.wav", volume = 0.8, speed = 0.9 },
+	Shot_Shells = { id = "rbxasset://sounds/Rocket shot.wav", volume = 0.6, speed = 1.6 },
+	Laser = { id = "rbxasset://sounds/electronicpingshort.wav", volume = 0.5, speed = 0.7 },
+	Bolt = { id = "rbxasset://sounds/electronicpingshort.wav", volume = 0.7, speed = 0.4 },
+	Explosion = { id = "rbxasset://sounds/collide.wav", volume = 1, speed = 0.5 },
+	Hit = { id = "rbxasset://sounds/clickfast.wav", volume = 0.5, speed = 1.5 },
+	Kill = { id = "rbxasset://sounds/electronicpingshort.wav", volume = 0.6, speed = 1.3 },
+	Hurt = { id = "rbxasset://sounds/hit.wav", volume = 0.6, speed = 1 },
+	LiftAlarm = { id = "rbxasset://sounds/electronicpingshort.wav", volume = 1, speed = 0.5 },
+	Extract = { id = "rbxasset://sounds/electronicpingshort.wav", volume = 1, speed = 1 },
+	Spotted = { id = "rbxasset://sounds/electronicpingshort.wav", volume = 1, speed = 0.3 },
+	Reload = { id = "rbxasset://sounds/unsheath.wav", volume = 0.5, speed = 1.2 },
+	Heal = { id = "rbxasset://sounds/unsheath.wav", volume = 0.4, speed = 0.8 },
+}
+
+local function folder(kind: string)
+	local root = ReplicatedStorage:FindFirstChild("GameAssets")
+	return root and root:FindFirstChild(kind)
+end
+
+-- Returns a fresh clone of the asset, or nil if none was added.
+function Assets.Get(kind: string, name: string)
+	local f = folder(kind)
+	local template = f and f:FindFirstChild(name)
+	if not template then
+		return nil
+	end
+	local clone = template:Clone()
+	-- never run scripts that came with a downloaded model
+	for _, d in clone:GetDescendants() do
+		if d:IsA("Script") or d:IsA("LocalScript") or d:IsA("ModuleScript") then
+			d:Destroy()
+		end
+	end
+	return clone
+end
+
+-- Makes a Sound for the given slot (custom asset first, then fallback).
+function Assets.Sound(name: string): Sound?
+	local custom = Assets.Get("Sounds", name)
+	if custom and custom:IsA("Sound") then
+		return custom
+	end
+	local fb = Assets.FallbackSounds[name]
+	if not fb then
+		return nil
+	end
+	local sound = Instance.new("Sound")
+	sound.SoundId = fb.id
+	sound.Volume = fb.volume
+	sound.PlaybackSpeed = fb.speed
+	return sound
+end
+
+-- Scales a model so its largest dimension matches `size`, then pivots it to cf.
+function Assets.Fit(model: Model, size: number, cf: CFrame)
+	local extents = model:GetExtentsSize()
+	local largest = math.max(extents.X, extents.Y, extents.Z)
+	if largest > 0 then
+		model:ScaleTo(model:GetScale() * size / largest)
+	end
+	model:PivotTo(cf)
+end
+
+return Assets
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="9">
         <Properties>
           <string name="Name">Config</string>
           <string name="Source"><![CDATA[-- SCRAPFALL tuning. Gameplay numbers live here so balancing never needs
@@ -152,7 +277,7 @@ return Config
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="3">
+      <Item class="ModuleScript" referent="10">
         <Properties>
           <string name="Name">Crafting</string>
           <string name="Source"><![CDATA[-- Workbench recipes and quarters decorations.
@@ -234,7 +359,7 @@ return Crafting
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="4">
+      <Item class="ModuleScript" referent="11">
         <Properties>
           <string name="Name">Items</string>
           <string name="Source"><![CDATA[-- Every item in SCRAPFALL: weapons, ammo, meds and salvage.
@@ -389,7 +514,7 @@ return Items
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="5">
+      <Item class="ModuleScript" referent="12">
         <Properties>
           <string name="Name">Robots</string>
           <string name="Source"><![CDATA[-- Robot types. Familiar extraction-shooter archetypes (small crawler,
@@ -449,15 +574,15 @@ return Robots
       </Item>
     </Item>
   </Item>
-  <Item class="ServerScriptService" referent="6">
+  <Item class="ServerScriptService" referent="13">
     <Properties>
       <string name="Name">ServerScriptService</string>
     </Properties>
-    <Item class="Folder" referent="7">
+    <Item class="Folder" referent="14">
       <Properties>
         <string name="Name">Server</string>
       </Properties>
-      <Item class="ModuleScript" referent="8">
+      <Item class="ModuleScript" referent="15">
         <Properties>
           <string name="Name">AnalyticsService</string>
           <string name="Source"><![CDATA[-- Thin wrapper around Roblox AnalyticsService. The data shows up in the
@@ -563,7 +688,7 @@ return Analytics
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="9">
+      <Item class="ModuleScript" referent="16">
         <Properties>
           <string name="Name">CombatService</string>
           <string name="Source"><![CDATA[-- Shooting, reloading, healing and damage. The server is the authority:
@@ -599,6 +724,53 @@ end
 ---------------------------------------------------------------------------
 -- Weapon models (simple part guns welded to the right hand)
 ---------------------------------------------------------------------------
+local function gunPart(model, hand, name, size: Vector3, offset: CFrame, color: Color3, material, shape)
+	local p = Instance.new("Part")
+	p.Name = name
+	p.Size = size
+	p.Color = color
+	p.Material = material or Enum.Material.Metal
+	if shape then
+		p.Shape = shape
+	end
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CanTouch = false
+	p.Massless = true
+	-- with the arm held out, the hand's -Y axis points forward
+	p.CFrame = hand.CFrame * CFrame.Angles(math.rad(-90), 0, 0) * offset
+	p.Parent = model
+	local w = Instance.new("WeldConstraint")
+	w.Part0 = hand
+	w.Part1 = p
+	w.Parent = p
+	return p
+end
+
+-- Built-in gun shapes; replaced by GameAssets/Weapons/<ItemId> if present.
+local function buildGun(model: Model, hand: BasePart, id: string, def)
+	local w = def.weapon
+	local length = if w.range > 400 then 4.6 elseif w.pellets > 1 then 3.6 elseif w.auto then 3 else 1.6
+	local body = def.color or Color3.fromRGB(80, 80, 80)
+	local dark = Color3.fromRGB(28, 28, 32)
+	local base = CFrame.new(0, 0.3, -length / 2 + 0.35)
+	gunPart(model, hand, "Body", Vector3.new(0.35, 0.55, length), base, body)
+	gunPart(model, hand, "Grip", Vector3.new(0.3, 0.7, 0.4), base * CFrame.new(0, -0.5, length / 2 - 0.5) * CFrame.Angles(math.rad(-15), 0, 0), dark)
+	if w.mag > 6 then
+		gunPart(model, hand, "Mag", Vector3.new(0.25, 0.8, 0.4), base * CFrame.new(0, -0.6, -0.2) * CFrame.Angles(math.rad(10), 0, 0), dark)
+	end
+	gunPart(model, hand, "Barrel", Vector3.new(length * 0.55, 0.22, 0.22), base * CFrame.new(0, 0.1, -length / 2 - length * 0.2) * CFrame.Angles(0, math.rad(90), 0), dark, nil, Enum.PartType.Cylinder)
+	if w.range > 250 then
+		gunPart(model, hand, "Scope", Vector3.new(1.2, 0.3, 0.3), base * CFrame.new(0, 0.45, 0) * CFrame.Angles(0, math.rad(90), 0), dark, nil, Enum.PartType.Cylinder)
+		gunPart(model, hand, "Lens", Vector3.new(0.05, 0.26, 0.26), base * CFrame.new(0, 0.45, -0.62) * CFrame.Angles(0, math.rad(90), 0), Color3.fromRGB(80, 180, 255), Enum.Material.Neon, Enum.PartType.Cylinder)
+	end
+	if w.auto or w.range > 250 then
+		gunPart(model, hand, "Stock", Vector3.new(0.3, 0.45, 0.9), base * CFrame.new(0, -0.05, length / 2 + 0.4), body:Lerp(dark, 0.4))
+	end
+	gunPart(model, hand, "Stripe", Vector3.new(0.37, 0.08, length * 0.6), base * CFrame.new(0, 0.1, 0), Color3.fromRGB(255, 150, 40), Enum.Material.Neon)
+	gunPart(model, hand, "Muzzle", Vector3.new(0.2, 0.2, 0.2), base * CFrame.new(0, 0.1, -length / 2 - length * 0.5), dark)
+end
+
 function Combat.RefreshWeaponModel(player: Player)
 	local char = player.Character
 	if not char then
@@ -615,37 +787,32 @@ function Combat.RefreshWeaponModel(player: Player)
 		return
 	end
 	local def = Items.Get(weapon.id)
-	local length = if def.weapon.range > 300 then 4.5 elseif def.weapon.pellets > 1 then 3.6 elseif def.weapon.auto then 3 else 1.8
-	local model = Instance.new("Model")
+	local custom = S.Assets.Get("Weapons", weapon.id)
+	local model
+	if custom and custom:IsA("Model") then
+		model = custom
+		local handle = model:FindFirstChild("Handle", true) or model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart", true)
+		if handle then
+			model.PrimaryPart = handle
+			model:PivotTo(hand.CFrame * CFrame.Angles(math.rad(-90), 0, 0))
+		end
+		for _, d in model:GetDescendants() do
+			if d:IsA("BasePart") then
+				d.Anchored = false
+				d.CanCollide = false
+				d.CanQuery = false
+				d.Massless = true
+				local w = Instance.new("WeldConstraint")
+				w.Part0 = hand
+				w.Part1 = d
+				w.Parent = d
+			end
+		end
+	else
+		model = Instance.new("Model")
+		buildGun(model, hand, weapon.id, def)
+	end
 	model.Name = "HeldWeapon"
-	local body = Instance.new("Part")
-	body.Name = "Body"
-	body.Size = Vector3.new(0.4, 0.7, length)
-	body.Color = def.color or Color3.fromRGB(80, 80, 80)
-	body.Material = Enum.Material.Metal
-	body.CanCollide = false
-	body.CanQuery = false
-	body.Massless = true
-	body.CFrame = hand.CFrame * CFrame.new(0, -0.3, -length / 2 + 0.4)
-	body.Parent = model
-	local barrel = Instance.new("Part")
-	barrel.Name = "Muzzle"
-	barrel.Size = Vector3.new(0.25, 0.25, 0.8)
-	barrel.Color = Color3.fromRGB(30, 30, 30)
-	barrel.Material = Enum.Material.Metal
-	barrel.CanCollide = false
-	barrel.CanQuery = false
-	barrel.Massless = true
-	barrel.CFrame = body.CFrame * CFrame.new(0, 0.15, -length / 2 - 0.4)
-	barrel.Parent = model
-	local w1 = Instance.new("WeldConstraint")
-	w1.Part0 = hand
-	w1.Part1 = body
-	w1.Parent = body
-	local w2 = Instance.new("WeldConstraint")
-	w2.Part0 = body
-	w2.Part1 = barrel
-	w2.Parent = barrel
 	model.Parent = char
 end
 
@@ -723,10 +890,10 @@ local function spreadDirection(dir: Vector3, degrees: number): Vector3
 	return (cf * CFrame.Angles(0, 0, roll) * CFrame.Angles(angle, 0, 0)).LookVector
 end
 
-local function broadcastTracer(shooter: Player, from: Vector3, to: Vector3)
+local function broadcastTracer(shooter: Player, from: Vector3, to: Vector3, ammo: string?)
 	for _, other in Players:GetPlayers() do
 		if other ~= shooter and other:GetAttribute("MapId") == shooter:GetAttribute("MapId") then
-			S.Remotes.Effect:FireClient(other, "Tracer", from, to)
+			S.Remotes.Effect:FireClient(other, "Tracer", from, to, ammo)
 		end
 	end
 end
@@ -808,11 +975,11 @@ function Combat.Fire(player: Player, origin, direction)
 	end
 	baseDir = baseDir.Unit
 
-	for _ = 1, def.pellets do
+	for pellet = 1, def.pellets do
 		local dir = spreadDirection(baseDir, def.spread)
 		local result = workspace:Raycast(from, dir * def.range, params)
 		local to = if result then result.Position else from + dir * def.range
-		broadcastTracer(player, from, to)
+		broadcastTracer(player, from, to, if pellet == 1 then def.ammo else nil)
 		if result then
 			hitSomething(player, result, def.damage)
 		end
@@ -939,7 +1106,7 @@ return Combat
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="10">
+      <Item class="ModuleScript" referent="17">
         <Properties>
           <string name="Name">DataService</string>
           <string name="Source"><![CDATA[-- Player save data: loading, saving, autosave and leaderstats.
@@ -1213,7 +1380,7 @@ return DataService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="11">
+      <Item class="ModuleScript" referent="18">
         <Properties>
           <string name="Name">InventoryService</string>
           <string name="Source"><![CDATA[-- What a raider carries DURING a raid: two weapon slots, a backpack and a
@@ -1462,7 +1629,7 @@ return Inventory
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="12">
+      <Item class="ModuleScript" referent="19">
         <Properties>
           <string name="Name">LeaderboardService</string>
           <string name="Source"><![CDATA[-- Global "top raiders" board in the Outpost (all-time value extracted).
@@ -1548,7 +1715,7 @@ return LeaderboardService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="13">
+      <Item class="ModuleScript" referent="20">
         <Properties>
           <string name="Name">LootService</string>
           <string name="Source"><![CDATA[-- Searchable containers: map crates (respawn), robot wrecks and the bags
@@ -1750,7 +1917,7 @@ return LootService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="Script" referent="14">
+      <Item class="Script" referent="21">
         <Properties>
           <string name="Name">Main</string>
           <token name="RunContext">0</token>
@@ -1775,8 +1942,20 @@ remotes.Parent = ReplicatedStorage
 
 local S = {
 	Config = require(Shared.Config),
+	Assets = require(Shared.Assets),
 	Remotes = remotes,
 }
+
+-- Safety: scripts hidden inside downloaded models must never run.
+local gameAssets = ReplicatedStorage:FindFirstChild("GameAssets")
+if gameAssets then
+	for _, d in gameAssets:GetDescendants() do
+		if d:IsA("Script") or d:IsA("LocalScript") or d:IsA("ModuleScript") then
+			warn("[GameAssets] removed a script from a model:", d:GetFullName())
+			d:Destroy()
+		end
+	end
+end
 
 function S.Notify(target: Player?, text: string, color: string?, big: boolean?)
 	if target then
@@ -1903,7 +2082,7 @@ end)
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="15">
+      <Item class="ModuleScript" referent="22">
         <Properties>
           <string name="Name">MapBuilder</string>
           <string name="Source"><![CDATA[-- Builds the hub and the raid zone entirely from code.
@@ -1994,6 +2173,18 @@ function MapBuilder.MakeContainer(cf: CFrame, kind: string, parent: Instance)
 		CFrame = box.CFrame * CFrame.new(0, style.size.Y / 2, 0), Color = style.color:Lerp(Color3.new(0, 0, 0), 0.3),
 		Material = Enum.Material.Metal, CanCollide = false, Parent = box,
 	})
+	local custom = S.Assets.Get("Props", kind)
+	if custom and custom:IsA("Model") then
+		S.Assets.Fit(custom, math.max(style.size.X, style.size.Y, style.size.Z) * 1.2, cf * CFrame.new(0, style.size.Y / 2, 0))
+		for _, d in custom:GetDescendants() do
+			if d:IsA("BasePart") then
+				d.Anchored = true
+			end
+		end
+		custom.Parent = box
+		box.Transparency = 1
+		box:FindFirstChild("Lid"):Destroy()
+	end
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = "Search"
 	prompt.ObjectText = style.label
@@ -2005,24 +2196,54 @@ function MapBuilder.MakeContainer(cf: CFrame, kind: string, parent: Instance)
 	return box, prompt
 end
 
+local function effect(className: string, props)
+	local inst = Lighting:FindFirstChildOfClass(className) or Instance.new(className)
+	for k, v in props do
+		inst[k] = v
+	end
+	inst.Parent = Lighting
+	return inst
+end
+
 local function buildLighting()
-	Lighting.ClockTime = 17.4
-	Lighting.Brightness = 2
-	Lighting.OutdoorAmbient = Color3.fromRGB(140, 120, 110)
-	Lighting.EnvironmentDiffuseScale = 0.5
-	local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
-	atmosphere.Density = 0.36
-	atmosphere.Offset = 0.2
-	atmosphere.Haze = 2
-	atmosphere.Glare = 0.4
-	atmosphere.Color = Color3.fromRGB(230, 180, 140)
-	atmosphere.Decay = Color3.fromRGB(120, 90, 80)
-	atmosphere.Parent = Lighting
-	local cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect")
-	cc.Saturation = -0.15
-	cc.Contrast = 0.08
-	cc.TintColor = Color3.fromRGB(255, 240, 225)
-	cc.Parent = Lighting
+	-- Golden-hour wasteland look. (Lighting.Technology = Future is set in the
+	-- place file because scripts are not allowed to change it.)
+	Lighting.ClockTime = 17.3
+	Lighting.GeographicLatitude = 30
+	Lighting.Brightness = 3
+	Lighting.Ambient = Color3.fromRGB(40, 32, 30)
+	Lighting.OutdoorAmbient = Color3.fromRGB(120, 100, 90)
+	Lighting.EnvironmentDiffuseScale = 1
+	Lighting.EnvironmentSpecularScale = 1
+	Lighting.ExposureCompensation = 0.1
+	effect("Atmosphere", {
+		Density = 0.38, Offset = 0.25, Haze = 2.2, Glare = 0.6,
+		Color = Color3.fromRGB(235, 185, 140), Decay = Color3.fromRGB(110, 80, 70),
+	})
+	effect("ColorCorrectionEffect", {
+		Brightness = 0.02, Contrast = 0.14, Saturation = -0.12, TintColor = Color3.fromRGB(255, 238, 220),
+	})
+	effect("BloomEffect", { Intensity = 0.7, Size = 28, Threshold = 1.4 })
+	effect("SunRaysEffect", { Intensity = 0.07, Spread = 0.6 })
+	effect("DepthOfFieldEffect", { FarIntensity = 0.12, FocusDistance = 40, InFocusRadius = 90, NearIntensity = 0 })
+end
+
+---------------------------------------------------------------------------
+-- Terrain helpers (terrain looks far better than flat parts)
+---------------------------------------------------------------------------
+local Terrain = workspace.Terrain
+
+local function paint(center: Vector3, radius: number, material)
+	-- repaints the top layer of the ground in a disc
+	Terrain:FillCylinder(CFrame.new(center.X, -1, center.Z), 2, radius, material)
+end
+
+local function mound(center: Vector3, radius: number, material)
+	Terrain:FillBall(Vector3.new(center.X, -radius * 0.65, center.Z), radius, material)
+end
+
+local function boulder(center: Vector3, radius: number, material)
+	Terrain:FillBall(center + Vector3.new(0, radius * 0.3, 0), radius, material)
 end
 
 ---------------------------------------------------------------------------
@@ -2080,22 +2301,24 @@ local function buildHub(root)
 	local c = Config.HubPos
 	local R = 120 -- half size of the cavern
 
-	-- Cavern: floor, rock walls and ceiling
+	-- Cavern carved out of solid rock
+	Terrain:FillBlock(CFrame.new(c + Vector3.new(0, 30, 0)), Vector3.new(R * 2 + 80, 100, R * 2 + 80), Enum.Material.Rock)
+	Terrain:FillBlock(CFrame.new(c + Vector3.new(0, 28, 0)), Vector3.new(R * 2, 60, R * 2), Enum.Material.Air)
+	local caveRng = Random.new(7)
+	for _ = 1, 40 do
+		local p = c + Vector3.new(caveRng:NextNumber(-R, R), 58, caveRng:NextNumber(-R, R))
+		if math.abs(p.X - c.X) > 20 or math.abs(p.Z - c.Z) > 20 then
+			Terrain:FillBall(p, caveRng:NextNumber(4, 10), Enum.Material.Slate) -- stalactites
+		end
+	end
+	for _ = 1, 30 do
+		local a = caveRng:NextNumber(0, math.pi * 2)
+		local p = c + Vector3.new(math.cos(a) * R, caveRng:NextNumber(0, 40), math.sin(a) * R)
+		Terrain:FillBall(p, caveRng:NextNumber(6, 14), Enum.Material.Rock) -- uneven walls
+	end
 	part({
 		Name = "Floor", Size = Vector3.new(R * 2, 4, R * 2), CFrame = CFrame.new(c - Vector3.new(0, 2, 0)),
 		Color = Color3.fromRGB(85, 75, 65), Material = Enum.Material.Cobblestone, Parent = folder,
-	})
-	for i = 0, 3 do
-		local angle = math.rad(i * 90)
-		part({
-			Name = "CaveWall", Size = Vector3.new(R * 2 + 10, 60, 10),
-			CFrame = CFrame.new(c + Vector3.new(math.sin(angle) * (R + 5), 30, math.cos(angle) * (R + 5))) * CFrame.Angles(0, angle, 0),
-			Color = Color3.fromRGB(70, 60, 55), Material = Enum.Material.Rock, Parent = folder,
-		})
-	end
-	part({
-		Name = "Ceiling", Size = Vector3.new(R * 2 + 10, 6, R * 2 + 10), CFrame = CFrame.new(c + Vector3.new(0, 58, 0)),
-		Color = Color3.fromRGB(60, 52, 48), Material = Enum.Material.Rock, Parent = folder,
 	})
 	-- Central plaza with the big lift shaft up to the surface
 	part({
@@ -2284,6 +2507,142 @@ function MapBuilder.BuildQuarters(index: number, ownerName: string)
 end
 
 ---------------------------------------------------------------------------
+-- Set dressing: wrecked cars, street lamps, dead trees, barrels, fences
+---------------------------------------------------------------------------
+local function car(folder, rng: Random, pos: Vector3)
+	local model = Instance.new("Model")
+	model.Name = "WreckedCar"
+	local colors = { Color3.fromRGB(140, 60, 45), Color3.fromRGB(70, 90, 110), Color3.fromRGB(180, 170, 150), Color3.fromRGB(60, 80, 60) }
+	local color = colors[rng:NextInteger(1, #colors)]
+	local base = CFrame.new(pos) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), math.rad(rng:NextNumber(-6, 6)))
+	part({ Name = "Body", Size = Vector3.new(6, 2.2, 13), CFrame = base * CFrame.new(0, 1.8, 0), Color = color, Material = Enum.Material.CorrodedMetal, Parent = model })
+	part({ Name = "Cabin", Size = Vector3.new(5.4, 2, 6), CFrame = base * CFrame.new(0, 3.9, 0.8), Color = color:Lerp(Color3.new(0, 0, 0), 0.2), Material = Enum.Material.CorrodedMetal, Parent = model })
+	part({ Name = "Windshield", Size = Vector3.new(5, 1.7, 0.2), CFrame = base * CFrame.new(0, 3.9, -2.25) * CFrame.Angles(math.rad(-25), 0, 0), Color = Color3.fromRGB(30, 40, 45), Material = Enum.Material.Glass, Transparency = 0.4, Parent = model })
+	for _, x in { -1, 1 } do
+		for _, z in { -1, 1 } do
+			if rng:NextNumber() < 0.85 then
+				part({
+					Name = "Wheel", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1, 2.4, 2.4),
+					CFrame = base * CFrame.new(x * 3, 0.9, z * 4.2), Color = Color3.fromRGB(25, 25, 28), Material = Enum.Material.Rubber, Parent = model,
+				})
+			end
+		end
+	end
+	model.Parent = folder
+end
+
+local function streetLamp(folder, pos: Vector3, working: boolean)
+	part({ Name = "LampPole", Size = Vector3.new(0.6, 16, 0.6), CFrame = CFrame.new(pos + Vector3.new(0, 8, 0)), Color = Color3.fromRGB(50, 50, 55), Material = Enum.Material.Metal, Parent = folder })
+	part({ Name = "LampArm", Size = Vector3.new(4, 0.4, 0.4), CFrame = CFrame.new(pos + Vector3.new(1.8, 15.8, 0)), Color = Color3.fromRGB(50, 50, 55), Material = Enum.Material.Metal, Parent = folder })
+	local bulb = part({
+		Name = "LampHead", Size = Vector3.new(1.6, 0.5, 1), CFrame = CFrame.new(pos + Vector3.new(3.6, 15.5, 0)),
+		Color = if working then Color3.fromRGB(255, 200, 130) else Color3.fromRGB(60, 60, 60),
+		Material = if working then Enum.Material.Neon else Enum.Material.Glass, Parent = folder,
+	})
+	if working then
+		local light = Instance.new("SpotLight")
+		light.Face = Enum.NormalId.Bottom
+		light.Range = 40
+		light.Angle = 80
+		light.Brightness = 2
+		light.Color = Color3.fromRGB(255, 200, 140)
+		light.Parent = bulb
+	end
+end
+
+local function deadTree(folder, rng: Random, pos: Vector3)
+	local height = rng:NextNumber(12, 22)
+	local wood = Color3.fromRGB(70, 55, 45)
+	local trunk = part({
+		Name = "Trunk", Size = Vector3.new(1.4, height, 1.4), CFrame = CFrame.new(pos + Vector3.new(0, height / 2, 0)) * CFrame.Angles(0, 0, math.rad(rng:NextNumber(-6, 6))),
+		Color = wood, Material = Enum.Material.Wood, Parent = folder,
+	})
+	for _ = 1, rng:NextInteger(3, 5) do
+		local y = rng:NextNumber(height * 0.4, height * 0.95) - height / 2
+		local len = rng:NextNumber(4, 8)
+		local yaw = rng:NextNumber(0, math.pi * 2)
+		part({
+			Name = "Branch", Size = Vector3.new(0.5, len, 0.5), CanCollide = false,
+			CFrame = trunk.CFrame * CFrame.new(0, y, 0) * CFrame.Angles(0, yaw, math.rad(rng:NextNumber(30, 60))) * CFrame.new(0, len / 2, 0),
+			Color = wood, Material = Enum.Material.Wood, Parent = folder,
+		})
+	end
+end
+
+local function barrels(folder, rng: Random, pos: Vector3)
+	local colors = { Color3.fromRGB(150, 50, 40), Color3.fromRGB(60, 90, 140), Color3.fromRGB(200, 160, 40), Color3.fromRGB(90, 90, 90) }
+	for i = 1, rng:NextInteger(1, 4) do
+		local offset = Vector3.new(rng:NextNumber(-3, 3), 0, rng:NextNumber(-3, 3))
+		local fallen = rng:NextNumber() < 0.25
+		part({
+			Name = "Barrel", Shape = Enum.PartType.Cylinder, Size = Vector3.new(3.2, 2.4, 2.4),
+			CFrame = CFrame.new(pos + offset + Vector3.new(0, if fallen then 1.2 else 1.6, 0)) * (if fallen then CFrame.Angles(0, rng:NextNumber(0, 6), 0) else CFrame.Angles(0, 0, math.rad(90))),
+			Color = colors[rng:NextInteger(1, #colors)], Material = Enum.Material.CorrodedMetal, Parent = folder,
+		})
+	end
+end
+
+local function fence(folder, rng: Random, pos: Vector3)
+	local yaw = rng:NextNumber(0, math.pi)
+	local base = CFrame.new(pos) * CFrame.Angles(0, yaw, 0)
+	local segments = rng:NextInteger(2, 5)
+	for i = 0, segments do
+		part({ Name = "FencePost", Size = Vector3.new(0.4, 7, 0.4), CFrame = base * CFrame.new(i * 8, 3.5, 0), Color = Color3.fromRGB(80, 80, 85), Material = Enum.Material.Metal, Parent = folder })
+		if i < segments and rng:NextNumber() < 0.8 then
+			part({
+				Name = "FenceMesh", Size = Vector3.new(8, 6, 0.1), CFrame = base * CFrame.new(i * 8 + 4, 3.5, 0) * CFrame.Angles(math.rad(rng:NextNumber(-8, 8)), 0, 0),
+				Color = Color3.fromRGB(110, 110, 115), Material = Enum.Material.DiamondPlate, Transparency = 0.55, Parent = folder,
+			})
+		end
+	end
+end
+
+local function powerPole(folder, pos: Vector3)
+	part({ Name = "PowerPole", Size = Vector3.new(1, 28, 1), CFrame = CFrame.new(pos + Vector3.new(0, 14, 0)), Color = Color3.fromRGB(80, 60, 45), Material = Enum.Material.Wood, Parent = folder })
+	part({ Name = "CrossBar", Size = Vector3.new(8, 0.6, 0.6), CFrame = CFrame.new(pos + Vector3.new(0, 25, 0)), Color = Color3.fromRGB(80, 60, 45), Material = Enum.Material.Wood, Parent = folder })
+end
+
+function MapBuilder.Props(folder, rng: Random, c: Vector3, half: number, clear, quarry: boolean)
+	local props = Instance.new("Folder")
+	props.Name = "Props"
+	props.Parent = folder
+	-- along the roads
+	for i = -2, 2 do
+		local offset = i * 128 + 64
+		if math.abs(offset) < half then
+			for t = -half + 20, half - 20, 32 do
+				local alongX = c + Vector3.new(offset + 10, 0, t)
+				local alongZ = c + Vector3.new(t, 0, offset - 10)
+				if not quarry and clear(alongX, 10) and rng:NextNumber() < 0.5 then
+					streetLamp(props, alongX, rng:NextNumber() < 0.35)
+				elseif quarry and clear(alongX, 10) and rng:NextNumber() < 0.3 then
+					powerPole(props, alongX)
+				end
+				if clear(alongZ, 12) and rng:NextNumber() < 0.22 then
+					car(props, rng, alongZ + Vector3.new(0, 0, rng:NextNumber(-4, 4)))
+				end
+			end
+		end
+	end
+	-- scattered dressing
+	for _ = 1, 70 do
+		local pos = c + Vector3.new(rng:NextNumber(-half + 15, half - 15), 0, rng:NextNumber(-half + 15, half - 15))
+		if clear(pos, 12) and (pos - c).Magnitude > 45 then
+			local roll = rng:NextNumber()
+			if roll < 0.35 then
+				barrels(props, rng, pos)
+			elseif roll < 0.6 then
+				deadTree(props, rng, pos)
+			elseif roll < 0.8 then
+				fence(props, rng, pos)
+			else
+				car(props, rng, pos)
+			end
+		end
+	end
+end
+
+---------------------------------------------------------------------------
 -- Raid zone
 ---------------------------------------------------------------------------
 local function building(folder, rng: Random, center: Vector3, containers)
@@ -2320,6 +2679,32 @@ local function building(folder, rng: Random, center: Vector3, containers)
 			part({ Name = "Wall", Size = Vector3.new(rightLen, h, 1.2), CFrame = wall.cf * CFrame.new(wall.length / 2 - rightLen / 2, 0, 0), Color = color, Material = Enum.Material.Concrete, Parent = model })
 			part({ Name = "Lintel", Size = Vector3.new(gap, h - 9, 1.2), CFrame = wall.cf * CFrame.new(gapCenter, 4.5, 0), Color = color, Material = Enum.Material.Concrete, Parent = model })
 		end
+	end
+
+	-- Broken wall tops and exposed rebar make the ruins read as ruins.
+	for _, wall in walls do
+		for _ = 1, rng:NextInteger(1, 3) do
+			local x = rng:NextNumber(-wall.length / 2 + 2, wall.length / 2 - 2)
+			local w2 = rng:NextNumber(2, 6)
+			part({
+				Name = "Rubble", Size = Vector3.new(w2, rng:NextNumber(1, 4), 1.3),
+				CFrame = wall.cf * CFrame.new(x, h / 2 + 1, 0) * CFrame.Angles(0, 0, math.rad(rng:NextNumber(-12, 12))),
+				Color = color, Material = Enum.Material.Concrete, Parent = model,
+			})
+			if rng:NextNumber() < 0.6 then
+				part({
+					Name = "Rebar", Size = Vector3.new(0.2, rng:NextNumber(2, 4), 0.2), CanCollide = false,
+					CFrame = wall.cf * CFrame.new(x + w2 / 2 + 0.5, h / 2 + 1.5, 0) * CFrame.Angles(0, 0, math.rad(rng:NextNumber(-25, 25))),
+					Color = Color3.fromRGB(110, 60, 40), Material = Enum.Material.CorrodedMetal, Parent = model,
+				})
+			end
+		end
+	end
+	-- Rubble piles at the base (terrain)
+	for _ = 1, rng:NextInteger(1, 3) do
+		-- the left wall never has a door, so rubble there never blocks a way in
+		local corner = base * CFrame.new(-w / 2 - 2.5, 0, rng:NextNumber(-d / 2, d / 2))
+		Terrain:FillBall(corner.Position, rng:NextNumber(2.5, 4), Enum.Material.Concrete)
 	end
 
 	-- Partly collapsed roof: drones can see in through the holes.
@@ -2408,28 +2793,47 @@ local function buildRaid(root, map)
 	local size = map.size
 	local half = size / 2
 
-	part({
-		Name = "Ground", Size = Vector3.new(size + 40, 4, size + 40), CFrame = CFrame.new(c - Vector3.new(0, 2, 0)),
-		Color = map.ground, Material = Enum.Material.Ground, Parent = folder,
-	})
-	-- Boundary walls
+	local quarry = not map.crashSite
+	local groundMat = if quarry then Enum.Material.Sand else Enum.Material.Ground
+	local rockMat = if quarry then Enum.Material.Sandstone else Enum.Material.Rock
+	-- Ground (terrain)
+	Terrain:FillBlock(CFrame.new(c - Vector3.new(0, 8, 0)), Vector3.new(size + 200, 16, size + 200), groundMat)
+	-- Cliffs all around the zone
+	for i = 0, 3 do
+		local angle = math.rad(i * 90)
+		local center = c + Vector3.new(math.sin(angle) * (half + 30), 20, math.cos(angle) * (half + 30))
+		Terrain:FillBlock(CFrame.new(center) * CFrame.Angles(0, angle, 0), Vector3.new(size + 160, 60, 50), rockMat)
+	end
+	for _ = 1, 60 do
+		local a = rng:NextNumber(0, math.pi * 2)
+		local r = half + rng:NextNumber(5, 25)
+		Terrain:FillBall(c + Vector3.new(math.cos(a) * r, rng:NextNumber(20, 50), math.sin(a) * r), rng:NextNumber(12, 24), rockMat)
+	end
+	-- Invisible wall so nobody climbs out
 	for i = 0, 3 do
 		local angle = math.rad(i * 90)
 		part({
-			Name = "Boundary", Size = Vector3.new(size + 40, 40, 6),
-			CFrame = CFrame.new(c + Vector3.new(math.sin(angle) * (half + 10), 20, math.cos(angle) * (half + 10))) * CFrame.Angles(0, angle, 0),
-			Color = Color3.fromRGB(90, 85, 80), Material = Enum.Material.Rock, Parent = folder,
+			Name = "Boundary", Size = Vector3.new(size + 40, 300, 4), Transparency = 1,
+			CFrame = CFrame.new(c + Vector3.new(math.sin(angle) * (half + 8), 150, math.cos(angle) * (half + 8))) * CFrame.Angles(0, angle, 0),
+			Parent = folder,
 		})
 	end
-	-- Roads
+	-- Roads (painted into the terrain)
 	for i = -2, 2 do
 		local offset = i * 128 + 64
 		if math.abs(offset) < half then
-			part({ Name = "Road", Size = Vector3.new(14, 0.2, size), CFrame = CFrame.new(c + Vector3.new(offset, 0.1, 0)), Color = Color3.fromRGB(60, 60, 62), Material = Enum.Material.Asphalt, CanCollide = false, Parent = folder })
-			part({ Name = "Road", Size = Vector3.new(size, 0.2, 14), CFrame = CFrame.new(c + Vector3.new(0, 0.1, offset)), Color = Color3.fromRGB(60, 60, 62), Material = Enum.Material.Asphalt, CanCollide = false, Parent = folder })
+			Terrain:FillBlock(CFrame.new(c + Vector3.new(offset, -1, 0)), Vector3.new(16, 2, size), if quarry then Enum.Material.Ground else Enum.Material.Asphalt)
+			Terrain:FillBlock(CFrame.new(c + Vector3.new(0, -1, offset)), Vector3.new(size, 2, 16), if quarry then Enum.Material.Ground else Enum.Material.Asphalt)
 		end
 	end
-
+	-- Ground variety
+	local patchMats = if quarry
+		then { Enum.Material.Sandstone, Enum.Material.Ground, Enum.Material.Salt }
+		else { Enum.Material.Grass, Enum.Material.LeafyGrass, Enum.Material.Mud, Enum.Material.Pavement }
+	for _ = 1, 90 do
+		local pos = c + Vector3.new(rng:NextNumber(-half, half), 0, rng:NextNumber(-half, half))
+		paint(pos, rng:NextNumber(8, 26), patchMats[rng:NextInteger(1, #patchMats)])
+	end
 	local containers = {}
 	local blocked = {} -- positions to keep clear (spawns, lifts)
 
@@ -2458,6 +2862,24 @@ local function buildRaid(root, map)
 			Name = "Beacon", Size = Vector3.new(2, 60, 2), CFrame = CFrame.new(pos + Vector3.new(Config.ExtractRadius + 2, 30, 0)),
 			Color = Color3.fromRGB(60, 200, 90), Material = Enum.Material.Neon, CanCollide = false, Parent = folder,
 		})
+		for k = 0, 3 do
+			local a2 = k / 4 * math.pi * 2 + math.pi / 4
+			part({
+				Name = "LiftPillar", Size = Vector3.new(1.5, 18, 1.5),
+				CFrame = CFrame.new(pos + Vector3.new(math.cos(a2) * Config.ExtractRadius, 9, math.sin(a2) * Config.ExtractRadius)),
+				Color = Color3.fromRGB(60, 62, 66), Material = Enum.Material.DiamondPlate, Parent = folder,
+			})
+		end
+		part({
+			Name = "LiftFrame", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1, Config.ExtractRadius * 2 + 2, Config.ExtractRadius * 2 + 2),
+			CFrame = CFrame.new(pos + Vector3.new(0, 18.5, 0)) * CFrame.Angles(0, 0, math.rad(90)),
+			Color = Color3.fromRGB(255, 160, 40), Material = Enum.Material.Metal, Transparency = 0.6, CanCollide = false, Parent = folder,
+		})
+		local beaconLight = Instance.new("PointLight")
+		beaconLight.Color = Color3.fromRGB(80, 255, 120)
+		beaconLight.Range = 35
+		beaconLight.Brightness = 2
+		beaconLight.Parent = beacon
 		local console = part({
 			Name = "Console", Size = Vector3.new(3, 4, 2), CFrame = CFrame.new(pos + Vector3.new(Config.ExtractRadius - 2, 2, 0)),
 			Color = Color3.fromRGB(50, 55, 60), Material = Enum.Material.Metal, Parent = folder,
@@ -2523,21 +2945,27 @@ local function buildRaid(root, map)
 		end
 	end
 
-	-- Rocks & debris for cover (and a few loose crates)
+	-- Boulders, hills and cover (terrain), plus a few loose crates
 	for _ = 1, map.rocks do
 		local pos = c + Vector3.new(rng:NextNumber(-half + 10, half - 10), 0, rng:NextNumber(-half + 10, half - 10))
 		if clear(pos, 14) and (pos - c).Magnitude > 50 then
-			local size = rng:NextNumber(4, 10)
-			part({
-				Name = "Rock", Size = Vector3.new(size * rng:NextNumber(0.8, 1.6), size * 0.7, size),
-				CFrame = CFrame.new(pos + Vector3.new(0, size * 0.25, 0)) * CFrame.Angles(rng:NextNumber(-0.3, 0.3), rng:NextNumber(0, 6), rng:NextNumber(-0.3, 0.3)),
-				Color = Color3.fromRGB(110, 100, 90), Material = Enum.Material.Slate, Parent = folder,
-			})
+			local r = rng:NextNumber(3, 8)
+			boulder(pos, r, rockMat)
+			if rng:NextNumber() < 0.4 then
+				boulder(pos + Vector3.new(r, 0, rng:NextNumber(-r, r)), r * 0.6, rockMat)
+			end
 			if rng:NextNumber() < 0.15 then
-				table.insert(containers, { cf = CFrame.new(pos + Vector3.new(size, 0, 0)), kind = "Crate" })
+				table.insert(containers, { cf = CFrame.new(pos + Vector3.new(r + 3, 0, 0)), kind = "Crate" })
 			end
 		end
 	end
+	for _ = 1, 14 do
+		local pos = c + Vector3.new(rng:NextNumber(-half + 40, half - 40), 0, rng:NextNumber(-half + 40, half - 40))
+		if clear(pos, 40) and (pos - c).Magnitude > 70 then
+			mound(pos, rng:NextNumber(18, 32), groundMat)
+		end
+	end
+	MapBuilder.Props(folder, rng, c, half, clear, quarry)
 
 	-- Robot spawn points: anywhere not right next to a spawn or lift
 	local robotSpawns = {}
@@ -2596,7 +3024,7 @@ return MapBuilder
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="16">
+      <Item class="ModuleScript" referent="23">
         <Properties>
           <string name="Name">MonetizationService</string>
           <string name="Source"><![CDATA[-- Game passes and developer products. Nothing random is ever sold.
@@ -2725,7 +3153,7 @@ return MonetizationService
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="17">
+      <Item class="ModuleScript" referent="24">
         <Properties>
           <string name="Name">OutpostService</string>
           <string name="Source"><![CDATA[-- The Outpost: trader, stash & loadout, workbench crafting, upgrades and the
@@ -3084,7 +3512,7 @@ return Outpost
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="18">
+      <Item class="ModuleScript" referent="25">
         <Properties>
           <string name="Name">QuartersService</string>
           <string name="Source"><![CDATA[-- Private Quarters: your own room with a personal (upgradable) workbench,
@@ -3333,7 +3761,7 @@ return Quarters
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="19">
+      <Item class="ModuleScript" referent="26">
         <Properties>
           <string name="Name">RaidService</string>
           <string name="Source"><![CDATA[-- Raid lifecycle: deploy from the Outpost onto a chosen map, extract at a
@@ -3506,6 +3934,7 @@ function Raid.Extract(player: Player)
 	if humanoid then
 		humanoid.Health = humanoid.MaxHealth
 	end
+	S.Remotes.Effect:FireClient(player, "Sound", "Extract")
 	S.Notify(player, string.format("✅ EXTRACTED! Loot worth %d credits is in your stash.", value), "Green", true)
 	S.Analytics.Funnel(player, 4)
 	S.Analytics.Custom(player, "ExtractValue", value)
@@ -3596,6 +4025,7 @@ local function runLift(mapId: string, lift, caller: Player)
 	lift.endsAt = os.clock() + Config.ExtractCountdown
 	setLiftLook(lift)
 	S.Robots.Noise(mapId, lift.info.position, Config.ExtractAlertRadius)
+	S.Remotes.Effect:FireAllClients("Sound", "LiftAlarm", lift.info.position)
 	for player, st in raidState do
 		if st.mapId == mapId then
 			S.Notify(player, string.format("🛗 %s called Extraction %d! Lift arrives in %ds.", caller.DisplayName, lift.info.index, Config.ExtractCountdown), "Orange")
@@ -3710,7 +4140,7 @@ return Raid
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="20">
+      <Item class="ModuleScript" referent="27">
         <Properties>
           <string name="Name">RobotService</string>
           <string name="Source"><![CDATA[-- Robot AI. Ground robots walk with a Humanoid (smooth, replicated physics),
@@ -3785,9 +4215,206 @@ local function visual(model: Model, root: BasePart, props)
 end
 
 ---------------------------------------------------------------------------
--- Building robot models (simple shapes, original designs)
+-- Building robot models. A custom model in GameAssets/Robots/<Type> replaces
+-- the built-in look. Only visible parts can be hit (the root is invisible
+-- and not hittable), so hitboxes match what you see.
 ---------------------------------------------------------------------------
-local function buildGround(def, position: Vector3)
+local function glow(part: BasePart, color: Color3, range: number)
+	local light = Instance.new("PointLight")
+	light.Color = color
+	light.Range = range
+	light.Brightness = 2
+	light.Parent = part
+end
+
+local function ellipsoid(model, root, name, size: Vector3, cf: CFrame, color: Color3, material)
+	-- a block with a sphere mesh: looks round, hit box matches the shape's bounds
+	local p = visual(model, root, {
+		Name = name, Size = size, CFrame = cf, Color = color, Material = material or Enum.Material.Metal,
+	})
+	local mesh = Instance.new("SpecialMesh")
+	mesh.MeshType = Enum.MeshType.Sphere
+	mesh.Parent = p
+	return p
+end
+
+local function cylinder(model, root, name, length: number, radius: number, from: Vector3, to: Vector3, color: Color3, material)
+	local mid = (from + to) / 2
+	return visual(model, root, {
+		Name = name, Shape = Enum.PartType.Cylinder, Size = Vector3.new(length, radius * 2, radius * 2),
+		CFrame = CFrame.lookAt(mid, to) * CFrame.Angles(0, math.rad(90), 0), Color = color, Material = material or Enum.Material.Metal,
+	})
+end
+
+-- Two-segment leg from a hip point out to a foot on the ground.
+local function leg(model, root, hip: Vector3, foot: Vector3, thickness: number, color: Color3)
+	local knee = (hip + foot) / 2 + Vector3.new(0, (hip - foot).Magnitude * 0.45, 0) + (foot - hip) * Vector3.new(0.25, 0, 0.25)
+	cylinder(model, root, "Leg", (knee - hip).Magnitude, thickness, hip, knee, color)
+	cylinder(model, root, "Leg", (foot - knee).Magnitude, thickness * 0.8, knee, foot, color:Lerp(Color3.new(0, 0, 0), 0.25))
+	visual(model, root, {
+		Name = "Joint", Shape = Enum.PartType.Ball, Size = Vector3.one * thickness * 2.6, CFrame = CFrame.new(knee),
+		Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal,
+	})
+end
+
+local ARMOR = Color3.fromRGB(200, 195, 185)
+
+local function decorate(typeName: string, def, model: Model, root: BasePart)
+	local cf = root.CFrame
+	local size = def.size
+	local dark = def.color:Lerp(Color3.new(0, 0, 0), 0.35)
+	if typeName == "Crawler" then
+		ellipsoid(model, root, "Shell", Vector3.new(size.X, size.Y, size.Z * 1.2), cf, def.color)
+		ellipsoid(model, root, "ShellPlate", Vector3.new(size.X * 0.8, size.Y * 0.5, size.Z * 0.9), cf * CFrame.new(0, size.Y * 0.35, 0.1), ARMOR, Enum.Material.SmoothPlastic)
+		for i = -1, 1 do
+			local eye = visual(model, root, {
+				Name = if i == 0 then "Eye" else "EyeSmall", Shape = Enum.PartType.Ball, Size = Vector3.one * (if i == 0 then 0.7 else 0.4),
+				CFrame = cf * CFrame.new(i * 0.55, 0.1, -size.Z * 0.62), Color = def.eye, Material = Enum.Material.Neon,
+			})
+			if i == 0 then
+				glow(eye, def.eye, 10)
+			end
+		end
+		for side = -1, 1, 2 do
+			for j = -1, 1 do
+				local hip = (cf * CFrame.new(side * size.X * 0.4, 0, j * size.Z * 0.35)).Position
+				local foot = (cf * CFrame.new(side * size.X * 1.1, -(def.hipHeight + size.Y / 2), j * size.Z * 0.55)).Position
+				leg(model, root, hip, foot, 0.18, dark)
+			end
+		end
+	elseif typeName == "Buzzer" then
+		visual(model, root, {
+			Name = "Hull", Shape = Enum.PartType.Cylinder, Size = Vector3.new(size.Y, size.X, size.Z),
+			CFrame = cf * CFrame.Angles(0, 0, math.rad(90)), Color = def.color, Material = Enum.Material.Metal,
+		})
+		ellipsoid(model, root, "Dome", Vector3.new(size.X * 0.6, size.Y * 1.2, size.Z * 0.6), cf * CFrame.new(0, size.Y * 0.4, 0), ARMOR, Enum.Material.SmoothPlastic)
+		for i = 1, 4 do
+			local a = (i / 4) * math.pi * 2 + math.pi / 4
+			local tip = cf * CFrame.new(math.cos(a) * size.X * 0.95, 0.2, math.sin(a) * size.Z * 0.95)
+			cylinder(model, root, "Arm", size.X * 0.6, 0.18, (cf * CFrame.new(math.cos(a) * size.X * 0.35, 0.1, math.sin(a) * size.Z * 0.35)).Position, tip.Position, dark)
+			visual(model, root, {
+				Name = "Rotor", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.15, 2.6, 2.6),
+				CFrame = tip * CFrame.new(0, 0.3, 0) * CFrame.Angles(0, 0, math.rad(90)), Color = Color3.fromRGB(30, 30, 35),
+				Material = Enum.Material.Glass, Transparency = 0.5,
+			})
+			local thruster = visual(model, root, {
+				Name = "Thruster", Shape = Enum.PartType.Ball, Size = Vector3.one * 0.5, CFrame = tip * CFrame.new(0, -0.3, 0),
+				Color = Color3.fromRGB(120, 200, 255), Material = Enum.Material.Neon,
+			})
+			if i == 1 then
+				glow(thruster, Color3.fromRGB(120, 200, 255), 8)
+			end
+		end
+		cylinder(model, root, "Gun", 1.6, 0.18, (cf * CFrame.new(0, -0.5, -0.4)).Position, (cf * CFrame.new(0, -0.6, -2)).Position, Color3.fromRGB(30, 30, 30))
+		local eye = visual(model, root, {
+			Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * 0.8, CFrame = cf * CFrame.new(0, -0.1, -size.Z * 0.5),
+			Color = def.eye, Material = Enum.Material.Neon,
+		})
+		glow(eye, def.eye, 14)
+	elseif typeName == "Watcher" then
+		ellipsoid(model, root, "Body", size, cf, ARMOR, Enum.Material.SmoothPlastic)
+		visual(model, root, {
+			Name = "Ring", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, size.X * 1.6, size.X * 1.6),
+			CFrame = cf * CFrame.Angles(0, 0, math.rad(90)), Color = Color3.fromRGB(50, 50, 55), Material = Enum.Material.Metal,
+		})
+		local eye = visual(model, root, {
+			Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * 1.3, CFrame = cf * CFrame.new(0, 0, -size.Z * 0.42),
+			Color = def.eye, Material = Enum.Material.Neon,
+		})
+		glow(eye, def.eye, 18)
+		visual(model, root, {
+			Name = "Siren", Shape = Enum.PartType.Ball, Size = Vector3.one * 0.9, CFrame = cf * CFrame.new(0, size.Y * 0.55, 0),
+			Color = Color3.fromRGB(255, 40, 40), Material = Enum.Material.Neon,
+		})
+		for _, x in { -1, 1 } do
+			cylinder(model, root, "Antenna", 1.6, 0.06, (cf * CFrame.new(x * 0.6, size.Y * 0.4, 0)).Position, (cf * CFrame.new(x * 0.9, size.Y * 0.4 + 1.5, 0.3)).Position, dark)
+		end
+	elseif typeName == "Sentinel" or typeName == "Colossus" then
+		local boss = typeName == "Colossus"
+		visual(model, root, {
+			Name = "Torso", Size = size * Vector3.new(1, 0.7, 1.1), CFrame = cf, Color = def.color, Material = Enum.Material.Metal,
+		})
+		visual(model, root, {
+			Name = "Armor", Size = size * Vector3.new(1.08, 0.25, 0.9), CFrame = cf * CFrame.new(0, size.Y * 0.42, -size.Z * 0.05),
+			Color = ARMOR, Material = Enum.Material.SmoothPlastic,
+		})
+		local head = visual(model, root, {
+			Name = "Head", Size = size * Vector3.new(0.5, 0.35, 0.45), CFrame = cf * CFrame.new(0, size.Y * 0.2, -size.Z * 0.62),
+			Color = dark, Material = Enum.Material.Metal,
+		})
+		local eye = visual(model, root, {
+			Name = "Eye", Size = Vector3.new(size.X * 0.4, size.Y * 0.08, 0.3), CFrame = head.CFrame * CFrame.new(0, 0, -size.Z * 0.23),
+			Color = def.eye, Material = Enum.Material.Neon,
+		})
+		glow(eye, def.eye, if boss then 40 else 18)
+		for _, x in { -1, 1 } do
+			cylinder(model, root, "Barrel", size.Z * 0.5, size.X * 0.05, (head.CFrame * CFrame.new(x * size.X * 0.15, -size.Y * 0.12, 0)).Position,
+				(head.CFrame * CFrame.new(x * size.X * 0.15, -size.Y * 0.12, -size.Z * 0.5)).Position, Color3.fromRGB(30, 30, 30))
+		end
+		for sx = -1, 1, 2 do
+			for sz = -1, 1, 2 do
+				local hip = (cf * CFrame.new(sx * size.X * 0.45, -size.Y * 0.2, sz * size.Z * 0.4)).Position
+				local foot = (cf * CFrame.new(sx * size.X * 0.85, -(def.hipHeight + size.Y / 2), sz * size.Z * 0.75)).Position
+				leg(model, root, hip, foot, if boss then 0.9 else 0.4, dark)
+				visual(model, root, {
+					Name = "Foot", Size = Vector3.new(1, 0.4, 1) * (if boss then 3 else 1.4), CFrame = CFrame.new(foot),
+					Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal,
+				})
+			end
+		end
+		local core = visual(model, root, {
+			Name = "WeakPoint", Shape = Enum.PartType.Ball, Size = Vector3.one * math.max(1.4, size.X * 0.22),
+			CFrame = cf * CFrame.new(0, size.Y * 0.2, size.Z * 0.58), Color = Color3.fromRGB(255, 140, 30), Material = Enum.Material.Neon,
+		})
+		glow(core, Color3.fromRGB(255, 140, 30), if boss then 24 else 10)
+		if boss then
+			for _, x in { -1, 1 } do
+				local pod = visual(model, root, {
+					Name = "RocketPod", Size = Vector3.new(3, 3.4, 5), CFrame = cf * CFrame.new(x * (size.X / 2 + 1.8), size.Y * 0.35, 0),
+					Color = Color3.fromRGB(90, 40, 30), Material = Enum.Material.CorrodedMetal,
+				})
+				for r = -1, 1, 2 do
+					for c = -1, 1, 2 do
+						visual(model, root, {
+							Name = "Tube", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, 1, 1),
+							CFrame = pod.CFrame * CFrame.new(c * 0.7, r * 0.8, -2.55) * CFrame.Angles(0, math.rad(90), 0),
+							Color = Color3.fromRGB(255, 90, 40), Material = Enum.Material.Neon,
+						})
+					end
+				end
+			end
+		end
+	end
+end
+
+-- Puts a custom model from GameAssets/Robots on the root. Returns true if used.
+local function useCustomModel(typeName: string, def, model: Model, root: BasePart): boolean
+	local custom = S.Assets.Get("Robots", typeName)
+	if not custom then
+		return false
+	end
+	if not custom:IsA("Model") then
+		custom:Destroy()
+		return false
+	end
+	S.Assets.Fit(custom, math.max(def.size.X, def.size.Z) * 1.4, root.CFrame)
+	for _, d in custom:GetDescendants() do
+		if d:IsA("BasePart") then
+			d.Anchored = false
+			d.CanCollide = false
+			d.Massless = true
+			weld(root, d)
+		end
+	end
+	custom.Name = "Visual"
+	custom.Parent = model
+	if not custom:FindFirstChild("Eye", true) then
+		visual(model, root, { Name = "Eye", Size = Vector3.one * 0.2, CFrame = root.CFrame * CFrame.new(0, 0, -def.size.Z / 2), Transparency = 1 })
+	end
+	return true
+end
+
+local function buildGround(typeName: string, def, position: Vector3)
 	local model = Instance.new("Model")
 	model.Name = def.name
 	local size = def.size
@@ -3795,46 +4422,12 @@ local function buildGround(def, position: Vector3)
 	root.Name = "HumanoidRootPart"
 	root.Size = size
 	root.Transparency = 1
+	root.CanQuery = false -- only visible parts count as hits
 	root.CFrame = CFrame.new(position + Vector3.new(0, def.hipHeight + size.Y / 2 + 0.5, 0))
 	root.Parent = model
 	model.PrimaryPart = root
-
-	visual(model, root, {
-		Name = "Body", Size = size * Vector3.new(1, 0.8, 1), CFrame = root.CFrame,
-		Color = def.color, Material = Enum.Material.Metal,
-	})
-	visual(model, root, {
-		Name = "Plate", Size = size * Vector3.new(0.8, 0.25, 0.8), CFrame = root.CFrame * CFrame.new(0, size.Y * 0.45, 0),
-		Color = def.color:Lerp(Color3.new(1, 1, 1), 0.2), Material = Enum.Material.DiamondPlate,
-	})
-	visual(model, root, {
-		Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * math.max(0.8, size.X * 0.22),
-		CFrame = root.CFrame * CFrame.new(0, size.Y * 0.1, -size.Z / 2), Color = def.eye, Material = Enum.Material.Neon,
-	})
-	-- legs
-	local legLength = def.hipHeight + size.Y * 0.3
-	for i = 1, 4 do
-		local sx = if i <= 2 then -1 else 1
-		local sz = if i % 2 == 0 then -1 else 1
-		visual(model, root, {
-			Name = "Leg", Size = Vector3.new(size.X * 0.12 + 0.3, legLength, size.X * 0.12 + 0.3),
-			CFrame = root.CFrame * CFrame.new(sx * size.X * 0.55, -legLength / 2 - size.Y * 0.1, sz * size.Z * 0.45) * CFrame.Angles(sz * 0.25, 0, -sx * 0.3),
-			Color = def.color:Lerp(Color3.new(0, 0, 0), 0.3), Material = Enum.Material.Metal,
-		})
-	end
-	if def.weakPoint then
-		visual(model, root, {
-			Name = "WeakPoint", Shape = Enum.PartType.Ball, Size = Vector3.one * math.max(1.4, size.X * 0.22),
-			CFrame = root.CFrame * CFrame.new(0, size.Y * 0.2, size.Z / 2), Color = Color3.fromRGB(255, 140, 30), Material = Enum.Material.Neon,
-		})
-	end
-	if def.boss then
-		for _, x in { -1, 1 } do
-			visual(model, root, {
-				Name = "RocketPod", Size = Vector3.new(3, 3, 5), CFrame = root.CFrame * CFrame.new(x * (size.X / 2 + 1.5), size.Y * 0.3, 0),
-				Color = Color3.fromRGB(90, 40, 30), Material = Enum.Material.CorrodedMetal,
-			})
-		end
+	if not useCustomModel(typeName, def, model, root) then
+		decorate(typeName, def, model, root)
 	end
 
 	local humanoid = Instance.new("Humanoid")
@@ -3853,37 +4446,23 @@ local function buildGround(def, position: Vector3)
 	return model, root, humanoid
 end
 
-local function buildAir(def, position: Vector3)
+local function buildAir(typeName: string, def, position: Vector3)
 	local model = Instance.new("Model")
 	model.Name = def.name
 	local size = def.size
 	local root = Instance.new("Part")
 	root.Name = "Core"
 	root.Size = size
-	root.Color = def.color
-	root.Material = Enum.Material.Metal
+	root.Transparency = 1
+	root.CanQuery = false
 	root.CFrame = CFrame.new(position + Vector3.new(0, def.hoverHeight, 0))
 	root.CanCollide = false
 	root.Parent = model
 	model.PrimaryPart = root
-	visual(model, root, {
-		Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * 1.2,
-		CFrame = root.CFrame * CFrame.new(0, -size.Y / 2, -size.Z / 2 + 0.5), Color = def.eye, Material = Enum.Material.Neon,
-	})
-	if def.attack == "scout" then
-		visual(model, root, {
-			Name = "Siren", Shape = Enum.PartType.Ball, Size = Vector3.one * 1.6,
-			CFrame = root.CFrame * CFrame.new(0, size.Y / 2 + 0.6, 0), Color = Color3.fromRGB(255, 40, 40), Material = Enum.Material.Neon,
-		})
+	if not useCustomModel(typeName, def, model, root) then
+		decorate(typeName, def, model, root)
 	end
-	for i = 1, 4 do
-		local a = (i / 4) * math.pi * 2 + math.pi / 4
-		visual(model, root, {
-			Name = "Rotor", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.2, 2.4, 2.4),
-			CFrame = root.CFrame * CFrame.new(math.cos(a) * size.X * 0.7, size.Y * 0.3, math.sin(a) * size.Z * 0.7) * CFrame.Angles(0, 0, math.rad(90)),
-			Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal, Transparency = 0.3,
-		})
-	end
+
 	local attachment = Instance.new("Attachment")
 	attachment.Parent = root
 	local align = Instance.new("AlignPosition")
@@ -3943,9 +4522,9 @@ function Robots.Spawn(typeName: string, mapId: string, position: Vector3)
 	end
 	local model, root, humanoid, align, orient
 	if def.kind == "air" then
-		model, root, humanoid, align, orient = buildAir(def, position)
+		model, root, humanoid, align, orient = buildAir(typeName, def, position)
 	else
-		model, root, humanoid = buildGround(def, position)
+		model, root, humanoid = buildGround(typeName, def, position)
 	end
 	nextId += 1
 	local robot = {
@@ -3983,12 +4562,7 @@ local function die(robot, killer)
 	robots[robot.id] = nil
 	robot.dead = true
 	local pos = robot.root.Position
-	local explosion = Instance.new("Explosion")
-	explosion.Position = pos
-	explosion.BlastRadius = 0
-	explosion.BlastPressure = 0
-	explosion.DestroyJointRadiusPercent = 0
-	explosion.Parent = workspace
+	S.Remotes.Effect:FireAllClients("Explosion", pos, if robot.def.boss then 3 else 1)
 	robot.model:Destroy()
 
 	local drops = {}
@@ -4058,12 +4632,7 @@ local projParams = RaycastParams.new()
 projParams.FilterType = Enum.RaycastFilterType.Exclude
 
 local function explode(position: Vector3, radius: number, damage: number, mapId: string, owner)
-	local explosion = Instance.new("Explosion")
-	explosion.Position = position
-	explosion.BlastRadius = 0
-	explosion.BlastPressure = 0
-	explosion.DestroyJointRadiusPercent = 0
-	explosion.Parent = workspace
+	S.Remotes.Effect:FireAllClients("Explosion", position, 1.5)
 	for _, r in raidersIn(mapId) do
 		local dist = (r.root.Position - position).Magnitude
 		if dist <= radius then
@@ -4189,6 +4758,7 @@ local function attack(robot, target: Player, targetRoot: BasePart)
 			telegraphBeam(robot, targetRoot, def.telegraph)
 			task.wait(def.telegraph)
 			if not robot.dead and targetRoot.Parent then
+				S.Remotes.Effect:FireAllClients("Sound", "Bolt", eyePosition(robot))
 				local lead = targetRoot.AssemblyLinearVelocity * 0.3
 				fireProjectile(robot, eyePosition(robot), targetRoot.Position + lead, def.boltSpeed, def.damage)
 			end
@@ -4205,6 +4775,7 @@ local function attack(robot, target: Player, targetRoot: BasePart)
 			end
 		elseif def.attack == "scout" then
 			S.Notify(target, "🚨 A Watcher spotted you - reinforcements incoming!", "Red", true)
+			S.Remotes.Effect:FireAllClients("Sound", "Spotted", robot.root.Position)
 			local siren = robot.model:FindFirstChild("Siren")
 			if siren then
 				local light = Instance.new("PointLight")
@@ -4564,7 +5135,7 @@ return Robots
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="21">
+      <Item class="ModuleScript" referent="28">
         <Properties>
           <string name="Name">Stacks</string>
           <string name="Source"><![CDATA[-- Helpers for item lists: arrays of { id = string, count = number } where
@@ -4669,15 +5240,15 @@ return Stacks
       </Item>
     </Item>
   </Item>
-  <Item class="StarterPlayer" referent="22">
+  <Item class="StarterPlayer" referent="29">
     <Properties>
       <string name="Name">StarterPlayer</string>
     </Properties>
-    <Item class="StarterCharacterScripts" referent="23">
+    <Item class="StarterCharacterScripts" referent="30">
       <Properties>
         <string name="Name">StarterCharacterScripts</string>
       </Properties>
-      <Item class="Script" referent="24">
+      <Item class="Script" referent="31">
         <Properties>
           <string name="Name">Health</string>
           <token name="RunContext">0</token>
@@ -4687,15 +5258,15 @@ return Stacks
         </Properties>
       </Item>
     </Item>
-    <Item class="StarterPlayerScripts" referent="25">
+    <Item class="StarterPlayerScripts" referent="32">
       <Properties>
         <string name="Name">StarterPlayerScripts</string>
       </Properties>
-      <Item class="Folder" referent="26">
+      <Item class="Folder" referent="33">
         <Properties>
           <string name="Name">Client</string>
         </Properties>
-        <Item class="LocalScript" referent="27">
+        <Item class="LocalScript" referent="34">
           <Properties>
             <string name="Name">Main</string>
             <string name="Source"><![CDATA[-- SCRAPFALL client: camera, shooting, HUD and all menus.
@@ -4715,6 +5286,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
 local Items = require(Shared:WaitForChild("Items"))
 local Crafting = require(Shared:WaitForChild("Crafting"))
+local Assets = require(Shared:WaitForChild("Assets"))
 local Remotes = ReplicatedStorage:WaitForChild("Remotes")
 local UI = require(script.Parent:WaitForChild("UIKit"))
 local C = UI.Colors
@@ -5439,17 +6011,137 @@ local function tracer(from: Vector3, to: Vector3, color: Color3, width: number, 
 	Debris:AddItem(p, life + 0.05)
 end
 
+local function playSound(name: string, position: Vector3?)
+	local sound = Assets.Sound(name)
+	if not sound then
+		return
+	end
+	if position then
+		local holder = Instance.new("Part")
+		holder.Anchored = true
+		holder.CanCollide = false
+		holder.CanQuery = false
+		holder.Transparency = 1
+		holder.Size = Vector3.one
+		holder.CFrame = CFrame.new(position)
+		holder.Parent = effectsFolder
+		sound.RollOffMaxDistance = 300
+		sound.Parent = holder
+		Debris:AddItem(holder, 4)
+	else
+		sound.Parent = gui
+		Debris:AddItem(sound, 4)
+	end
+	sound:Play()
+end
+
+local function flash(position: Vector3, color: Color3, size: number, range: number)
+	local p = Instance.new("Part")
+	p.Shape = Enum.PartType.Ball
+	p.Anchored = true
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CastShadow = false
+	p.Material = Enum.Material.Neon
+	p.Color = color
+	p.Size = Vector3.one * size
+	p.CFrame = CFrame.new(position)
+	p.Parent = effectsFolder
+	local light = Instance.new("PointLight")
+	light.Color = color
+	light.Range = range
+	light.Brightness = 3
+	light.Parent = p
+	TweenService:Create(p, TweenInfo.new(0.08), { Transparency = 1, Size = Vector3.one * size * 1.6 }):Play()
+	Debris:AddItem(p, 0.1)
+end
+
+local function sparks(position: Vector3, color: Color3, amount: number)
+	local holder = Instance.new("Part")
+	holder.Anchored = true
+	holder.CanCollide = false
+	holder.CanQuery = false
+	holder.Transparency = 1
+	holder.Size = Vector3.one * 0.2
+	holder.CFrame = CFrame.new(position)
+	holder.Parent = effectsFolder
+	local emitter = Instance.new("ParticleEmitter")
+	emitter.Texture = "rbxasset://textures/particles/sparkles_main.dds"
+	emitter.Color = ColorSequence.new(color)
+	emitter.LightEmission = 1
+	emitter.Size = NumberSequence.new(0.3, 0)
+	emitter.Speed = NumberRange.new(10, 25)
+	emitter.SpreadAngle = Vector2.new(180, 180)
+	emitter.Lifetime = NumberRange.new(0.15, 0.35)
+	emitter.Drag = 4
+	emitter.Enabled = false
+	emitter.Parent = holder
+	emitter:Emit(amount)
+	Debris:AddItem(holder, 1)
+end
+
+local function explosion(position: Vector3, scale: number)
+	flash(position, Color3.fromRGB(255, 160, 60), 4 * scale, 40 * scale)
+	local holder = Instance.new("Part")
+	holder.Anchored = true
+	holder.CanCollide = false
+	holder.CanQuery = false
+	holder.Transparency = 1
+	holder.Size = Vector3.one
+	holder.CFrame = CFrame.new(position)
+	holder.Parent = effectsFolder
+	local fire = Instance.new("ParticleEmitter")
+	fire.Texture = "rbxasset://textures/particles/fire_main.dds"
+	fire.Color = ColorSequence.new(Color3.fromRGB(255, 200, 90), Color3.fromRGB(255, 80, 30))
+	fire.LightEmission = 1
+	fire.Size = NumberSequence.new(3 * scale, 6 * scale)
+	fire.Transparency = NumberSequence.new(0.1, 1)
+	fire.Speed = NumberRange.new(8 * scale, 20 * scale)
+	fire.SpreadAngle = Vector2.new(180, 180)
+	fire.Lifetime = NumberRange.new(0.3, 0.6)
+	fire.Enabled = false
+	fire.Parent = holder
+	fire:Emit(25)
+	local smoke = Instance.new("ParticleEmitter")
+	smoke.Texture = "rbxasset://textures/particles/smoke_main.dds"
+	smoke.Color = ColorSequence.new(Color3.fromRGB(60, 55, 50))
+	smoke.Size = NumberSequence.new(4 * scale, 10 * scale)
+	smoke.Transparency = NumberSequence.new(0.3, 1)
+	smoke.Speed = NumberRange.new(3, 8)
+	smoke.SpreadAngle = Vector2.new(180, 180)
+	smoke.Lifetime = NumberRange.new(1.5, 3)
+	smoke.Enabled = false
+	smoke.Parent = holder
+	smoke:Emit(18)
+	sparks(position, Color3.fromRGB(255, 190, 90), 30)
+	playSound("Explosion", position)
+	Debris:AddItem(holder, 4)
+end
+
 Remotes.Effect.OnClientEvent:Connect(function(kind, a, b, c)
 	if kind == "Tracer" then
 		tracer(a, b, Color3.fromRGB(255, 220, 140), 0.12, 0.08)
+		flash(a, Color3.fromRGB(255, 200, 120), 0.8, 10)
+		sparks(b, Color3.fromRGB(255, 220, 160), 6)
+		if c then
+			playSound("Shot_" .. c, a)
+		end
 	elseif kind == "Laser" then
 		tracer(a, b, Color3.fromRGB(255, 80, 40), 0.25, 0.15)
+		flash(a, Color3.fromRGB(255, 80, 40), 0.8, 12)
+		sparks(b, Color3.fromRGB(255, 120, 60), 8)
+		playSound("Laser", a)
+	elseif kind == "Explosion" then
+		explosion(a, b or 1)
+	elseif kind == "Sound" then
+		playSound(a, b)
 	elseif kind == "Hit" then
 		hitMarker.Visible = true
 		hitMarker.TextColor3 = if c then C.Red elseif b then C.Gold else Color3.new(1, 1, 1)
 		damageNumber.Text = tostring(a) .. (if b then "!" else "")
 		damageNumber.TextColor3 = if b then C.Gold else Color3.new(1, 1, 1)
 		damageNumber.Visible = true
+		playSound(if c then "Kill" else "Hit")
 		task.delay(0.15, function()
 			hitMarker.Visible = false
 		end)
@@ -5459,6 +6151,7 @@ Remotes.Effect.OnClientEvent:Connect(function(kind, a, b, c)
 	elseif kind == "Hurt" then
 		vignette.BackgroundTransparency = 0.7
 		TweenService:Create(vignette, TweenInfo.new(0.4), { BackgroundTransparency = 1 }):Play()
+		playSound("Hurt")
 	end
 end)
 
@@ -5468,25 +6161,105 @@ end)
 local freeMouse = false
 local holdTrack = nil
 
+-- Our own over-the-shoulder camera: Roblox's default camera only turns while
+-- the right mouse button is held, which feels wrong in a shooter.
+local camYaw, camPitch = 0, 0
+local camActive = false
+local gamepadLook = Vector2.zero
+local lookTouch, lastTouchPos = nil, nil
+local MOUSE_SENS = 0.0032
+local TOUCH_SENS = 0.006
+local PAD_SPEED = 3.2
+local SHOULDER = Vector3.new(2.3, 0.5, 9)
+local camParams = RaycastParams.new()
+camParams.FilterType = Enum.RaycastFilterType.Exclude
+
 local function applyCameraMode()
 	local char = player.Character
 	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
-	if not humanoid then
-		return
-	end
-	if inRaid() then
-		humanoid.CameraOffset = Vector3.new(2, 0.6, 0)
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	local camera = workspace.CurrentCamera
+	if inRaid() and humanoid and root then
 		humanoid.AutoRotate = false
-		player.CameraMinZoomDistance = 7
-		player.CameraMaxZoomDistance = 12
+		local look = root.CFrame.LookVector
+		camYaw = math.atan2(-look.X, -look.Z)
+		camPitch = -0.1
+		camActive = true
+		camera.CameraType = Enum.CameraType.Scriptable
 	else
-		humanoid.CameraOffset = Vector3.zero
-		humanoid.AutoRotate = true
-		player.CameraMaxZoomDistance = 40
-		player.CameraMinZoomDistance = 0.5
+		camActive = false
+		if humanoid then
+			humanoid.AutoRotate = true
+		end
+		camera.CameraType = Enum.CameraType.Custom
+		if humanoid then
+			camera.CameraSubject = humanoid
+		end
 	end
 end
 player:GetAttributeChangedSignal("InRaid"):Connect(applyCameraMode)
+
+UserInputService.InputChanged:Connect(function(input, processed)
+	if not camActive then
+		return
+	end
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then
+			camYaw -= input.Delta.X * MOUSE_SENS
+			camPitch = math.clamp(camPitch - input.Delta.Y * MOUSE_SENS, -1.2, 1.1)
+		end
+	elseif input.KeyCode == Enum.KeyCode.Thumbstick2 then
+		gamepadLook = Vector2.new(input.Position.X, input.Position.Y)
+		if gamepadLook.Magnitude < 0.15 then
+			gamepadLook = Vector2.zero
+		end
+	elseif input == lookTouch and lastTouchPos then
+		local delta = input.Position - lastTouchPos
+		lastTouchPos = input.Position
+		camYaw -= delta.X * TOUCH_SENS
+		camPitch = math.clamp(camPitch - delta.Y * TOUCH_SENS, -1.2, 1.1)
+	end
+end)
+UserInputService.InputBegan:Connect(function(input, processed)
+	-- touches on the right part of the screen (not on a button) turn the camera
+	if camActive and input.UserInputType == Enum.UserInputType.Touch and not processed then
+		if input.Position.X > workspace.CurrentCamera.ViewportSize.X * 0.35 and not lookTouch then
+			lookTouch = input
+			lastTouchPos = input.Position
+		end
+	end
+end)
+UserInputService.InputEnded:Connect(function(input)
+	if input == lookTouch then
+		lookTouch, lastTouchPos = nil, nil
+	end
+end)
+
+RunService:BindToRenderStep("ScrapfallCamera", Enum.RenderPriority.Camera.Value + 1, function(dt)
+	if not camActive then
+		return
+	end
+	local char = player.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+	if gamepadLook.Magnitude > 0 then
+		camYaw -= gamepadLook.X * PAD_SPEED * dt
+		camPitch = math.clamp(camPitch + gamepadLook.Y * PAD_SPEED * 0.7 * dt, -1.2, 1.1)
+	end
+	local camera = workspace.CurrentCamera
+	camera.CameraType = Enum.CameraType.Scriptable
+	local rotation = CFrame.Angles(0, camYaw, 0) * CFrame.Angles(camPitch, 0, 0)
+	local pivot = root.Position + Vector3.new(0, 1.8, 0)
+	local desired = pivot + rotation:VectorToWorldSpace(SHOULDER)
+	-- keep the camera out of walls
+	camParams.FilterDescendantsInstances = { char, effectsFolder }
+	local offset = desired - pivot
+	local hit = workspace:Raycast(pivot, offset, camParams)
+	local camPos = if hit then hit.Position - offset.Unit * 0.6 else desired
+	camera.CFrame = CFrame.new(camPos) * rotation
+end)
 
 local function playHoldAnimation(char: Model)
 	local humanoid = char:WaitForChild("Humanoid", 10)
@@ -5561,7 +6334,15 @@ local function tryFire()
 	local to = if result then result.Position else origin + direction * def.range
 	local held = char:FindFirstChild("HeldWeapon")
 	local muzzle = held and held:FindFirstChild("Muzzle")
-	tracer(if muzzle then muzzle.Position else origin, to, Color3.fromRGB(255, 230, 150), 0.1, 0.06)
+	local from = if muzzle then muzzle.Position else origin
+	tracer(from, to, Color3.fromRGB(255, 230, 150), 0.1, 0.06)
+	flash(from, Color3.fromRGB(255, 200, 120), 0.9, 12)
+	if result then
+		sparks(to, Color3.fromRGB(255, 220, 160), 8)
+	end
+	playSound("Shot_" .. def.ammo, from)
+	-- a little camera kick
+	camPitch = math.min(camPitch + (if def.damage > 40 then 0.03 else 0.008), 1.1)
 end
 
 UserInputService.InputBegan:Connect(function(input, processed)
@@ -5619,12 +6400,8 @@ RunService.RenderStepped:Connect(function()
 	local lockMouse = raid and not modal.Visible and not freeMouse and not isTouch
 	UserInputService.MouseBehavior = if lockMouse then Enum.MouseBehavior.LockCenter else Enum.MouseBehavior.Default
 	UserInputService.MouseIconEnabled = not lockMouse
-	if raid and root and humanoid and humanoid.Health > 0 then
-		local look = workspace.CurrentCamera.CFrame.LookVector
-		local flat = Vector3.new(look.X, 0, look.Z)
-		if flat.Magnitude > 0.01 then
-			root.CFrame = CFrame.lookAt(root.Position, root.Position + flat)
-		end
+	if camActive and root and humanoid and humanoid.Health > 0 then
+		root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, camYaw, 0)
 	end
 	if holdTrack then
 		local wantHold = raid and (player:GetAttribute("WeaponId") or "") ~= ""
@@ -5743,7 +6520,7 @@ action("RequestProfile")
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="28">
+        <Item class="ModuleScript" referent="35">
           <Properties>
             <string name="Name">UIKit</string>
             <string name="Source"><![CDATA[-- Tiny helpers for building UI from code.
@@ -5858,11 +6635,17 @@ return UIKit
       </Item>
     </Item>
   </Item>
-  <Item class="Workspace" referent="29">
+  <Item class="Workspace" referent="36">
     <Properties>
       <string name="Name">Workspace</string>
       <bool name="NeedsPivotMigration">false</bool>
       <bool name="StreamingEnabled">false</bool>
     </Properties>
+    <Item class="Terrain" referent="37">
+      <Properties>
+        <string name="Name">Terrain</string>
+        <bool name="Decoration">true</bool>
+      </Properties>
+    </Item>
   </Item>
 </roblox>

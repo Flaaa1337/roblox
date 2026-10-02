@@ -35,6 +35,10 @@ step("profile loaded", function()
 end)
 
 -- Client menus in the Outpost
+step("render frames in the outpost", function()
+	renderFrame()
+end)
+
 for _, panel in { "Trader", "Stash", "Workbench", "Upgrades", "MapSelect", "QuartersBuy" } do
 	step("open panel " .. panel, function()
 		Remotes.OpenPanel:FireClient(player, panel)
@@ -47,6 +51,13 @@ step("deploy to Rustfield", function()
 	task.wait(0.3)
 	assert(player:GetAttribute("InRaid") == true, "not in raid after deploy")
 	assert(Inventory.Get(player), "no raid inventory")
+end)
+
+step("render frames in the raid (camera, HUD)", function()
+	for _ = 1, 3 do
+		renderFrame()
+	end
+	assert(workspace.CurrentCamera.CameraType == roblox.Enum.CameraType.Scriptable, "shooter camera not active in raid")
 end)
 
 step("shoot, reload, heal, swap", function()

@@ -15,6 +15,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Config = require(Shared:WaitForChild("Config"))
 local Items = require(Shared:WaitForChild("Items"))
 local Crafting = require(Shared:WaitForChild("Crafting"))
+local Assets = require(Shared:WaitForChild("Assets"))
 local Remotes = ReplicatedStorage:WaitForChild("Remotes")
 local UI = require(script.Parent:WaitForChild("UIKit"))
 local C = UI.Colors
@@ -739,17 +740,137 @@ local function tracer(from: Vector3, to: Vector3, color: Color3, width: number, 
 	Debris:AddItem(p, life + 0.05)
 end
 
+local function playSound(name: string, position: Vector3?)
+	local sound = Assets.Sound(name)
+	if not sound then
+		return
+	end
+	if position then
+		local holder = Instance.new("Part")
+		holder.Anchored = true
+		holder.CanCollide = false
+		holder.CanQuery = false
+		holder.Transparency = 1
+		holder.Size = Vector3.one
+		holder.CFrame = CFrame.new(position)
+		holder.Parent = effectsFolder
+		sound.RollOffMaxDistance = 300
+		sound.Parent = holder
+		Debris:AddItem(holder, 4)
+	else
+		sound.Parent = gui
+		Debris:AddItem(sound, 4)
+	end
+	sound:Play()
+end
+
+local function flash(position: Vector3, color: Color3, size: number, range: number)
+	local p = Instance.new("Part")
+	p.Shape = Enum.PartType.Ball
+	p.Anchored = true
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CastShadow = false
+	p.Material = Enum.Material.Neon
+	p.Color = color
+	p.Size = Vector3.one * size
+	p.CFrame = CFrame.new(position)
+	p.Parent = effectsFolder
+	local light = Instance.new("PointLight")
+	light.Color = color
+	light.Range = range
+	light.Brightness = 3
+	light.Parent = p
+	TweenService:Create(p, TweenInfo.new(0.08), { Transparency = 1, Size = Vector3.one * size * 1.6 }):Play()
+	Debris:AddItem(p, 0.1)
+end
+
+local function sparks(position: Vector3, color: Color3, amount: number)
+	local holder = Instance.new("Part")
+	holder.Anchored = true
+	holder.CanCollide = false
+	holder.CanQuery = false
+	holder.Transparency = 1
+	holder.Size = Vector3.one * 0.2
+	holder.CFrame = CFrame.new(position)
+	holder.Parent = effectsFolder
+	local emitter = Instance.new("ParticleEmitter")
+	emitter.Texture = "rbxasset://textures/particles/sparkles_main.dds"
+	emitter.Color = ColorSequence.new(color)
+	emitter.LightEmission = 1
+	emitter.Size = NumberSequence.new(0.3, 0)
+	emitter.Speed = NumberRange.new(10, 25)
+	emitter.SpreadAngle = Vector2.new(180, 180)
+	emitter.Lifetime = NumberRange.new(0.15, 0.35)
+	emitter.Drag = 4
+	emitter.Enabled = false
+	emitter.Parent = holder
+	emitter:Emit(amount)
+	Debris:AddItem(holder, 1)
+end
+
+local function explosion(position: Vector3, scale: number)
+	flash(position, Color3.fromRGB(255, 160, 60), 4 * scale, 40 * scale)
+	local holder = Instance.new("Part")
+	holder.Anchored = true
+	holder.CanCollide = false
+	holder.CanQuery = false
+	holder.Transparency = 1
+	holder.Size = Vector3.one
+	holder.CFrame = CFrame.new(position)
+	holder.Parent = effectsFolder
+	local fire = Instance.new("ParticleEmitter")
+	fire.Texture = "rbxasset://textures/particles/fire_main.dds"
+	fire.Color = ColorSequence.new(Color3.fromRGB(255, 200, 90), Color3.fromRGB(255, 80, 30))
+	fire.LightEmission = 1
+	fire.Size = NumberSequence.new(3 * scale, 6 * scale)
+	fire.Transparency = NumberSequence.new(0.1, 1)
+	fire.Speed = NumberRange.new(8 * scale, 20 * scale)
+	fire.SpreadAngle = Vector2.new(180, 180)
+	fire.Lifetime = NumberRange.new(0.3, 0.6)
+	fire.Enabled = false
+	fire.Parent = holder
+	fire:Emit(25)
+	local smoke = Instance.new("ParticleEmitter")
+	smoke.Texture = "rbxasset://textures/particles/smoke_main.dds"
+	smoke.Color = ColorSequence.new(Color3.fromRGB(60, 55, 50))
+	smoke.Size = NumberSequence.new(4 * scale, 10 * scale)
+	smoke.Transparency = NumberSequence.new(0.3, 1)
+	smoke.Speed = NumberRange.new(3, 8)
+	smoke.SpreadAngle = Vector2.new(180, 180)
+	smoke.Lifetime = NumberRange.new(1.5, 3)
+	smoke.Enabled = false
+	smoke.Parent = holder
+	smoke:Emit(18)
+	sparks(position, Color3.fromRGB(255, 190, 90), 30)
+	playSound("Explosion", position)
+	Debris:AddItem(holder, 4)
+end
+
 Remotes.Effect.OnClientEvent:Connect(function(kind, a, b, c)
 	if kind == "Tracer" then
 		tracer(a, b, Color3.fromRGB(255, 220, 140), 0.12, 0.08)
+		flash(a, Color3.fromRGB(255, 200, 120), 0.8, 10)
+		sparks(b, Color3.fromRGB(255, 220, 160), 6)
+		if c then
+			playSound("Shot_" .. c, a)
+		end
 	elseif kind == "Laser" then
 		tracer(a, b, Color3.fromRGB(255, 80, 40), 0.25, 0.15)
+		flash(a, Color3.fromRGB(255, 80, 40), 0.8, 12)
+		sparks(b, Color3.fromRGB(255, 120, 60), 8)
+		playSound("Laser", a)
+	elseif kind == "Explosion" then
+		explosion(a, b or 1)
+	elseif kind == "Sound" then
+		playSound(a, b)
 	elseif kind == "Hit" then
 		hitMarker.Visible = true
 		hitMarker.TextColor3 = if c then C.Red elseif b then C.Gold else Color3.new(1, 1, 1)
 		damageNumber.Text = tostring(a) .. (if b then "!" else "")
 		damageNumber.TextColor3 = if b then C.Gold else Color3.new(1, 1, 1)
 		damageNumber.Visible = true
+		playSound(if c then "Kill" else "Hit")
 		task.delay(0.15, function()
 			hitMarker.Visible = false
 		end)
@@ -759,6 +880,7 @@ Remotes.Effect.OnClientEvent:Connect(function(kind, a, b, c)
 	elseif kind == "Hurt" then
 		vignette.BackgroundTransparency = 0.7
 		TweenService:Create(vignette, TweenInfo.new(0.4), { BackgroundTransparency = 1 }):Play()
+		playSound("Hurt")
 	end
 end)
 
@@ -768,25 +890,105 @@ end)
 local freeMouse = false
 local holdTrack = nil
 
+-- Our own over-the-shoulder camera: Roblox's default camera only turns while
+-- the right mouse button is held, which feels wrong in a shooter.
+local camYaw, camPitch = 0, 0
+local camActive = false
+local gamepadLook = Vector2.zero
+local lookTouch, lastTouchPos = nil, nil
+local MOUSE_SENS = 0.0032
+local TOUCH_SENS = 0.006
+local PAD_SPEED = 3.2
+local SHOULDER = Vector3.new(2.3, 0.5, 9)
+local camParams = RaycastParams.new()
+camParams.FilterType = Enum.RaycastFilterType.Exclude
+
 local function applyCameraMode()
 	local char = player.Character
 	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
-	if not humanoid then
-		return
-	end
-	if inRaid() then
-		humanoid.CameraOffset = Vector3.new(2, 0.6, 0)
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	local camera = workspace.CurrentCamera
+	if inRaid() and humanoid and root then
 		humanoid.AutoRotate = false
-		player.CameraMinZoomDistance = 7
-		player.CameraMaxZoomDistance = 12
+		local look = root.CFrame.LookVector
+		camYaw = math.atan2(-look.X, -look.Z)
+		camPitch = -0.1
+		camActive = true
+		camera.CameraType = Enum.CameraType.Scriptable
 	else
-		humanoid.CameraOffset = Vector3.zero
-		humanoid.AutoRotate = true
-		player.CameraMaxZoomDistance = 40
-		player.CameraMinZoomDistance = 0.5
+		camActive = false
+		if humanoid then
+			humanoid.AutoRotate = true
+		end
+		camera.CameraType = Enum.CameraType.Custom
+		if humanoid then
+			camera.CameraSubject = humanoid
+		end
 	end
 end
 player:GetAttributeChangedSignal("InRaid"):Connect(applyCameraMode)
+
+UserInputService.InputChanged:Connect(function(input, processed)
+	if not camActive then
+		return
+	end
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then
+			camYaw -= input.Delta.X * MOUSE_SENS
+			camPitch = math.clamp(camPitch - input.Delta.Y * MOUSE_SENS, -1.2, 1.1)
+		end
+	elseif input.KeyCode == Enum.KeyCode.Thumbstick2 then
+		gamepadLook = Vector2.new(input.Position.X, input.Position.Y)
+		if gamepadLook.Magnitude < 0.15 then
+			gamepadLook = Vector2.zero
+		end
+	elseif input == lookTouch and lastTouchPos then
+		local delta = input.Position - lastTouchPos
+		lastTouchPos = input.Position
+		camYaw -= delta.X * TOUCH_SENS
+		camPitch = math.clamp(camPitch - delta.Y * TOUCH_SENS, -1.2, 1.1)
+	end
+end)
+UserInputService.InputBegan:Connect(function(input, processed)
+	-- touches on the right part of the screen (not on a button) turn the camera
+	if camActive and input.UserInputType == Enum.UserInputType.Touch and not processed then
+		if input.Position.X > workspace.CurrentCamera.ViewportSize.X * 0.35 and not lookTouch then
+			lookTouch = input
+			lastTouchPos = input.Position
+		end
+	end
+end)
+UserInputService.InputEnded:Connect(function(input)
+	if input == lookTouch then
+		lookTouch, lastTouchPos = nil, nil
+	end
+end)
+
+RunService:BindToRenderStep("ScrapfallCamera", Enum.RenderPriority.Camera.Value + 1, function(dt)
+	if not camActive then
+		return
+	end
+	local char = player.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+	if gamepadLook.Magnitude > 0 then
+		camYaw -= gamepadLook.X * PAD_SPEED * dt
+		camPitch = math.clamp(camPitch + gamepadLook.Y * PAD_SPEED * 0.7 * dt, -1.2, 1.1)
+	end
+	local camera = workspace.CurrentCamera
+	camera.CameraType = Enum.CameraType.Scriptable
+	local rotation = CFrame.Angles(0, camYaw, 0) * CFrame.Angles(camPitch, 0, 0)
+	local pivot = root.Position + Vector3.new(0, 1.8, 0)
+	local desired = pivot + rotation:VectorToWorldSpace(SHOULDER)
+	-- keep the camera out of walls
+	camParams.FilterDescendantsInstances = { char, effectsFolder }
+	local offset = desired - pivot
+	local hit = workspace:Raycast(pivot, offset, camParams)
+	local camPos = if hit then hit.Position - offset.Unit * 0.6 else desired
+	camera.CFrame = CFrame.new(camPos) * rotation
+end)
 
 local function playHoldAnimation(char: Model)
 	local humanoid = char:WaitForChild("Humanoid", 10)
@@ -861,7 +1063,15 @@ local function tryFire()
 	local to = if result then result.Position else origin + direction * def.range
 	local held = char:FindFirstChild("HeldWeapon")
 	local muzzle = held and held:FindFirstChild("Muzzle")
-	tracer(if muzzle then muzzle.Position else origin, to, Color3.fromRGB(255, 230, 150), 0.1, 0.06)
+	local from = if muzzle then muzzle.Position else origin
+	tracer(from, to, Color3.fromRGB(255, 230, 150), 0.1, 0.06)
+	flash(from, Color3.fromRGB(255, 200, 120), 0.9, 12)
+	if result then
+		sparks(to, Color3.fromRGB(255, 220, 160), 8)
+	end
+	playSound("Shot_" .. def.ammo, from)
+	-- a little camera kick
+	camPitch = math.min(camPitch + (if def.damage > 40 then 0.03 else 0.008), 1.1)
 end
 
 UserInputService.InputBegan:Connect(function(input, processed)
@@ -919,12 +1129,8 @@ RunService.RenderStepped:Connect(function()
 	local lockMouse = raid and not modal.Visible and not freeMouse and not isTouch
 	UserInputService.MouseBehavior = if lockMouse then Enum.MouseBehavior.LockCenter else Enum.MouseBehavior.Default
 	UserInputService.MouseIconEnabled = not lockMouse
-	if raid and root and humanoid and humanoid.Health > 0 then
-		local look = workspace.CurrentCamera.CFrame.LookVector
-		local flat = Vector3.new(look.X, 0, look.Z)
-		if flat.Magnitude > 0.01 then
-			root.CFrame = CFrame.lookAt(root.Position, root.Position + flat)
-		end
+	if camActive and root and humanoid and humanoid.Health > 0 then
+		root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, camYaw, 0)
 	end
 	if holdTrack then
 		local wantHold = raid and (player:GetAttribute("WeaponId") or "") ~= ""

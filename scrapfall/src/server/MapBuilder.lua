@@ -86,6 +86,18 @@ function MapBuilder.MakeContainer(cf: CFrame, kind: string, parent: Instance)
 		CFrame = box.CFrame * CFrame.new(0, style.size.Y / 2, 0), Color = style.color:Lerp(Color3.new(0, 0, 0), 0.3),
 		Material = Enum.Material.Metal, CanCollide = false, Parent = box,
 	})
+	local custom = S.Assets.Get("Props", kind)
+	if custom and custom:IsA("Model") then
+		S.Assets.Fit(custom, math.max(style.size.X, style.size.Y, style.size.Z) * 1.2, cf * CFrame.new(0, style.size.Y / 2, 0))
+		for _, d in custom:GetDescendants() do
+			if d:IsA("BasePart") then
+				d.Anchored = true
+			end
+		end
+		custom.Parent = box
+		box.Transparency = 1
+		box:FindFirstChild("Lid"):Destroy()
+	end
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = "Search"
 	prompt.ObjectText = style.label
@@ -97,24 +109,54 @@ function MapBuilder.MakeContainer(cf: CFrame, kind: string, parent: Instance)
 	return box, prompt
 end
 
+local function effect(className: string, props)
+	local inst = Lighting:FindFirstChildOfClass(className) or Instance.new(className)
+	for k, v in props do
+		inst[k] = v
+	end
+	inst.Parent = Lighting
+	return inst
+end
+
 local function buildLighting()
-	Lighting.ClockTime = 17.4
-	Lighting.Brightness = 2
-	Lighting.OutdoorAmbient = Color3.fromRGB(140, 120, 110)
-	Lighting.EnvironmentDiffuseScale = 0.5
-	local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
-	atmosphere.Density = 0.36
-	atmosphere.Offset = 0.2
-	atmosphere.Haze = 2
-	atmosphere.Glare = 0.4
-	atmosphere.Color = Color3.fromRGB(230, 180, 140)
-	atmosphere.Decay = Color3.fromRGB(120, 90, 80)
-	atmosphere.Parent = Lighting
-	local cc = Lighting:FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect")
-	cc.Saturation = -0.15
-	cc.Contrast = 0.08
-	cc.TintColor = Color3.fromRGB(255, 240, 225)
-	cc.Parent = Lighting
+	-- Golden-hour wasteland look. (Lighting.Technology = Future is set in the
+	-- place file because scripts are not allowed to change it.)
+	Lighting.ClockTime = 17.3
+	Lighting.GeographicLatitude = 30
+	Lighting.Brightness = 3
+	Lighting.Ambient = Color3.fromRGB(40, 32, 30)
+	Lighting.OutdoorAmbient = Color3.fromRGB(120, 100, 90)
+	Lighting.EnvironmentDiffuseScale = 1
+	Lighting.EnvironmentSpecularScale = 1
+	Lighting.ExposureCompensation = 0.1
+	effect("Atmosphere", {
+		Density = 0.38, Offset = 0.25, Haze = 2.2, Glare = 0.6,
+		Color = Color3.fromRGB(235, 185, 140), Decay = Color3.fromRGB(110, 80, 70),
+	})
+	effect("ColorCorrectionEffect", {
+		Brightness = 0.02, Contrast = 0.14, Saturation = -0.12, TintColor = Color3.fromRGB(255, 238, 220),
+	})
+	effect("BloomEffect", { Intensity = 0.7, Size = 28, Threshold = 1.4 })
+	effect("SunRaysEffect", { Intensity = 0.07, Spread = 0.6 })
+	effect("DepthOfFieldEffect", { FarIntensity = 0.12, FocusDistance = 40, InFocusRadius = 90, NearIntensity = 0 })
+end
+
+---------------------------------------------------------------------------
+-- Terrain helpers (terrain looks far better than flat parts)
+---------------------------------------------------------------------------
+local Terrain = workspace.Terrain
+
+local function paint(center: Vector3, radius: number, material)
+	-- repaints the top layer of the ground in a disc
+	Terrain:FillCylinder(CFrame.new(center.X, -1, center.Z), 2, radius, material)
+end
+
+local function mound(center: Vector3, radius: number, material)
+	Terrain:FillBall(Vector3.new(center.X, -radius * 0.65, center.Z), radius, material)
+end
+
+local function boulder(center: Vector3, radius: number, material)
+	Terrain:FillBall(center + Vector3.new(0, radius * 0.3, 0), radius, material)
 end
 
 ---------------------------------------------------------------------------
@@ -172,22 +214,24 @@ local function buildHub(root)
 	local c = Config.HubPos
 	local R = 120 -- half size of the cavern
 
-	-- Cavern: floor, rock walls and ceiling
+	-- Cavern carved out of solid rock
+	Terrain:FillBlock(CFrame.new(c + Vector3.new(0, 30, 0)), Vector3.new(R * 2 + 80, 100, R * 2 + 80), Enum.Material.Rock)
+	Terrain:FillBlock(CFrame.new(c + Vector3.new(0, 28, 0)), Vector3.new(R * 2, 60, R * 2), Enum.Material.Air)
+	local caveRng = Random.new(7)
+	for _ = 1, 40 do
+		local p = c + Vector3.new(caveRng:NextNumber(-R, R), 58, caveRng:NextNumber(-R, R))
+		if math.abs(p.X - c.X) > 20 or math.abs(p.Z - c.Z) > 20 then
+			Terrain:FillBall(p, caveRng:NextNumber(4, 10), Enum.Material.Slate) -- stalactites
+		end
+	end
+	for _ = 1, 30 do
+		local a = caveRng:NextNumber(0, math.pi * 2)
+		local p = c + Vector3.new(math.cos(a) * R, caveRng:NextNumber(0, 40), math.sin(a) * R)
+		Terrain:FillBall(p, caveRng:NextNumber(6, 14), Enum.Material.Rock) -- uneven walls
+	end
 	part({
 		Name = "Floor", Size = Vector3.new(R * 2, 4, R * 2), CFrame = CFrame.new(c - Vector3.new(0, 2, 0)),
 		Color = Color3.fromRGB(85, 75, 65), Material = Enum.Material.Cobblestone, Parent = folder,
-	})
-	for i = 0, 3 do
-		local angle = math.rad(i * 90)
-		part({
-			Name = "CaveWall", Size = Vector3.new(R * 2 + 10, 60, 10),
-			CFrame = CFrame.new(c + Vector3.new(math.sin(angle) * (R + 5), 30, math.cos(angle) * (R + 5))) * CFrame.Angles(0, angle, 0),
-			Color = Color3.fromRGB(70, 60, 55), Material = Enum.Material.Rock, Parent = folder,
-		})
-	end
-	part({
-		Name = "Ceiling", Size = Vector3.new(R * 2 + 10, 6, R * 2 + 10), CFrame = CFrame.new(c + Vector3.new(0, 58, 0)),
-		Color = Color3.fromRGB(60, 52, 48), Material = Enum.Material.Rock, Parent = folder,
 	})
 	-- Central plaza with the big lift shaft up to the surface
 	part({
@@ -376,6 +420,142 @@ function MapBuilder.BuildQuarters(index: number, ownerName: string)
 end
 
 ---------------------------------------------------------------------------
+-- Set dressing: wrecked cars, street lamps, dead trees, barrels, fences
+---------------------------------------------------------------------------
+local function car(folder, rng: Random, pos: Vector3)
+	local model = Instance.new("Model")
+	model.Name = "WreckedCar"
+	local colors = { Color3.fromRGB(140, 60, 45), Color3.fromRGB(70, 90, 110), Color3.fromRGB(180, 170, 150), Color3.fromRGB(60, 80, 60) }
+	local color = colors[rng:NextInteger(1, #colors)]
+	local base = CFrame.new(pos) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), math.rad(rng:NextNumber(-6, 6)))
+	part({ Name = "Body", Size = Vector3.new(6, 2.2, 13), CFrame = base * CFrame.new(0, 1.8, 0), Color = color, Material = Enum.Material.CorrodedMetal, Parent = model })
+	part({ Name = "Cabin", Size = Vector3.new(5.4, 2, 6), CFrame = base * CFrame.new(0, 3.9, 0.8), Color = color:Lerp(Color3.new(0, 0, 0), 0.2), Material = Enum.Material.CorrodedMetal, Parent = model })
+	part({ Name = "Windshield", Size = Vector3.new(5, 1.7, 0.2), CFrame = base * CFrame.new(0, 3.9, -2.25) * CFrame.Angles(math.rad(-25), 0, 0), Color = Color3.fromRGB(30, 40, 45), Material = Enum.Material.Glass, Transparency = 0.4, Parent = model })
+	for _, x in { -1, 1 } do
+		for _, z in { -1, 1 } do
+			if rng:NextNumber() < 0.85 then
+				part({
+					Name = "Wheel", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1, 2.4, 2.4),
+					CFrame = base * CFrame.new(x * 3, 0.9, z * 4.2), Color = Color3.fromRGB(25, 25, 28), Material = Enum.Material.Rubber, Parent = model,
+				})
+			end
+		end
+	end
+	model.Parent = folder
+end
+
+local function streetLamp(folder, pos: Vector3, working: boolean)
+	part({ Name = "LampPole", Size = Vector3.new(0.6, 16, 0.6), CFrame = CFrame.new(pos + Vector3.new(0, 8, 0)), Color = Color3.fromRGB(50, 50, 55), Material = Enum.Material.Metal, Parent = folder })
+	part({ Name = "LampArm", Size = Vector3.new(4, 0.4, 0.4), CFrame = CFrame.new(pos + Vector3.new(1.8, 15.8, 0)), Color = Color3.fromRGB(50, 50, 55), Material = Enum.Material.Metal, Parent = folder })
+	local bulb = part({
+		Name = "LampHead", Size = Vector3.new(1.6, 0.5, 1), CFrame = CFrame.new(pos + Vector3.new(3.6, 15.5, 0)),
+		Color = if working then Color3.fromRGB(255, 200, 130) else Color3.fromRGB(60, 60, 60),
+		Material = if working then Enum.Material.Neon else Enum.Material.Glass, Parent = folder,
+	})
+	if working then
+		local light = Instance.new("SpotLight")
+		light.Face = Enum.NormalId.Bottom
+		light.Range = 40
+		light.Angle = 80
+		light.Brightness = 2
+		light.Color = Color3.fromRGB(255, 200, 140)
+		light.Parent = bulb
+	end
+end
+
+local function deadTree(folder, rng: Random, pos: Vector3)
+	local height = rng:NextNumber(12, 22)
+	local wood = Color3.fromRGB(70, 55, 45)
+	local trunk = part({
+		Name = "Trunk", Size = Vector3.new(1.4, height, 1.4), CFrame = CFrame.new(pos + Vector3.new(0, height / 2, 0)) * CFrame.Angles(0, 0, math.rad(rng:NextNumber(-6, 6))),
+		Color = wood, Material = Enum.Material.Wood, Parent = folder,
+	})
+	for _ = 1, rng:NextInteger(3, 5) do
+		local y = rng:NextNumber(height * 0.4, height * 0.95) - height / 2
+		local len = rng:NextNumber(4, 8)
+		local yaw = rng:NextNumber(0, math.pi * 2)
+		part({
+			Name = "Branch", Size = Vector3.new(0.5, len, 0.5), CanCollide = false,
+			CFrame = trunk.CFrame * CFrame.new(0, y, 0) * CFrame.Angles(0, yaw, math.rad(rng:NextNumber(30, 60))) * CFrame.new(0, len / 2, 0),
+			Color = wood, Material = Enum.Material.Wood, Parent = folder,
+		})
+	end
+end
+
+local function barrels(folder, rng: Random, pos: Vector3)
+	local colors = { Color3.fromRGB(150, 50, 40), Color3.fromRGB(60, 90, 140), Color3.fromRGB(200, 160, 40), Color3.fromRGB(90, 90, 90) }
+	for i = 1, rng:NextInteger(1, 4) do
+		local offset = Vector3.new(rng:NextNumber(-3, 3), 0, rng:NextNumber(-3, 3))
+		local fallen = rng:NextNumber() < 0.25
+		part({
+			Name = "Barrel", Shape = Enum.PartType.Cylinder, Size = Vector3.new(3.2, 2.4, 2.4),
+			CFrame = CFrame.new(pos + offset + Vector3.new(0, if fallen then 1.2 else 1.6, 0)) * (if fallen then CFrame.Angles(0, rng:NextNumber(0, 6), 0) else CFrame.Angles(0, 0, math.rad(90))),
+			Color = colors[rng:NextInteger(1, #colors)], Material = Enum.Material.CorrodedMetal, Parent = folder,
+		})
+	end
+end
+
+local function fence(folder, rng: Random, pos: Vector3)
+	local yaw = rng:NextNumber(0, math.pi)
+	local base = CFrame.new(pos) * CFrame.Angles(0, yaw, 0)
+	local segments = rng:NextInteger(2, 5)
+	for i = 0, segments do
+		part({ Name = "FencePost", Size = Vector3.new(0.4, 7, 0.4), CFrame = base * CFrame.new(i * 8, 3.5, 0), Color = Color3.fromRGB(80, 80, 85), Material = Enum.Material.Metal, Parent = folder })
+		if i < segments and rng:NextNumber() < 0.8 then
+			part({
+				Name = "FenceMesh", Size = Vector3.new(8, 6, 0.1), CFrame = base * CFrame.new(i * 8 + 4, 3.5, 0) * CFrame.Angles(math.rad(rng:NextNumber(-8, 8)), 0, 0),
+				Color = Color3.fromRGB(110, 110, 115), Material = Enum.Material.DiamondPlate, Transparency = 0.55, Parent = folder,
+			})
+		end
+	end
+end
+
+local function powerPole(folder, pos: Vector3)
+	part({ Name = "PowerPole", Size = Vector3.new(1, 28, 1), CFrame = CFrame.new(pos + Vector3.new(0, 14, 0)), Color = Color3.fromRGB(80, 60, 45), Material = Enum.Material.Wood, Parent = folder })
+	part({ Name = "CrossBar", Size = Vector3.new(8, 0.6, 0.6), CFrame = CFrame.new(pos + Vector3.new(0, 25, 0)), Color = Color3.fromRGB(80, 60, 45), Material = Enum.Material.Wood, Parent = folder })
+end
+
+function MapBuilder.Props(folder, rng: Random, c: Vector3, half: number, clear, quarry: boolean)
+	local props = Instance.new("Folder")
+	props.Name = "Props"
+	props.Parent = folder
+	-- along the roads
+	for i = -2, 2 do
+		local offset = i * 128 + 64
+		if math.abs(offset) < half then
+			for t = -half + 20, half - 20, 32 do
+				local alongX = c + Vector3.new(offset + 10, 0, t)
+				local alongZ = c + Vector3.new(t, 0, offset - 10)
+				if not quarry and clear(alongX, 10) and rng:NextNumber() < 0.5 then
+					streetLamp(props, alongX, rng:NextNumber() < 0.35)
+				elseif quarry and clear(alongX, 10) and rng:NextNumber() < 0.3 then
+					powerPole(props, alongX)
+				end
+				if clear(alongZ, 12) and rng:NextNumber() < 0.22 then
+					car(props, rng, alongZ + Vector3.new(0, 0, rng:NextNumber(-4, 4)))
+				end
+			end
+		end
+	end
+	-- scattered dressing
+	for _ = 1, 70 do
+		local pos = c + Vector3.new(rng:NextNumber(-half + 15, half - 15), 0, rng:NextNumber(-half + 15, half - 15))
+		if clear(pos, 12) and (pos - c).Magnitude > 45 then
+			local roll = rng:NextNumber()
+			if roll < 0.35 then
+				barrels(props, rng, pos)
+			elseif roll < 0.6 then
+				deadTree(props, rng, pos)
+			elseif roll < 0.8 then
+				fence(props, rng, pos)
+			else
+				car(props, rng, pos)
+			end
+		end
+	end
+end
+
+---------------------------------------------------------------------------
 -- Raid zone
 ---------------------------------------------------------------------------
 local function building(folder, rng: Random, center: Vector3, containers)
@@ -412,6 +592,32 @@ local function building(folder, rng: Random, center: Vector3, containers)
 			part({ Name = "Wall", Size = Vector3.new(rightLen, h, 1.2), CFrame = wall.cf * CFrame.new(wall.length / 2 - rightLen / 2, 0, 0), Color = color, Material = Enum.Material.Concrete, Parent = model })
 			part({ Name = "Lintel", Size = Vector3.new(gap, h - 9, 1.2), CFrame = wall.cf * CFrame.new(gapCenter, 4.5, 0), Color = color, Material = Enum.Material.Concrete, Parent = model })
 		end
+	end
+
+	-- Broken wall tops and exposed rebar make the ruins read as ruins.
+	for _, wall in walls do
+		for _ = 1, rng:NextInteger(1, 3) do
+			local x = rng:NextNumber(-wall.length / 2 + 2, wall.length / 2 - 2)
+			local w2 = rng:NextNumber(2, 6)
+			part({
+				Name = "Rubble", Size = Vector3.new(w2, rng:NextNumber(1, 4), 1.3),
+				CFrame = wall.cf * CFrame.new(x, h / 2 + 1, 0) * CFrame.Angles(0, 0, math.rad(rng:NextNumber(-12, 12))),
+				Color = color, Material = Enum.Material.Concrete, Parent = model,
+			})
+			if rng:NextNumber() < 0.6 then
+				part({
+					Name = "Rebar", Size = Vector3.new(0.2, rng:NextNumber(2, 4), 0.2), CanCollide = false,
+					CFrame = wall.cf * CFrame.new(x + w2 / 2 + 0.5, h / 2 + 1.5, 0) * CFrame.Angles(0, 0, math.rad(rng:NextNumber(-25, 25))),
+					Color = Color3.fromRGB(110, 60, 40), Material = Enum.Material.CorrodedMetal, Parent = model,
+				})
+			end
+		end
+	end
+	-- Rubble piles at the base (terrain)
+	for _ = 1, rng:NextInteger(1, 3) do
+		-- the left wall never has a door, so rubble there never blocks a way in
+		local corner = base * CFrame.new(-w / 2 - 2.5, 0, rng:NextNumber(-d / 2, d / 2))
+		Terrain:FillBall(corner.Position, rng:NextNumber(2.5, 4), Enum.Material.Concrete)
 	end
 
 	-- Partly collapsed roof: drones can see in through the holes.
@@ -500,28 +706,47 @@ local function buildRaid(root, map)
 	local size = map.size
 	local half = size / 2
 
-	part({
-		Name = "Ground", Size = Vector3.new(size + 40, 4, size + 40), CFrame = CFrame.new(c - Vector3.new(0, 2, 0)),
-		Color = map.ground, Material = Enum.Material.Ground, Parent = folder,
-	})
-	-- Boundary walls
+	local quarry = not map.crashSite
+	local groundMat = if quarry then Enum.Material.Sand else Enum.Material.Ground
+	local rockMat = if quarry then Enum.Material.Sandstone else Enum.Material.Rock
+	-- Ground (terrain)
+	Terrain:FillBlock(CFrame.new(c - Vector3.new(0, 8, 0)), Vector3.new(size + 200, 16, size + 200), groundMat)
+	-- Cliffs all around the zone
+	for i = 0, 3 do
+		local angle = math.rad(i * 90)
+		local center = c + Vector3.new(math.sin(angle) * (half + 30), 20, math.cos(angle) * (half + 30))
+		Terrain:FillBlock(CFrame.new(center) * CFrame.Angles(0, angle, 0), Vector3.new(size + 160, 60, 50), rockMat)
+	end
+	for _ = 1, 60 do
+		local a = rng:NextNumber(0, math.pi * 2)
+		local r = half + rng:NextNumber(5, 25)
+		Terrain:FillBall(c + Vector3.new(math.cos(a) * r, rng:NextNumber(20, 50), math.sin(a) * r), rng:NextNumber(12, 24), rockMat)
+	end
+	-- Invisible wall so nobody climbs out
 	for i = 0, 3 do
 		local angle = math.rad(i * 90)
 		part({
-			Name = "Boundary", Size = Vector3.new(size + 40, 40, 6),
-			CFrame = CFrame.new(c + Vector3.new(math.sin(angle) * (half + 10), 20, math.cos(angle) * (half + 10))) * CFrame.Angles(0, angle, 0),
-			Color = Color3.fromRGB(90, 85, 80), Material = Enum.Material.Rock, Parent = folder,
+			Name = "Boundary", Size = Vector3.new(size + 40, 300, 4), Transparency = 1,
+			CFrame = CFrame.new(c + Vector3.new(math.sin(angle) * (half + 8), 150, math.cos(angle) * (half + 8))) * CFrame.Angles(0, angle, 0),
+			Parent = folder,
 		})
 	end
-	-- Roads
+	-- Roads (painted into the terrain)
 	for i = -2, 2 do
 		local offset = i * 128 + 64
 		if math.abs(offset) < half then
-			part({ Name = "Road", Size = Vector3.new(14, 0.2, size), CFrame = CFrame.new(c + Vector3.new(offset, 0.1, 0)), Color = Color3.fromRGB(60, 60, 62), Material = Enum.Material.Asphalt, CanCollide = false, Parent = folder })
-			part({ Name = "Road", Size = Vector3.new(size, 0.2, 14), CFrame = CFrame.new(c + Vector3.new(0, 0.1, offset)), Color = Color3.fromRGB(60, 60, 62), Material = Enum.Material.Asphalt, CanCollide = false, Parent = folder })
+			Terrain:FillBlock(CFrame.new(c + Vector3.new(offset, -1, 0)), Vector3.new(16, 2, size), if quarry then Enum.Material.Ground else Enum.Material.Asphalt)
+			Terrain:FillBlock(CFrame.new(c + Vector3.new(0, -1, offset)), Vector3.new(size, 2, 16), if quarry then Enum.Material.Ground else Enum.Material.Asphalt)
 		end
 	end
-
+	-- Ground variety
+	local patchMats = if quarry
+		then { Enum.Material.Sandstone, Enum.Material.Ground, Enum.Material.Salt }
+		else { Enum.Material.Grass, Enum.Material.LeafyGrass, Enum.Material.Mud, Enum.Material.Pavement }
+	for _ = 1, 90 do
+		local pos = c + Vector3.new(rng:NextNumber(-half, half), 0, rng:NextNumber(-half, half))
+		paint(pos, rng:NextNumber(8, 26), patchMats[rng:NextInteger(1, #patchMats)])
+	end
 	local containers = {}
 	local blocked = {} -- positions to keep clear (spawns, lifts)
 
@@ -550,6 +775,24 @@ local function buildRaid(root, map)
 			Name = "Beacon", Size = Vector3.new(2, 60, 2), CFrame = CFrame.new(pos + Vector3.new(Config.ExtractRadius + 2, 30, 0)),
 			Color = Color3.fromRGB(60, 200, 90), Material = Enum.Material.Neon, CanCollide = false, Parent = folder,
 		})
+		for k = 0, 3 do
+			local a2 = k / 4 * math.pi * 2 + math.pi / 4
+			part({
+				Name = "LiftPillar", Size = Vector3.new(1.5, 18, 1.5),
+				CFrame = CFrame.new(pos + Vector3.new(math.cos(a2) * Config.ExtractRadius, 9, math.sin(a2) * Config.ExtractRadius)),
+				Color = Color3.fromRGB(60, 62, 66), Material = Enum.Material.DiamondPlate, Parent = folder,
+			})
+		end
+		part({
+			Name = "LiftFrame", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1, Config.ExtractRadius * 2 + 2, Config.ExtractRadius * 2 + 2),
+			CFrame = CFrame.new(pos + Vector3.new(0, 18.5, 0)) * CFrame.Angles(0, 0, math.rad(90)),
+			Color = Color3.fromRGB(255, 160, 40), Material = Enum.Material.Metal, Transparency = 0.6, CanCollide = false, Parent = folder,
+		})
+		local beaconLight = Instance.new("PointLight")
+		beaconLight.Color = Color3.fromRGB(80, 255, 120)
+		beaconLight.Range = 35
+		beaconLight.Brightness = 2
+		beaconLight.Parent = beacon
 		local console = part({
 			Name = "Console", Size = Vector3.new(3, 4, 2), CFrame = CFrame.new(pos + Vector3.new(Config.ExtractRadius - 2, 2, 0)),
 			Color = Color3.fromRGB(50, 55, 60), Material = Enum.Material.Metal, Parent = folder,
@@ -615,21 +858,27 @@ local function buildRaid(root, map)
 		end
 	end
 
-	-- Rocks & debris for cover (and a few loose crates)
+	-- Boulders, hills and cover (terrain), plus a few loose crates
 	for _ = 1, map.rocks do
 		local pos = c + Vector3.new(rng:NextNumber(-half + 10, half - 10), 0, rng:NextNumber(-half + 10, half - 10))
 		if clear(pos, 14) and (pos - c).Magnitude > 50 then
-			local size = rng:NextNumber(4, 10)
-			part({
-				Name = "Rock", Size = Vector3.new(size * rng:NextNumber(0.8, 1.6), size * 0.7, size),
-				CFrame = CFrame.new(pos + Vector3.new(0, size * 0.25, 0)) * CFrame.Angles(rng:NextNumber(-0.3, 0.3), rng:NextNumber(0, 6), rng:NextNumber(-0.3, 0.3)),
-				Color = Color3.fromRGB(110, 100, 90), Material = Enum.Material.Slate, Parent = folder,
-			})
+			local r = rng:NextNumber(3, 8)
+			boulder(pos, r, rockMat)
+			if rng:NextNumber() < 0.4 then
+				boulder(pos + Vector3.new(r, 0, rng:NextNumber(-r, r)), r * 0.6, rockMat)
+			end
 			if rng:NextNumber() < 0.15 then
-				table.insert(containers, { cf = CFrame.new(pos + Vector3.new(size, 0, 0)), kind = "Crate" })
+				table.insert(containers, { cf = CFrame.new(pos + Vector3.new(r + 3, 0, 0)), kind = "Crate" })
 			end
 		end
 	end
+	for _ = 1, 14 do
+		local pos = c + Vector3.new(rng:NextNumber(-half + 40, half - 40), 0, rng:NextNumber(-half + 40, half - 40))
+		if clear(pos, 40) and (pos - c).Magnitude > 70 then
+			mound(pos, rng:NextNumber(18, 32), groundMat)
+		end
+	end
+	MapBuilder.Props(folder, rng, c, half, clear, quarry)
 
 	-- Robot spawn points: anywhere not right next to a spawn or lift
 	local robotSpawns = {}

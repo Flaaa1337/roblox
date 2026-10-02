@@ -56,6 +56,33 @@ Empfohlen: *Game Settings → Places → Server Size* = **12**.
 PC: Maus zielen, Klick schießen, `R` nachladen, `1`/`2` Waffe, `H` heilen, `TAB` Rucksack, `E` interagieren, `ALT` Maus freigeben.
 Handy: FIRE-Knopf + Buttons, Ziehen zum Zielen. Controller: R2 schießen, X nachladen, Y wechseln.
 
+## Echte Modelle & Sounds einbauen (Asset-Slots)
+
+Das Spiel hat Platzhalter-Optik aus Code. Sobald du echte Modelle hast, ziehst du sie in
+**ReplicatedStorage → GameAssets** – mit dem passenden Namen – und das Spiel nutzt sie automatisch:
+
+| Ordner | Namen | Hinweise |
+|---|---|---|
+| `Robots` | `Crawler`, `Buzzer`, `Watcher`, `Sentinel`, `Colossus` | Vorderseite = blaue Pfeilrichtung (−Z). Optional ein Teil `WeakPoint` (3× Schaden) und `Eye` (Laser-Ursprung). Größe wird automatisch angepasst. |
+| `Weapons` | `ScrapPistol`, `Rattler`, `Hammer`, `Breacher`, `Longshot` | Ein Teil `Handle` (wird gehalten) und `Muzzle` (Laufende). Lauf zeigt nach −Z. |
+| `Props` | `Crate`, `Toolbox`, `MedCabinet`, `WeaponCase`, `RobotCache`, `DeathCache`, `Wreck` | Kisten-Modelle |
+| `Sounds` | `Shot_LightAmmo`, `Shot_HeavyAmmo`, `Shot_Shells`, `Laser`, `Bolt`, `Explosion`, `Hit`, `Kill`, `Hurt`, `LiftAlarm`, `Extract`, `Spotted`, `Reload`, `Heal` | `Sound`-Objekte |
+
+**Woher?**
+1. **Roblox Creator Store** (Toolbox in Studio): Modelle & Sounds. Am besten Filter **„Verified creators“**.
+   Suchbegriffe: *sci-fi drone*, *mech robot*, *spider robot*, *post apocalyptic*, *rusty car*, *military crate*,
+   für Sounds: *gunshot*, *laser*, *robot alarm*, *explosion*.
+   ⚠️ Kostenlose Modelle enthalten manchmal Schad-Skripte. Das Spiel **löscht automatisch alle Skripte** in
+   `GameAssets`, trotzdem nur Modelle ohne Skripte nehmen.
+2. **KI-Generierung in Studio:** Je nach Studio-Version kannst du über den Assistenten 3D-Modelle aus Text erzeugen
+   (z. B. „rusty spider robot with red eye“).
+3. **Für den echten „krassen“ Look:** einen 3D-Artist beauftragen (Roblox Talent Hub, Fiverr), damit alles
+   einen einheitlichen Stil hat. Das ist der Schritt, der aus „gut“ ein Top-Spiel macht.
+
+**Wichtig:** Wenn ich dir später eine neue `SCRAPFALL.rbxlx` schicke, sind deine eingefügten Modelle dort nicht drin.
+Deshalb: Rechtsklick auf `GameAssets` → **Save to File** (`GameAssets.rbxm`) und mir schicken bzw. auf GitHub in
+`scrapfall/assets/` hochladen – dann baue ich sie fest ein.
+
 ## Noch zu tun (Feinschliff)
 
 - Sounds (Schüsse, Roboter, Aufzug) aus dem Creator Store einfügen – aktuell ohne Ton.
