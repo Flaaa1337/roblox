@@ -1,3 +1,7 @@
+> **Dieses Repo enthält zwei Spiele:**
+> - **OVERBOARD!** (diese Datei, Code in `src/`, Spieldatei `OVERBOARD.rbxlx`)
+> - **SCRAPFALL** – Extraction-Shooter (siehe [`scrapfall/README.md`](scrapfall/README.md), Spieldatei `SCRAPFALL.rbxlx`)
+
 # 🎈 OVERBOARD!
 
 **Der ganze Server sitzt in EINEM Heißluftballon.** Beute schwebt vorbei – aber jedes Item macht den Ballon schwerer. Wird es knapp, stimmt die Crew ab, **wer über Bord fliegt**.

@@ -1,6 +1,7 @@
 *.rbxl
 *.rbxlx
 !OVERBOARD.rbxlx
+!SCRAPFALL.rbxlx
 *.rbxl.lock
 *.rbxlx.lock
 sourcemap.json

@@ -1,0 +1,2 @@
+-- Replaces Roblox's default health regeneration: in SCRAPFALL you heal
+-- with bandages and med kits only.

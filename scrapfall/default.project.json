@@ -1,0 +1,31 @@
+{
+  "name": "Scrapfall",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Shared": {
+        "$path": "src/shared"
+      }
+    },
+    "ServerScriptService": {
+      "Server": {
+        "$path": "src/server"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": {
+          "$path": "src/client"
+        }
+      },
+      "StarterCharacterScripts": {
+        "$path": "src/character"
+      }
+    },
+    "Workspace": {
+      "$properties": {
+        "StreamingEnabled": false
+      }
+    }
+  }
+}
