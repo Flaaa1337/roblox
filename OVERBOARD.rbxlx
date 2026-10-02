@@ -2552,13 +2552,6 @@ grants.TreasureRain = function(player: Player, data)
 	end
 end
 
-for name, amount in Config.ProductCoins do
-	grants[name] = function(player: Player)
-		S.Data.AddCoins(player, amount, false)
-		S.Notify(player, string.format("💰 +%d coins! Thank you for supporting the game!", amount), "Gold", true)
-	end
-end
-
 local function processReceipt(receipt)
 	local player = Players:GetPlayerByUserId(receipt.PlayerId)
 	if not player then
@@ -2595,6 +2588,12 @@ end
 function MonetizationService.Init(services)
 	S = services
 	Config = S.Config
+	for name, amount in Config.ProductCoins do
+		grants[name] = function(player: Player)
+			S.Data.AddCoins(player, amount, false)
+			S.Notify(player, string.format("💰 +%d coins! Thank you for supporting the game!", amount), "Gold", true)
+		end
+	end
 	for name, id in Config.Products do
 		if id ~= 0 then
 			productNameById[id] = name
