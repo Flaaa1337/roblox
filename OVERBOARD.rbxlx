@@ -1,0 +1,4403 @@
+<roblox version="4">
+  <Item class="ReplicatedStorage" referent="0">
+    <Properties>
+      <string name="Name">ReplicatedStorage</string>
+    </Properties>
+    <Item class="Folder" referent="1">
+      <Properties>
+        <string name="Name">Shared</string>
+      </Properties>
+      <Item class="ModuleScript" referent="2">
+        <Properties>
+          <string name="Name">Config</string>
+          <string name="Source"><![CDATA[-- Central tuning file. Almost every gameplay number lives here so the game
+-- can be balanced without touching the logic.
+
+local Config = {}
+
+Config.GameName = "OVERBOARD!"
+
+---------------------------------------------------------------------------
+-- Monetization (create these on the Creator Dashboard, then paste the IDs)
+-- An ID of 0 means "not set up yet": the item is hidden/disabled in game.
+---------------------------------------------------------------------------
+Config.GamePasses = {
+	VIP = 0, -- 2x coins on every cash-out + VIP-only Storm trail
+	Lifejacket = 0, -- keep your loot when you fall overboard or the balloon crashes
+	MegaHook = 0, -- +12 hook range and +10 kg backpack
+}
+
+Config.Products = {
+	EmergencyBurner = 0, -- +30 altitude for the whole balloon (saves everyone)
+	Rescue = 0, -- instantly climb back from the raft to the balloon
+	TreasureRain = 0, -- fixed burst of rare loot around the balloon for everyone
+	CoinsSmall = 0,
+	CoinsMedium = 0,
+	CoinsLarge = 0,
+}
+
+Config.ProductCoins = {
+	CoinsSmall = 500,
+	CoinsMedium = 1500,
+	CoinsLarge = 5000,
+}
+
+-- Fixed (non-random) contents of a Treasure Rain, so no paid randomness.
+Config.TreasureRainItems = {
+	"Chest", "Chest", "Chest", "Gull", "Gull", "Egg", "Egg", "Crown",
+}
+
+Config.EmergencyBurnerAltitude = 30
+
+-- Optional Roblox group: members get a coin bonus (0 = disabled).
+Config.GroupId = 0
+Config.GroupBonus = 0.1
+
+---------------------------------------------------------------------------
+-- World layout (the three zones are far apart so they never overlap)
+---------------------------------------------------------------------------
+Config.HarborPos = Vector3.new(0, 0, 0)
+Config.BalloonPos = Vector3.new(3000, 400, 0) -- top surface of the basket floor
+Config.BasketRadius = 22
+Config.RaftPos = Vector3.new(-3000, 20, 0) -- top surface of the rescue raft
+
+---------------------------------------------------------------------------
+-- Flight
+---------------------------------------------------------------------------
+Config.Intermission = 15
+Config.StartAltitude = 100
+Config.MaxAltitude = 100
+Config.StartFuel = 30
+Config.MaxFuel = 100
+Config.Speed = 14 -- metres per second (also the studs/s the scenery moves)
+
+-- Altitude change per second:
+--   BaseLift - load * WeightSink - distance * LeakPerMeter (+ BurnerLift)
+-- where load = total weight aboard / balloon capacity.
+Config.BaseLift = 0.5
+Config.WeightSink = 1.0
+Config.LeakPerMeter = 0.0001
+Config.BurnerLift = 1.4
+Config.BurnerFuelPerSecond = 1
+Config.BurnerPump = 2 -- seconds of burn added per press
+Config.BurnerMaxTime = 6
+
+Config.BodyWeight = 5
+Config.CapacityPerPlayer = 18
+Config.MinCapacityPlayers = 4
+
+Config.PortEvery = 1200 -- metres between Sky Ports (cash-out stops)
+Config.DockTime = 12
+Config.DockFuel = 15
+Config.DistanceCoinsPer = 50 -- 1 coin per 50 m flown, paid at the end
+
+Config.LootInterval = 1.1
+Config.FuelCanisterChance = 0.15
+Config.FuelCanisterAmount = 8
+Config.LuckPerMeter = 1 / 3000 -- rare loot gets more common the further you fly
+
+-- Emergency Burner tokens bought outside a flight trigger automatically
+-- when the balloon drops below this altitude.
+Config.AutoBurnerAltitude = 15
+
+---------------------------------------------------------------------------
+-- Social chaos
+---------------------------------------------------------------------------
+Config.ShoveEnabled = true
+Config.ShoveCooldown = 8
+Config.ShoveRange = 7
+Config.ShoveForce = 70
+
+Config.VoteDuration = 12
+Config.VoteCooldown = 75
+Config.AutoVoteAltitude = 30
+Config.MinPlayersForVote = 3
+Config.MinVotesToThrow = 2
+
+---------------------------------------------------------------------------
+-- Bot crew: keeps the balloon lively while the game has few players.
+-- Bots fill the basket up to BotCrewSize passengers and hop off when real
+-- players join. They are clearly marked with a robot icon.
+---------------------------------------------------------------------------
+Config.BotsEnabled = true
+Config.BotCrewSize = 5
+Config.BotHookRange = 22
+
+---------------------------------------------------------------------------
+-- Rescue raft
+---------------------------------------------------------------------------
+Config.DeliveriesToReturn = 3
+Config.BarrelFuel = 12
+Config.BarrelRespawn = 8
+Config.DeliveryCoins = 5
+
+return Config
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="3">
+        <Properties>
+          <string name="Name">Loot</string>
+          <string name="Source"><![CDATA[-- Everything that can float past the balloon.
+-- Heavier items are worth more: that trade-off is the whole game.
+
+local Loot = {}
+
+Loot.Rarities = {
+	Common = { order = 1, color = Color3.fromRGB(210, 210, 210), chance = 55 },
+	Uncommon = { order = 2, color = Color3.fromRGB(90, 220, 110), chance = 25 },
+	Rare = { order = 3, color = Color3.fromRGB(70, 150, 255), chance = 12 },
+	Epic = { order = 4, color = Color3.fromRGB(185, 95, 255), chance = 5.5 },
+	Legendary = { order = 5, color = Color3.fromRGB(255, 190, 40), chance = 2 },
+	Mythic = { order = 6, color = Color3.fromRGB(255, 60, 130), chance = 0.5 },
+}
+
+Loot.RarityOrder = { "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic" }
+
+Loot.Items = {
+	Duck = {
+		name = "Rubber Duck", rarity = "Common", weight = 1, value = 4,
+		color = Color3.fromRGB(255, 220, 40), shape = "Ball", size = Vector3.new(1.6, 1.6, 1.6),
+	},
+	Boot = {
+		name = "Old Boot", rarity = "Common", weight = 2, value = 3,
+		color = Color3.fromRGB(110, 75, 45), shape = "Block", size = Vector3.new(1.4, 1.8, 2.4),
+	},
+	Bottle = {
+		name = "Message in a Bottle", rarity = "Common", weight = 1, value = 7,
+		color = Color3.fromRGB(120, 200, 150), shape = "Cylinder", size = Vector3.new(2.4, 1, 1),
+	},
+	Hat = {
+		name = "Pirate Hat", rarity = "Uncommon", weight = 2, value = 16,
+		color = Color3.fromRGB(30, 30, 35), shape = "Block", size = Vector3.new(2.6, 1, 2.6),
+	},
+	GoldFish = {
+		name = "Golden Fish", rarity = "Uncommon", weight = 2, value = 22,
+		color = Color3.fromRGB(255, 170, 40), shape = "Block", size = Vector3.new(2.2, 1.2, 0.6),
+	},
+	Chest = {
+		name = "Treasure Chest", rarity = "Rare", weight = 5, value = 70,
+		color = Color3.fromRGB(150, 95, 40), shape = "Block", size = Vector3.new(3, 2.2, 2),
+	},
+	Gull = {
+		name = "Crystal Seagull", rarity = "Rare", weight = 3, value = 55,
+		color = Color3.fromRGB(150, 240, 255), shape = "Block", size = Vector3.new(2.6, 1.2, 1.2),
+	},
+	Egg = {
+		name = "Cloud Whale Egg", rarity = "Epic", weight = 6, value = 170,
+		color = Color3.fromRGB(245, 245, 255), shape = "Ball", size = Vector3.new(3, 3, 3),
+	},
+	Crown = {
+		name = "Sky Crown", rarity = "Legendary", weight = 4, value = 450,
+		color = Color3.fromRGB(255, 205, 50), shape = "Cylinder", size = Vector3.new(1.4, 2.4, 2.4),
+	},
+	Anvil = {
+		name = "Rainbow Anvil", rarity = "Mythic", weight = 14, value = 1500,
+		color = Color3.fromRGB(255, 80, 200), shape = "Block", size = Vector3.new(3.4, 2, 2),
+	},
+}
+
+Loot.Fuel = {
+	name = "Fuel Canister", rarity = "Common", weight = 0, value = 0, fuel = true,
+	color = Color3.fromRGB(230, 50, 40), shape = "Cylinder", size = Vector3.new(2, 1.4, 1.4),
+}
+
+Loot.ByRarity = {}
+for id, def in Loot.Items do
+	def.id = id
+	Loot.ByRarity[def.rarity] = Loot.ByRarity[def.rarity] or {}
+	table.insert(Loot.ByRarity[def.rarity], id)
+end
+for _, list in Loot.ByRarity do
+	table.sort(list)
+end
+
+-- luckMult boosts Rare and above.
+function Loot.Roll(rng: Random, luckMult: number)
+	local total = 0
+	local weights = {}
+	for _, rarity in Loot.RarityOrder do
+		local info = Loot.Rarities[rarity]
+		local w = info.chance
+		if info.order >= 3 then
+			w *= luckMult
+		end
+		weights[rarity] = w
+		total += w
+	end
+	local pick = rng:NextNumber() * total
+	local chosen = "Common"
+	for _, rarity in Loot.RarityOrder do
+		pick -= weights[rarity]
+		if pick <= 0 then
+			chosen = rarity
+			break
+		end
+	end
+	local list = Loot.ByRarity[chosen]
+	return Loot.Items[list[rng:NextInteger(1, #list)]]
+end
+
+return Loot
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="4">
+        <Properties>
+          <string name="Name">Shop</string>
+          <string name="Source"><![CDATA[-- Coin shop: permanent upgrades, cosmetic trails and daily rewards.
+
+local Shop = {}
+
+Shop.Upgrades = {
+	Hook = {
+		name = "Hook Range", desc = "Grab loot from further away.",
+		max = 8, baseCost = 50, growth = 1.7, base = 18, per = 6, unit = " studs",
+	},
+	Backpack = {
+		name = "Backpack", desc = "Carry more weight at once.",
+		max = 10, baseCost = 75, growth = 1.7, base = 10, per = 5, unit = " kg",
+	},
+	Luck = {
+		name = "Lucky Hook", desc = "Chance to double an item's value when you cash out.",
+		max = 10, baseCost = 150, growth = 1.8, base = 0, per = 5, unit = "%",
+	},
+}
+
+Shop.UpgradeOrder = { "Hook", "Backpack", "Luck" }
+
+function Shop.UpgradeCost(id: string, level: number): number
+	local u = Shop.Upgrades[id]
+	return math.floor(u.baseCost * u.growth ^ level)
+end
+
+function Shop.UpgradeValue(id: string, level: number): number
+	local u = Shop.Upgrades[id]
+	return u.base + u.per * level
+end
+
+Shop.Trails = {
+	{
+		id = "Sky", name = "Sky Trail", price = 200,
+		colors = { Color3.fromRGB(120, 220, 255), Color3.fromRGB(255, 255, 255) },
+	},
+	{
+		id = "Sunset", name = "Sunset Trail", price = 600,
+		colors = { Color3.fromRGB(255, 120, 60), Color3.fromRGB(255, 60, 140) },
+	},
+	{
+		id = "Gold", name = "Golden Trail", price = 1500,
+		colors = { Color3.fromRGB(255, 215, 60), Color3.fromRGB(255, 150, 20) },
+	},
+	{
+		id = "Rainbow", name = "Rainbow Trail", price = 5000,
+		colors = {
+			Color3.fromRGB(255, 60, 60), Color3.fromRGB(255, 170, 40), Color3.fromRGB(255, 240, 60),
+			Color3.fromRGB(60, 220, 90), Color3.fromRGB(60, 140, 255), Color3.fromRGB(170, 80, 255),
+		},
+	},
+	{
+		id = "Storm", name = "Storm Trail (VIP)", price = 0, vip = true,
+		colors = { Color3.fromRGB(70, 60, 140), Color3.fromRGB(180, 230, 255) },
+	},
+}
+
+function Shop.GetTrail(id: string)
+	for _, trail in Shop.Trails do
+		if trail.id == id then
+			return trail
+		end
+	end
+	return nil
+end
+
+-- Reward for day 1..7 of a login streak (repeats after day 7).
+Shop.DailyRewards = { 50, 80, 120, 180, 250, 350, 600 }
+Shop.DailyCooldown = 20 * 3600
+Shop.DailyStreakWindow = 48 * 3600
+
+return Shop
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="ServerScriptService" referent="5">
+    <Properties>
+      <string name="Name">ServerScriptService</string>
+    </Properties>
+    <Item class="Folder" referent="6">
+      <Properties>
+        <string name="Name">Server</string>
+      </Properties>
+      <Item class="ModuleScript" referent="7">
+        <Properties>
+          <string name="Name">AnalyticsService</string>
+          <string name="Source"><![CDATA[-- Thin wrapper around Roblox AnalyticsService. The data shows up in the
+-- Creator Dashboard (Analytics -> Economy / Funnels / Custom) and tells us
+-- whether the game is actually fun: where new players drop off, what they
+-- spend coins on and how often they come back.
+
+local AnalyticsService = game:GetService("AnalyticsService")
+local Players = game:GetService("Players")
+
+local Analytics = {}
+local S
+
+local funnelDone = {} -- [Player] = { [step] = true }
+
+local FUNNEL = {
+	[1] = "Joined",
+	[2] = "BoardedFirstFlight",
+	[3] = "HookedFirstLoot",
+	[4] = "FirstCashOut",
+	[5] = "BoughtFirstUpgrade",
+}
+
+local function safe(fn, ...)
+	local ok, err = pcall(fn, ...)
+	if not ok then
+		warn("[Analytics]", err)
+	end
+end
+
+function Analytics.Funnel(player: Player, step: number, name: string?)
+	local done = funnelDone[player]
+	if not done or done[step] then
+		return
+	end
+	done[step] = true
+	safe(function()
+		AnalyticsService:LogOnboardingFunnelStepEvent(player, step, name or FUNNEL[step])
+	end)
+end
+
+local function balance(player: Player): number
+	local data = S.Data.Get(player)
+	return data and data.coins or 0
+end
+
+function Analytics.Earn(player: Player, amount: number, source: string)
+	if source == "CashOut" then
+		Analytics.Funnel(player, 4)
+	end
+	safe(function()
+		AnalyticsService:LogEconomyEvent(
+			player, Enum.AnalyticsEconomyFlowType.Source, "Coins", amount, balance(player),
+			Enum.AnalyticsEconomyTransactionType.Gameplay.Name, source
+		)
+	end)
+end
+
+function Analytics.Spend(player: Player, amount: number, sku: string)
+	Analytics.Funnel(player, 5)
+	safe(function()
+		AnalyticsService:LogEconomyEvent(
+			player, Enum.AnalyticsEconomyFlowType.Sink, "Coins", amount, balance(player),
+			Enum.AnalyticsEconomyTransactionType.Shop.Name, sku
+		)
+	end)
+end
+
+function Analytics.Purchase(player: Player, sku: string, robux: number?)
+	safe(function()
+		AnalyticsService:LogCustomEvent(player, "RobuxPurchase_" .. sku, robux or 0)
+	end)
+end
+
+function Analytics.Progress(player: Player, name: string, value: number)
+	safe(function()
+		AnalyticsService:LogCustomEvent(player, name, value)
+	end)
+end
+
+function Analytics.Custom(player: Player, name: string, value: number?)
+	if string.sub(name, 1, 11) == "LootHooked_" then
+		Analytics.Funnel(player, 3)
+	end
+	safe(function()
+		AnalyticsService:LogCustomEvent(player, name, value or 1)
+	end)
+end
+
+function Analytics.Init(services)
+	S = services
+end
+
+function Analytics.Start()
+	local function onAdded(player)
+		funnelDone[player] = {}
+		Analytics.Funnel(player, 1)
+	end
+	Players.PlayerAdded:Connect(onAdded)
+	for _, player in Players:GetPlayers() do
+		onAdded(player)
+	end
+	Players.PlayerRemoving:Connect(function(player)
+		funnelDone[player] = nil
+	end)
+end
+
+return Analytics
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="8">
+        <Properties>
+          <string name="Name">BotService</string>
+          <string name="Source"><![CDATA[-- Bot passengers. A game that is only fun with 8 people dies before it gets
+-- 8 people, so bots fill the basket while the player count is low. Each bot
+-- has a personality that creates the same drama real players would.
+
+local Players = game:GetService("Players")
+
+local BotService = {}
+local S, Config
+
+local rng = Random.new()
+local bots = {} -- list of bot tables
+local nextId = 0
+local folder
+
+local WALK_ANIM = "rbxassetid://507777826"
+local IDLE_ANIM = "rbxassetid://507766388"
+
+local PERSONALITIES = {
+	{
+		name = "Greedy Gary", greed = 1.0, caution = 0.0, panic = 0.2,
+		colors = { Color3.fromRGB(255, 200, 60), Color3.fromRGB(60, 140, 60) },
+		lines = {
+			grab = { "MINE!", "Ooh shiny!", "I'm gonna be RICH!", "Hands off, that's mine!" },
+			vote = { "Not me, I'm the fun one!", "Throw the skinny one!" },
+			thrown = { "MY TREASURE NOOO!", "You'll regret this!!" },
+		},
+	},
+	{
+		name = "Captain Panic", greed = 0.5, caution = 0.6, panic = 1.0,
+		colors = { Color3.fromRGB(255, 255, 255), Color3.fromRGB(30, 50, 110) },
+		lines = {
+			grab = { "Is this heavy? IS THIS HEAVY?", "Fine, ONE item." },
+			vote = { "WE'RE ALL GONNA SINK!", "Someone has to go!!" },
+			thrown = { "I KNEW IT! I KNEW IT!", "Tell my parrot I love him!" },
+		},
+	},
+	{
+		name = "Careful Carla", greed = 0.3, caution = 1.0, panic = 0.1,
+		colors = { Color3.fromRGB(120, 200, 255), Color3.fromRGB(240, 240, 240) },
+		lines = {
+			grab = { "Light stuff only.", "Safety first!" },
+			vote = { "Whoever is heaviest. It's just math.", "Check the weights, people." },
+			thrown = { "This is statistically unfair!", "Worth it for the team..." },
+		},
+	},
+	{
+		name = "Lucky Lou", greed = 0.7, caution = 0.4, panic = 0.3,
+		colors = { Color3.fromRGB(90, 220, 110), Color3.fromRGB(255, 255, 255) },
+		lines = {
+			grab = { "Feeling lucky!", "Today's my day!", "Jackpot?!" },
+			vote = { "Eeny, meeny, miny...", "Luck decides!" },
+			thrown = { "Guess my luck ran out!", "Wheee-- wait no" },
+		},
+	},
+	{
+		name = "Sneaky Sam", greed = 0.8, caution = 0.3, panic = 0.4,
+		colors = { Color3.fromRGB(60, 60, 70), Color3.fromRGB(150, 60, 200) },
+		lines = {
+			grab = { "Nobody saw that.", "Heh heh heh.", "Yoink." },
+			vote = { "I have a list.", "It's personal now." },
+			thrown = { "I'll remember your faces!", "Betrayed!" },
+		},
+	},
+}
+
+local function say(bot, kind: string)
+	local lines = bot.personality.lines[kind]
+	local tag = bot.tag
+	if not lines or not tag or not tag.Parent then
+		return
+	end
+	local text = lines[rng:NextInteger(1, #lines)]
+	tag.Speech.Text = text
+	tag.Speech.Visible = true
+	local token = {}
+	bot.speechToken = token
+	task.delay(3, function()
+		if bot.speechToken == token and tag.Parent then
+			tag.Speech.Visible = false
+		end
+	end)
+end
+
+local function updateTag(bot)
+	if bot.tag and bot.tag.Parent then
+		bot.tag.Weight.Text = string.format("🎒 %d kg", bot.weight)
+	end
+end
+
+local function root(bot)
+	return bot.model and bot.model:FindFirstChild("HumanoidRootPart")
+end
+
+local function createModel(bot)
+	local desc = Instance.new("HumanoidDescription")
+	local skin, shirt = bot.personality.colors[1], bot.personality.colors[2]
+	desc.HeadColor = Color3.fromRGB(255, 205, 160)
+	desc.LeftArmColor = desc.HeadColor
+	desc.RightArmColor = desc.HeadColor
+	desc.TorsoColor = shirt
+	desc.LeftLegColor = skin
+	desc.RightLegColor = skin
+	local ok, model = pcall(function()
+		return Players:CreateHumanoidModelFromDescription(desc, Enum.HumanoidRigType.R15)
+	end)
+	if not ok or not model then
+		warn("[Bots] could not create bot model:", model)
+		return nil
+	end
+	model.Name = bot.name
+	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+	humanoid.WalkSpeed = 10
+
+	local head = model:FindFirstChild("Head")
+	local tag = Instance.new("BillboardGui")
+	tag.Name = "WeightTag"
+	tag.Size = UDim2.fromOffset(170, 80)
+	tag.StudsOffset = Vector3.new(0, 3.4, 0)
+	tag.MaxDistance = 120
+	tag.Parent = head
+	local speech = Instance.new("TextLabel")
+	speech.Name = "Speech"
+	speech.Size = UDim2.fromScale(1, 0.38)
+	speech.BackgroundColor3 = Color3.new(1, 1, 1)
+	speech.TextColor3 = Color3.new(0, 0, 0)
+	speech.TextScaled = true
+	speech.Font = Enum.Font.GothamBold
+	speech.Visible = false
+	speech.Parent = tag
+	Instance.new("UICorner").Parent = speech
+	local name = Instance.new("TextLabel")
+	name.Position = UDim2.fromScale(0, 0.4)
+	name.Size = UDim2.fromScale(1, 0.3)
+	name.BackgroundTransparency = 1
+	name.Text = "🤖 " .. bot.name
+	name.TextColor3 = Color3.fromRGB(190, 220, 255)
+	name.TextScaled = true
+	name.Font = Enum.Font.GothamBold
+	name.TextStrokeTransparency = 0.3
+	name.Parent = tag
+	local weight = Instance.new("TextLabel")
+	weight.Name = "Weight"
+	weight.Position = UDim2.fromScale(0, 0.7)
+	weight.Size = UDim2.fromScale(1, 0.3)
+	weight.BackgroundTransparency = 1
+	weight.TextColor3 = Color3.new(1, 1, 1)
+	weight.TextScaled = true
+	weight.Font = Enum.Font.GothamBold
+	weight.TextStrokeTransparency = 0.3
+	weight.Parent = tag
+	bot.tag = tag
+
+	model:PivotTo(S.Flight.BasketSpot())
+	model.Parent = folder
+	local hrp = model:FindFirstChild("HumanoidRootPart")
+	pcall(function()
+		hrp:SetNetworkOwner(nil)
+	end)
+
+	-- Simple walk/idle animation so bots don't slide around stiffly.
+	local animator = humanoid:FindFirstChildOfClass("Animator") or Instance.new("Animator", humanoid)
+	local function load(id)
+		local anim = Instance.new("Animation")
+		anim.AnimationId = id
+		local ok2, track = pcall(animator.LoadAnimation, animator, anim)
+		return ok2 and track or nil
+	end
+	local walk, idle = load(WALK_ANIM), load(IDLE_ANIM)
+	if idle then
+		idle.Looped = true
+		idle:Play()
+	end
+	humanoid.Running:Connect(function(speed)
+		if walk then
+			if speed > 0.5 and not walk.IsPlaying then
+				walk.Looped = true
+				walk:Play()
+			elseif speed <= 0.5 and walk.IsPlaying then
+				walk:Stop()
+			end
+		end
+	end)
+
+	updateTag(bot)
+	return model
+end
+
+local function removeBot(bot)
+	local index = table.find(bots, bot)
+	if index then
+		table.remove(bots, index)
+	end
+	bot.removed = true
+	if bot.model then
+		bot.model:Destroy()
+	end
+end
+
+local function spawnBot()
+	local used = {}
+	for _, b in bots do
+		used[b.personality.name] = true
+	end
+	local options = {}
+	for _, p in PERSONALITIES do
+		if not used[p.name] then
+			table.insert(options, p)
+		end
+	end
+	if #options == 0 then
+		return
+	end
+	nextId += 1
+	local personality = options[rng:NextInteger(1, #options)]
+	local bot = {
+		id = -nextId,
+		name = personality.name,
+		personality = personality,
+		weight = 0,
+		cap = math.floor(8 + personality.greed * 18),
+		nextThink = os.clock() + rng:NextNumber(1, 3),
+		thrown = false,
+	}
+	bot.model = createModel(bot)
+	if bot.model then
+		table.insert(bots, bot)
+	end
+end
+
+function BotService.GetAboard()
+	local list = {}
+	for _, bot in bots do
+		if not bot.thrown then
+			table.insert(list, bot)
+		end
+	end
+	return list
+end
+
+function BotService.TryCarry(bot, def)
+	if bot.thrown or bot.weight + def.weight > bot.cap then
+		return false, "full"
+	end
+	bot.weight += def.weight
+	updateTag(bot)
+	return true
+end
+
+function BotService.Fling(bot, velocity: Vector3, reason: string?)
+	local hrp = root(bot)
+	if not hrp then
+		return
+	end
+	bot.fallReason = reason
+	local humanoid = bot.model:FindFirstChildOfClass("Humanoid")
+	humanoid.PlatformStand = true
+	hrp.AssemblyLinearVelocity = velocity
+	task.delay(1, function()
+		if humanoid.Parent then
+			humanoid.PlatformStand = false
+		end
+	end)
+end
+
+local function overboard(bot, reason: string?)
+	if bot.thrown then
+		return
+	end
+	bot.thrown = true
+	S.Notify(nil, string.format("🌊 🤖 %s went OVERBOARD! %s", bot.name, reason or bot.fallReason or ""), "Red")
+	task.delay(3, removeBot, bot)
+end
+
+function BotService.Throw(bot, reason: string)
+	if bot.thrown then
+		return
+	end
+	say(bot, "thrown")
+	local hrp = root(bot)
+	local center = S.World.balloon.top
+	local out = if hrp then (hrp.Position - center) * Vector3.new(1, 0, 1) else Vector3.new(1, 0, 0)
+	out = if out.Magnitude > 0.1 then out.Unit else Vector3.new(1, 0, 0)
+	BotService.Fling(bot, out * 110 + Vector3.new(0, 70, 0), reason)
+	task.delay(2.5, overboard, bot, reason)
+end
+
+-- Bring the crew up (or down) to BotCrewSize passengers.
+function BotService.Refresh()
+	if not Config.BotsEnabled or not S.Flight.IsActive() then
+		return
+	end
+	local real = #S.Flight.GetAboard()
+	local wanted = math.max(0, Config.BotCrewSize - real)
+	local aboard = BotService.GetAboard()
+	if #aboard < wanted then
+		for _ = 1, wanted - #aboard do
+			spawnBot()
+		end
+	elseif #aboard > wanted and not S.Vote.IsActive() then
+		table.sort(aboard, function(a, b)
+			return a.weight < b.weight
+		end)
+		for i = 1, #aboard - wanted do
+			S.Notify(nil, "🤖 " .. aboard[i].name .. " hopped off to make room for a new passenger!", "Gray")
+			removeBot(aboard[i])
+		end
+	end
+end
+
+function BotService.OnDock()
+	for _, bot in BotService.GetAboard() do
+		if bot.weight > 0 then
+			bot.weight = 0
+			updateTag(bot)
+		end
+	end
+	-- New bots board at Sky Ports to replace the ones voted off.
+	BotService.Refresh()
+end
+
+function BotService.OnVoteStarted(candidates)
+	for _, bot in BotService.GetAboard() do
+		task.delay(rng:NextNumber(2, Config.VoteDuration - 2), function()
+			if bot.thrown or not S.Vote.IsActive() then
+				return
+			end
+			-- Mostly vote for the heaviest passenger who isn't me.
+			local pick
+			for _, c in candidates do
+				if c.id ~= bot.id then
+					if not pick or (c.weight > pick.weight and rng:NextNumber() < 0.8) then
+						pick = c
+					end
+				end
+			end
+			if bot.personality.name == "Lucky Lou" and rng:NextNumber() < 0.5 then
+				pick = candidates[rng:NextInteger(1, #candidates)]
+				if pick.id == bot.id then
+					return
+				end
+			end
+			if pick then
+				say(bot, "vote")
+				S.Vote.Cast(bot, pick.id)
+			end
+		end)
+	end
+end
+
+local function think(bot, flight)
+	local hrp = root(bot)
+	local humanoid = bot.model and bot.model:FindFirstChildOfClass("Humanoid")
+	if not hrp or not humanoid then
+		return
+	end
+	local p = bot.personality
+	local altitude = flight.altitude
+
+	-- Panic: blow the vote horn when it gets low.
+	if p.panic > 0.8 and altitude < 45 and rng:NextNumber() < 0.3 then
+		S.Vote.BotCall(bot)
+	end
+
+	-- Careful bots run to the burner when things get dicey.
+	if altitude < 55 and flight.fuel > 0 and rng:NextNumber() < p.caution * 0.6 then
+		humanoid:MoveTo(S.World.balloon.top + Vector3.new(rng:NextNumber(-5, 5), 0, rng:NextNumber(-5, 5)))
+		S.Flight.PumpBurner()
+		return
+	end
+
+	-- Cautious bots toss weight when the balloon is sinking.
+	if altitude < 35 and bot.weight > 0 and rng:NextNumber() < p.caution then
+		bot.weight = math.max(0, bot.weight - rng:NextInteger(2, 6))
+		updateTag(bot)
+		return
+	end
+
+	-- Grab loot. Bots are a bit slower than players on purpose.
+	local willing = altitude > 40 or rng:NextNumber() < p.greed
+	if willing and rng:NextNumber() < 0.45 then
+		local nearby = S.Loot.FindNear(hrp.Position, Config.BotHookRange)
+		if #nearby > 0 then
+			local info = nearby[rng:NextInteger(1, #nearby)]
+			local ok = S.Loot.Grab(info, bot)
+			if ok then
+				S.Loot.PullTo(info, hrp.Position)
+				if rng:NextNumber() < 0.5 then
+					say(bot, "grab")
+				end
+				return
+			end
+		end
+	end
+
+	-- Wander around the basket.
+	if rng:NextNumber() < 0.5 then
+		humanoid:MoveTo(S.Flight.BasketSpot().Position)
+	end
+end
+
+function BotService.Step(dt: number, flight)
+	local clock = os.clock()
+	local floorY = S.World.balloon.top.Y
+	for _, bot in table.clone(bots) do
+		local hrp = root(bot)
+		if not bot.thrown then
+			if not hrp or hrp.Position.Y < floorY - 25 then
+				overboard(bot)
+			elseif flight.state == "Flying" and clock >= bot.nextThink then
+				bot.nextThink = clock + rng:NextNumber(1.2, 2.6)
+				think(bot, flight)
+			end
+		end
+	end
+end
+
+function BotService.Clear()
+	for _, bot in table.clone(bots) do
+		removeBot(bot)
+	end
+end
+
+function BotService.Init(services)
+	S = services
+	Config = S.Config
+end
+
+function BotService.Start()
+	folder = Instance.new("Folder")
+	folder.Name = "Bots"
+	folder.Parent = workspace
+end
+
+return BotService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="9">
+        <Properties>
+          <string name="Name">DataService</string>
+          <string name="Source"><![CDATA[-- Player save data: loading, saving, autosave and leaderstats.
+
+local DataStoreService = game:GetService("DataStoreService")
+local Players = game:GetService("Players")
+
+local DataService = {}
+local S
+
+local STORE_NAME = "Overboard_Player_v1"
+local BOARD_NAME = "Overboard_TotalEarned_v1"
+local AUTOSAVE_INTERVAL = 120
+
+local TEMPLATE = {
+	coins = 0,
+	totalEarned = 0,
+	bestDistance = 0,
+	flights = 0,
+	upgrades = { Hook = 0, Backpack = 0, Luck = 0 },
+	trails = {},
+	equippedTrail = "",
+	daily = { streak = 0, last = 0 },
+	tokens = { Rescue = 0, EmergencyBurner = 0, TreasureRain = 0 },
+	receipts = {},
+}
+
+local store, earnedBoard
+pcall(function()
+	store = DataStoreService:GetDataStore(STORE_NAME)
+	earnedBoard = DataStoreService:GetOrderedDataStore(BOARD_NAME)
+end)
+
+local profiles = {} -- [Player] = { data = table, canSave = boolean }
+
+local changedEvent = Instance.new("BindableEvent")
+DataService.Changed = changedEvent.Event
+
+local function deepCopy(t)
+	local copy = {}
+	for k, v in t do
+		copy[k] = if type(v) == "table" then deepCopy(v) else v
+	end
+	return copy
+end
+
+local function reconcile(data, template)
+	for k, v in template do
+		if data[k] == nil then
+			data[k] = if type(v) == "table" then deepCopy(v) else v
+		elseif type(v) == "table" and type(data[k]) == "table" then
+			reconcile(data[k], v)
+		end
+	end
+end
+
+local function keyFor(player: Player): string
+	return "u_" .. player.UserId
+end
+
+-- Returns data, canSave. If the store can't be read we play with fresh data
+-- but never save it, so a DataStore outage can't wipe anyone's progress.
+local function load(player: Player)
+	if not store then
+		return deepCopy(TEMPLATE), false
+	end
+	for attempt = 1, 3 do
+		local ok, result = pcall(function()
+			return store:GetAsync(keyFor(player))
+		end)
+		if ok then
+			local data = if type(result) == "table" then result else deepCopy(TEMPLATE)
+			reconcile(data, TEMPLATE)
+			return data, true
+		end
+		warn("[Data] load failed for", player.Name, result)
+		task.wait(attempt * 2)
+	end
+	return deepCopy(TEMPLATE), false
+end
+
+local function updateLeaderstats(player: Player)
+	local profile = profiles[player]
+	local stats = player:FindFirstChild("leaderstats")
+	if not profile or not stats then
+		return
+	end
+	stats.Coins.Value = profile.data.coins
+	stats.Best.Value = math.floor(profile.data.bestDistance)
+end
+
+function DataService.Get(player: Player)
+	local profile = profiles[player]
+	return profile and profile.data
+end
+
+function DataService.WaitForProfile(player: Player, timeout: number?)
+	local deadline = os.clock() + (timeout or 15)
+	while not profiles[player] and player.Parent and os.clock() < deadline do
+		task.wait(0.2)
+	end
+	return DataService.Get(player)
+end
+
+function DataService.MarkChanged(player: Player)
+	updateLeaderstats(player)
+	changedEvent:Fire(player)
+end
+
+function DataService.AddCoins(player: Player, amount: number, earned: boolean?)
+	local data = DataService.Get(player)
+	if not data or amount <= 0 then
+		return
+	end
+	amount = math.floor(amount)
+	data.coins += amount
+	if earned then
+		data.totalEarned += amount
+	end
+	DataService.MarkChanged(player)
+end
+
+function DataService.SpendCoins(player: Player, amount: number): boolean
+	local data = DataService.Get(player)
+	if not data or data.coins < amount then
+		return false
+	end
+	data.coins -= amount
+	DataService.MarkChanged(player)
+	return true
+end
+
+function DataService.Save(player: Player): boolean
+	local profile = profiles[player]
+	if not profile or not profile.canSave or not store then
+		return false
+	end
+	local data = profile.data
+	local ok, err = pcall(function()
+		store:UpdateAsync(keyFor(player), function()
+			return data
+		end)
+	end)
+	if not ok then
+		warn("[Data] save failed for", player.Name, err)
+	elseif earnedBoard then
+		pcall(function()
+			earnedBoard:SetAsync(tostring(player.UserId), math.floor(data.totalEarned))
+		end)
+	end
+	return ok
+end
+
+function DataService.GetEarnedBoard()
+	return earnedBoard
+end
+
+local function onPlayerAdded(player: Player)
+	local data, canSave = load(player)
+	if not player.Parent then
+		return
+	end
+	profiles[player] = { data = data, canSave = canSave }
+
+	local stats = Instance.new("Folder")
+	stats.Name = "leaderstats"
+	local coins = Instance.new("IntValue")
+	coins.Name = "Coins"
+	coins.Parent = stats
+	local best = Instance.new("IntValue")
+	best.Name = "Best"
+	best.Parent = stats
+	stats.Parent = player
+
+	if not canSave then
+		S.Notify(player, "Saving is unavailable right now - progress this session won't be kept.", "Red")
+	end
+	DataService.MarkChanged(player)
+end
+
+function DataService.Init(services)
+	S = services
+end
+
+function DataService.Start()
+	Players.PlayerAdded:Connect(onPlayerAdded)
+	for _, player in Players:GetPlayers() do
+		task.spawn(onPlayerAdded, player)
+	end
+
+	Players.PlayerRemoving:Connect(function(player)
+		DataService.Save(player)
+		profiles[player] = nil
+	end)
+
+	task.spawn(function()
+		while true do
+			task.wait(AUTOSAVE_INTERVAL)
+			for player in profiles do
+				task.spawn(DataService.Save, player)
+			end
+		end
+	end)
+
+	game:BindToClose(function()
+		local pending = 0
+		for player in profiles do
+			pending += 1
+			task.spawn(function()
+				DataService.Save(player)
+				pending -= 1
+			end)
+		end
+		local deadline = os.clock() + 25
+		while pending > 0 and os.clock() < deadline do
+			task.wait(0.1)
+		end
+	end)
+end
+
+return DataService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="10">
+        <Properties>
+          <string name="Name">FlightService</string>
+          <string name="Source"><![CDATA[-- The core loop: intermission -> flight (with Sky Port stops) -> crash -> repeat.
+-- Also owns each player's zone (Harbor / Balloon / Raft) and the loot they carry.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Flight = {}
+local S, Config, Shop
+
+local stateFolder -- replicated attributes the client HUD reads
+
+local flight = {
+	state = "Waiting", -- Waiting | Intermission | Flying | Docked | Crashed
+	altitude = 0,
+	distance = 0,
+	fuel = 0,
+	nextPort = 0,
+	portIndex = 0,
+	burnTime = 0,
+	dockUntil = 0,
+	rate = 0,
+	load = 0,
+	participants = {}, -- [Player] = true for everyone who took part in this flight
+}
+
+local pstate = {} -- [Player] = per-player runtime state
+
+local function now()
+	return workspace:GetServerTimeNow()
+end
+
+local function getRoot(player: Player)
+	local char = player.Character
+	if not char then
+		return nil
+	end
+	local humanoid = char:FindFirstChildOfClass("Humanoid")
+	if not humanoid or humanoid.Health <= 0 then
+		return nil
+	end
+	return char:FindFirstChild("HumanoidRootPart")
+end
+Flight.GetRoot = getRoot
+
+function Flight.IsActive(): boolean
+	return flight.state == "Flying" or flight.state == "Docked"
+end
+
+function Flight.GetState()
+	return flight
+end
+
+function Flight.GetPlayerState(player: Player)
+	return pstate[player]
+end
+
+function Flight.IsAboard(player: Player): boolean
+	local ps = pstate[player]
+	return ps ~= nil and ps.zone == "Balloon" and Flight.IsActive()
+end
+
+function Flight.GetAboard()
+	local list = {}
+	if not Flight.IsActive() then
+		return list
+	end
+	for player, ps in pstate do
+		if ps.zone == "Balloon" then
+			table.insert(list, player)
+		end
+	end
+	return list
+end
+
+---------------------------------------------------------------------------
+-- Teleporting & zones
+---------------------------------------------------------------------------
+function Flight.Teleport(player: Player, cf: CFrame)
+	local char = player.Character
+	if not char then
+		return
+	end
+	pcall(function()
+		player:RequestStreamAroundAsync(cf.Position, 3)
+	end)
+	char:PivotTo(cf)
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if root then
+		root.AssemblyLinearVelocity = Vector3.zero
+	end
+end
+
+function Flight.BasketSpot(): CFrame
+	local r = 6 + math.random() * (Config.BasketRadius - 10)
+	local a = math.random() * math.pi * 2
+	return CFrame.new(S.World.balloon.top + Vector3.new(math.cos(a) * r, 3.5, math.sin(a) * r))
+end
+
+local function harborSpot(): CFrame
+	return CFrame.new(Config.HarborPos + Vector3.new(math.random(-8, 8), 4, math.random(-8, 8)))
+end
+
+local function raftSpot(): CFrame
+	return CFrame.new(Config.RaftPos + Vector3.new(math.random(-10, 10), 3.5, math.random(-10, 10)))
+end
+Flight.RaftSpot = raftSpot
+
+function Flight.SetZone(player: Player, zone: string)
+	local ps = pstate[player]
+	if not ps then
+		return
+	end
+	ps.zone = zone
+	player:SetAttribute("Zone", zone)
+	if zone ~= "Raft" then
+		ps.deliveries = 0
+		player:SetAttribute("Deliveries", 0)
+		if S.Raft then
+			S.Raft.ClearBarrel(player)
+		end
+	end
+end
+
+local function placeByZone(player: Player)
+	local ps = pstate[player]
+	if not ps then
+		return
+	end
+	if ps.zone == "Balloon" then
+		Flight.Teleport(player, Flight.BasketSpot())
+	elseif ps.zone == "Raft" then
+		Flight.Teleport(player, raftSpot())
+	else
+		Flight.Teleport(player, harborSpot())
+	end
+end
+
+function Flight.Board(player: Player)
+	if not Flight.IsActive() or not pstate[player] then
+		return
+	end
+	flight.participants[player] = true
+	Flight.SetZone(player, "Balloon")
+	placeByZone(player)
+end
+
+function Flight.ReturnToBalloon(player: Player, message: string?)
+	local ps = pstate[player]
+	if not ps or ps.zone ~= "Raft" or not Flight.IsActive() then
+		return false
+	end
+	Flight.Board(player)
+	S.Notify(player, message or "Back on the balloon!", "Green")
+	S.Analytics.Custom(player, "ReturnedToBalloon")
+	return true
+end
+
+---------------------------------------------------------------------------
+-- Carrying loot
+---------------------------------------------------------------------------
+function Flight.GetCapacity(player: Player): number
+	local data = S.Data.Get(player)
+	local cap = Shop.UpgradeValue("Backpack", data and data.upgrades.Backpack or 0)
+	if S.Monetization.OwnsPass(player, "MegaHook") then
+		cap += 10
+	end
+	return cap
+end
+
+function Flight.GetHookRange(player: Player): number
+	local data = S.Data.Get(player)
+	local range = Shop.UpgradeValue("Hook", data and data.upgrades.Hook or 0)
+	if S.Monetization.OwnsPass(player, "MegaHook") then
+		range += 12
+	end
+	return range
+end
+
+local function updateTag(player: Player)
+	local char = player.Character
+	local head = char and char:FindFirstChild("Head")
+	local tag = head and head:FindFirstChild("WeightTag")
+	local ps = pstate[player]
+	if not tag or not ps then
+		return
+	end
+	tag.Weight.Text = string.format("🎒 %d kg", ps.weight)
+	local ratio = ps.weight / math.max(1, Flight.GetCapacity(player))
+	tag.Weight.TextColor3 = Color3.fromRGB(255, 255, 255):Lerp(Color3.fromRGB(255, 70, 70), math.clamp(ratio, 0, 1))
+end
+
+local function createTag(player: Player, char: Model)
+	local head = char:WaitForChild("Head", 10)
+	if not head then
+		return
+	end
+	local tag = Instance.new("BillboardGui")
+	tag.Name = "WeightTag"
+	tag.Size = UDim2.fromOffset(160, 50)
+	tag.StudsOffset = Vector3.new(0, 2.6, 0)
+	tag.MaxDistance = 120
+	tag.Parent = head
+	local name = Instance.new("TextLabel")
+	name.Name = "PlayerName"
+	name.Size = UDim2.fromScale(1, 0.5)
+	name.BackgroundTransparency = 1
+	name.Text = player.DisplayName
+	name.TextScaled = true
+	name.Font = Enum.Font.GothamBold
+	name.TextColor3 = if S.Monetization.OwnsPass(player, "VIP")
+		then Color3.fromRGB(255, 215, 80)
+		else Color3.new(1, 1, 1)
+	name.TextStrokeTransparency = 0.3
+	name.Parent = tag
+	local weight = Instance.new("TextLabel")
+	weight.Name = "Weight"
+	weight.Position = UDim2.fromScale(0, 0.5)
+	weight.Size = UDim2.fromScale(1, 0.5)
+	weight.BackgroundTransparency = 1
+	weight.TextScaled = true
+	weight.Font = Enum.Font.GothamBold
+	weight.TextStrokeTransparency = 0.3
+	weight.Parent = tag
+	local humanoid = char:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+	end
+	updateTag(player)
+end
+
+function Flight.SyncCarry(player: Player)
+	local ps = pstate[player]
+	if not ps then
+		return
+	end
+	local weight = 0
+	for _, item in ps.carried do
+		weight += item.weight
+	end
+	ps.weight = weight
+	player:SetAttribute("CarryWeight", weight)
+	player:SetAttribute("CarryCap", Flight.GetCapacity(player))
+	player:SetAttribute("HookRange", Flight.GetHookRange(player))
+	S.Remotes.Carry:FireClient(player, ps.carried)
+	updateTag(player)
+end
+
+function Flight.TryCarry(player: Player, item)
+	local ps = pstate[player]
+	if not ps or not Flight.IsAboard(player) then
+		return false, "You need to be on the balloon!"
+	end
+	if ps.weight + item.weight > Flight.GetCapacity(player) then
+		return false, "Backpack full! Drop something or upgrade your Backpack."
+	end
+	table.insert(ps.carried, {
+		id = item.id, name = item.name, rarity = item.rarity, weight = item.weight, value = item.value,
+	})
+	Flight.SyncCarry(player)
+	return true
+end
+
+function Flight.DropItem(player: Player, index)
+	local ps = pstate[player]
+	if not ps or type(index) ~= "number" then
+		return
+	end
+	local item = ps.carried[math.floor(index)]
+	if not item then
+		return
+	end
+	table.remove(ps.carried, math.floor(index))
+	Flight.SyncCarry(player)
+	S.Notify(player, string.format("Tossed %s overboard (-%d kg)", item.name, item.weight), "Gray")
+end
+
+-- Returns true if the loot was lost.
+local function loseLoot(player: Player): boolean
+	local ps = pstate[player]
+	if not ps or #ps.carried == 0 then
+		return false
+	end
+	if S.Monetization.OwnsPass(player, "Lifejacket") then
+		S.Notify(player, "🦺 Your Lifejacket saved your loot!", "Gold")
+		return false
+	end
+	table.clear(ps.carried)
+	Flight.SyncCarry(player)
+	return true
+end
+
+function Flight.CoinMultiplier(player: Player): number
+	local mult = 1
+	if S.Monetization.OwnsPass(player, "VIP") then
+		mult *= 2
+	end
+	if S.Monetization.IsGroupMember(player) then
+		mult *= 1 + Config.GroupBonus
+	end
+	return mult
+end
+
+function Flight.CashOut(player: Player)
+	local ps = pstate[player]
+	local data = S.Data.Get(player)
+	if not ps or not data or #ps.carried == 0 then
+		return 0
+	end
+	local luckChance = Shop.UpgradeValue("Luck", data.upgrades.Luck) / 100
+	local total, doubled = 0, 0
+	for _, item in ps.carried do
+		local value = item.value
+		if math.random() < luckChance then
+			value *= 2
+			doubled += 1
+		end
+		total += value
+	end
+	total = math.floor(total * Flight.CoinMultiplier(player))
+	local count = #ps.carried
+	table.clear(ps.carried)
+	Flight.SyncCarry(player)
+	S.Data.AddCoins(player, total, true)
+	local extra = if doubled > 0 then string.format(" (%d lucky doubles!)", doubled) else ""
+	S.Notify(player, string.format("💰 Cashed out %d items for %d coins!%s", count, total, extra), "Gold", true)
+	S.Analytics.Earn(player, total, "CashOut")
+	return total
+end
+
+---------------------------------------------------------------------------
+-- Overboard, flinging & shoving
+---------------------------------------------------------------------------
+function Flight.Fling(player: Player, velocity: Vector3)
+	S.Remotes.Fling:FireClient(player, velocity)
+end
+
+function Flight.SetFallReason(player: Player, reason: string, seconds: number)
+	local ps = pstate[player]
+	if ps then
+		ps.fallReason = reason
+		ps.fallReasonUntil = os.clock() + seconds
+	end
+end
+
+function Flight.Overboard(player: Player, reason: string?)
+	local ps = pstate[player]
+	if not ps or ps.zone ~= "Balloon" or not Flight.IsActive() then
+		return
+	end
+	if not reason and ps.fallReason and os.clock() < ps.fallReasonUntil then
+		reason = ps.fallReason
+	end
+	ps.fallReason = nil
+	local lost = loseLoot(player)
+	Flight.SetZone(player, "Raft")
+	S.Notify(nil, string.format("🌊 %s went OVERBOARD! %s", player.DisplayName, reason or ""), "Red")
+	S.Notify(player, if lost then "SPLASH! Your loot sank..." else "SPLASH!", "Red", true)
+	S.Analytics.Custom(player, "Overboard")
+
+	if getRoot(player) then
+		task.spawn(Flight.Teleport, player, raftSpot())
+	end
+
+	local data = S.Data.Get(player)
+	if data and data.tokens.Rescue > 0 then
+		data.tokens.Rescue -= 1
+		S.Data.MarkChanged(player)
+		task.delay(2, Flight.ReturnToBalloon, player, "🪢 Rescue Rope used - you're back!")
+	end
+end
+
+function Flight.Shove(player: Player)
+	if not Config.ShoveEnabled or flight.state ~= "Flying" then
+		return
+	end
+	local ps = pstate[player]
+	if not ps or ps.zone ~= "Balloon" or now() < ps.shoveReadyAt then
+		return
+	end
+	local root = getRoot(player)
+	if not root then
+		return
+	end
+	ps.shoveReadyAt = now() + Config.ShoveCooldown
+	player:SetAttribute("ShoveReadyAt", ps.shoveReadyAt)
+
+	local look = root.CFrame.LookVector
+	local bestTarget, bestRoot, bestDist = nil, nil, Config.ShoveRange
+	local function consider(target, targetRoot)
+		local offset = targetRoot.Position - root.Position
+		local dist = offset.Magnitude
+		if dist > 0.1 and dist < bestDist and look:Dot(offset.Unit) > 0.2 then
+			bestTarget, bestRoot, bestDist = target, targetRoot, dist
+		end
+	end
+	for other, ops in pstate do
+		if other ~= player and ops.zone == "Balloon" then
+			local otherRoot = getRoot(other)
+			if otherRoot then
+				consider(other, otherRoot)
+			end
+		end
+	end
+	for _, bot in S.Bots.GetAboard() do
+		local botRoot = bot.model and bot.model:FindFirstChild("HumanoidRootPart")
+		if botRoot then
+			consider(bot, botRoot)
+		end
+	end
+	if not bestTarget then
+		return
+	end
+
+	local dir = (bestRoot.Position - root.Position) * Vector3.new(1, 0, 1)
+	dir = if dir.Magnitude > 0.01 then dir.Unit else look
+	local velocity = dir * Config.ShoveForce + Vector3.new(0, 30, 0)
+	if typeof(bestTarget) == "Instance" then
+		Flight.Fling(bestTarget, velocity)
+		Flight.SetFallReason(bestTarget, "(shoved by " .. player.DisplayName .. ")", 5)
+		S.Notify(bestTarget, player.DisplayName .. " shoved you!", "Orange")
+	else
+		S.Bots.Fling(bestTarget, velocity, "(shoved by " .. player.DisplayName .. ")")
+	end
+end
+
+---------------------------------------------------------------------------
+-- Balloon physics
+---------------------------------------------------------------------------
+function Flight.AddFuel(amount: number)
+	flight.fuel = math.clamp(flight.fuel + amount, 0, Config.MaxFuel)
+end
+
+function Flight.AddAltitude(amount: number)
+	flight.altitude = math.clamp(flight.altitude + amount, 0, Config.MaxAltitude)
+end
+
+function Flight.PumpBurner(by: string?)
+	if flight.state ~= "Flying" then
+		return false
+	end
+	if flight.fuel <= 0 then
+		return false
+	end
+	flight.burnTime = math.min(flight.burnTime + Config.BurnerPump, Config.BurnerMaxTime)
+	return true
+end
+
+function Flight.GetBalloonCapacity(): number
+	local passengers = #Players:GetPlayers() + #S.Bots.GetAboard()
+	return Config.CapacityPerPlayer * math.max(Config.MinCapacityPlayers, passengers)
+end
+
+function Flight.TotalWeight(): number
+	local total = 0
+	for _, player in Flight.GetAboard() do
+		total += Config.BodyWeight + pstate[player].weight
+	end
+	for _, bot in S.Bots.GetAboard() do
+		total += Config.BodyWeight + bot.weight
+	end
+	return total
+end
+
+local function publishState()
+	stateFolder:SetAttribute("State", flight.state)
+	stateFolder:SetAttribute("Altitude", math.floor(flight.altitude * 10) / 10)
+	stateFolder:SetAttribute("Distance", math.floor(flight.distance))
+	stateFolder:SetAttribute("Fuel", math.floor(flight.fuel))
+	stateFolder:SetAttribute("NextPort", math.floor(flight.nextPort))
+	stateFolder:SetAttribute("Load", math.floor(flight.load * 100) / 100)
+	stateFolder:SetAttribute("Rate", math.floor(flight.rate * 100) / 100)
+	stateFolder:SetAttribute("Burning", flight.burnTime > 0 and flight.fuel > 0)
+	stateFolder:SetAttribute("DockEndsAt", if flight.state == "Docked" then now() + (flight.dockUntil - os.clock()) else 0)
+
+	local balloon = S.World.balloon
+	balloon.fire.Enabled = flight.burnTime > 0 and flight.fuel > 0
+	local top = balloon.top
+	balloon.sea.CFrame = CFrame.new(top - Vector3.new(0, 12 + flight.altitude * 2.4, 0))
+end
+
+local function useTokens(tokenName: string, apply)
+	for _, player in Players:GetPlayers() do
+		local data = S.Data.Get(player)
+		if data and data.tokens[tokenName] > 0 then
+			data.tokens[tokenName] -= 1
+			S.Data.MarkChanged(player)
+			apply(player)
+			return true
+		end
+	end
+	return false
+end
+
+function Flight.EmergencyBurner(player: Player)
+	Flight.AddAltitude(Config.EmergencyBurnerAltitude)
+	Flight.AddFuel(10)
+	S.Notify(nil, "🔥 " .. player.DisplayName .. " fired the EMERGENCY BURNER and saved everyone!", "Gold", true)
+end
+
+function Flight.TreasureRain(player: Player)
+	S.Loot.SpawnBurst(Config.TreasureRainItems)
+	S.Notify(nil, "💎 " .. player.DisplayName .. " started a TREASURE RAIN! Grab it!", "Gold", true)
+end
+
+local function startDock()
+	flight.state = "Docked"
+	flight.portIndex += 1
+	flight.dockUntil = os.clock() + Config.DockTime
+	flight.burnTime = 0
+	Flight.AddFuel(Config.DockFuel)
+	S.Loot.SetSpeed(0)
+	S.World.ShowDock(true)
+	S.Notify(nil, string.format("⚓ SKY PORT #%d! Loot is cashed out. +%d fuel", flight.portIndex, Config.DockFuel), "Gold", true)
+	for _, player in Flight.GetAboard() do
+		Flight.CashOut(player)
+		S.Analytics.Progress(player, "SkyPort", flight.portIndex)
+	end
+	S.Bots.OnDock()
+	for player, ps in pstate do
+		if ps.zone == "Raft" then
+			Flight.ReturnToBalloon(player, "⚓ The Sky Port crew pulled you back aboard!")
+		end
+	end
+end
+
+local function endDock()
+	flight.state = "Flying"
+	flight.nextPort = flight.distance + Config.PortEvery
+	S.Loot.SetSpeed(Config.Speed)
+	S.World.ShowDock(false)
+	S.Notify(nil, "🎈 Departing! Next Sky Port in " .. Config.PortEvery .. " m", "White")
+end
+
+local function crash()
+	flight.state = "Crashed"
+	S.Vote.Cancel()
+	S.Loot.SetSpeed(0)
+	S.Notify(nil, string.format("💥 SPLASH! The balloon hit the sea after %d m!", math.floor(flight.distance)), "Red", true)
+
+	local distanceCoins = math.floor(flight.distance / Config.DistanceCoinsPer)
+	for player in flight.participants do
+		if player.Parent then
+			local ps = pstate[player]
+			if ps and ps.zone == "Balloon" then
+				loseLoot(player)
+			end
+			local data = S.Data.Get(player)
+			if data then
+				data.flights += 1
+				if flight.distance > data.bestDistance then
+					data.bestDistance = math.floor(flight.distance)
+					S.Notify(player, "🏅 New personal best: " .. data.bestDistance .. " m!", "Gold")
+				end
+				local coins = math.floor(distanceCoins * Flight.CoinMultiplier(player))
+				if coins > 0 then
+					S.Data.AddCoins(player, coins, true)
+					S.Notify(player, string.format("✈ Flight bonus: +%d coins for %d m", coins, math.floor(flight.distance)), "Gold")
+					S.Analytics.Earn(player, coins, "DistanceBonus")
+				end
+				S.Data.MarkChanged(player)
+			end
+			S.Analytics.Custom(player, "FlightEnded", math.floor(flight.distance))
+		end
+	end
+	publishState()
+	task.wait(3)
+
+	S.Loot.ClearAll()
+	S.Bots.Clear()
+	for player, ps in pstate do
+		Flight.SetZone(player, "Harbor")
+		if getRoot(player) then
+			task.spawn(Flight.Teleport, player, harborSpot())
+		end
+	end
+	table.clear(flight.participants)
+end
+
+local function startFlight()
+	flight.state = "Flying"
+	flight.altitude = Config.StartAltitude
+	flight.distance = 0
+	flight.fuel = Config.StartFuel
+	flight.nextPort = Config.PortEvery
+	flight.portIndex = 0
+	flight.burnTime = 0
+	S.Loot.SetSpeed(Config.Speed)
+	S.Loot.Prewarm()
+	for player in pstate do
+		if getRoot(player) then
+			task.spawn(Flight.Board, player)
+			S.Analytics.Funnel(player, 2, "BoardedFirstFlight")
+		end
+	end
+	S.Bots.Refresh()
+	S.Notify(nil, "🎈 LIFT OFF! Grab loot, but watch the weight!", "White", true)
+	task.delay(2, useTokens, "TreasureRain", Flight.TreasureRain)
+end
+
+local function step(dt: number)
+	if flight.state == "Flying" then
+		local burning = flight.burnTime > 0 and flight.fuel > 0
+		flight.burnTime = math.max(0, flight.burnTime - dt)
+		if burning then
+			flight.fuel = math.max(0, flight.fuel - Config.BurnerFuelPerSecond * dt)
+		end
+		flight.load = Flight.TotalWeight() / Flight.GetBalloonCapacity()
+		flight.rate = Config.BaseLift
+			- flight.load * Config.WeightSink
+			- flight.distance * Config.LeakPerMeter
+			+ (if burning then Config.BurnerLift else 0)
+		flight.altitude = math.clamp(flight.altitude + flight.rate * dt, 0, Config.MaxAltitude)
+		flight.distance += Config.Speed * dt
+
+		if flight.altitude < Config.AutoBurnerAltitude then
+			useTokens("EmergencyBurner", Flight.EmergencyBurner)
+		end
+
+		S.Loot.Step(dt, flight.distance)
+		S.Bots.Step(dt, flight)
+		S.Vote.Step(flight.altitude)
+
+		if flight.altitude <= 0 then
+			crash()
+			return
+		elseif flight.distance >= flight.nextPort then
+			startDock()
+		end
+	elseif flight.state == "Docked" then
+		S.Bots.Step(dt, flight)
+		if os.clock() >= flight.dockUntil then
+			endDock()
+		end
+	end
+	publishState()
+end
+
+---------------------------------------------------------------------------
+-- Players
+---------------------------------------------------------------------------
+local function onCharacterAdded(player: Player, char: Model)
+	if not char:IsDescendantOf(workspace) then
+		char.AncestryChanged:Wait()
+	end
+	task.spawn(createTag, player, char)
+	S.ShopSvc.ApplyTrail(player)
+
+	local humanoid = char:WaitForChild("Humanoid", 10)
+	if humanoid then
+		humanoid.Died:Connect(function()
+			if Flight.IsAboard(player) then
+				Flight.Overboard(player, "(fell apart)")
+			end
+		end)
+	end
+
+	task.wait(0.2)
+	local ps = pstate[player]
+	if not ps then
+		return
+	end
+	if Flight.IsActive() and ps.zone == "Harbor" then
+		Flight.Board(player)
+		S.Bots.Refresh()
+	else
+		placeByZone(player)
+	end
+end
+
+local function onPlayerAdded(player: Player)
+	pstate[player] = {
+		zone = "Harbor",
+		carried = {},
+		weight = 0,
+		deliveries = 0,
+		shoveReadyAt = 0,
+		fallReason = nil,
+		fallReasonUntil = 0,
+	}
+	player:SetAttribute("Zone", "Harbor")
+	player.CharacterAdded:Connect(function(char)
+		onCharacterAdded(player, char)
+	end)
+	if player.Character then
+		task.spawn(onCharacterAdded, player, player.Character)
+	end
+	task.spawn(function()
+		S.Data.WaitForProfile(player)
+		Flight.SyncCarry(player)
+		S.ShopSvc.ApplyTrail(player)
+	end)
+end
+
+-- Falling out of a zone
+local function watchFalls()
+	while true do
+		task.wait(0.2)
+		for player, ps in pstate do
+			local root = getRoot(player)
+			if root then
+				local y = root.Position.Y
+				if ps.zone == "Balloon" and Flight.IsActive() then
+					if y < S.World.balloon.top.Y - 25 then
+						Flight.Overboard(player)
+					end
+				elseif ps.zone == "Raft" then
+					if y < Config.RaftPos.Y - 15 then
+						Flight.Teleport(player, raftSpot())
+					end
+				elseif y < Config.HarborPos.Y - 30 then
+					Flight.Teleport(player, harborSpot())
+				end
+			end
+		end
+	end
+end
+
+function Flight.Init(services)
+	S = services
+	Config = S.Config
+	Shop = S.Shop
+	stateFolder = Instance.new("Folder")
+	stateFolder.Name = "FlightState"
+	stateFolder.Parent = ReplicatedStorage
+end
+
+function Flight.Start()
+	Players.PlayerAdded:Connect(onPlayerAdded)
+	for _, player in Players:GetPlayers() do
+		onPlayerAdded(player)
+	end
+	Players.PlayerRemoving:Connect(function(player)
+		pstate[player] = nil
+		flight.participants[player] = nil
+		task.defer(S.Bots.Refresh)
+	end)
+
+	S.World.balloon.burnerPrompt.Triggered:Connect(function(player)
+		if not Flight.IsAboard(player) then
+			return
+		end
+		if not Flight.PumpBurner(player.Name) and flight.state == "Flying" then
+			S.Notify(player, "⛽ No fuel! Hook fuel canisters or wait for the raft crew.", "Red")
+		end
+	end)
+
+	task.spawn(watchFalls)
+
+	task.spawn(function()
+		while true do
+			flight.state = "Waiting"
+			publishState()
+			while #Players:GetPlayers() == 0 do
+				task.wait(1)
+			end
+			flight.state = "Intermission"
+			for t = Config.Intermission, 1, -1 do
+				stateFolder:SetAttribute("Countdown", t)
+				publishState()
+				task.wait(1)
+			end
+			stateFolder:SetAttribute("Countdown", 0)
+
+			startFlight()
+			local last = os.clock()
+			while Flight.IsActive() do
+				task.wait(0.1)
+				local t = os.clock()
+				step(t - last)
+				last = t
+				if #Players:GetPlayers() == 0 and Flight.IsActive() then
+					crash()
+				end
+			end
+		end
+	end)
+end
+
+return Flight
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="11">
+        <Properties>
+          <string name="Name">LeaderboardService</string>
+          <string name="Source"><![CDATA[-- Global "top treasure hunters" board in the harbor (all-time coins earned).
+
+local Players = game:GetService("Players")
+
+local LeaderboardService = {}
+local S
+
+local REFRESH = 120
+local nameCache = {}
+
+local function nameFor(userId: number): string
+	if nameCache[userId] then
+		return nameCache[userId]
+	end
+	local ok, name = pcall(Players.GetNameFromUserIdAsync, Players, userId)
+	nameCache[userId] = if ok then name else "Player"
+	return nameCache[userId]
+end
+
+local function render(entries)
+	local list = S.World.harbor.leaderboardList
+	for _, child in list:GetChildren() do
+		if child:IsA("TextLabel") then
+			child:Destroy()
+		end
+	end
+	if #entries == 0 then
+		entries = { { name = "Be the first!", value = 0 } }
+	end
+	for rank, entry in entries do
+		local row = Instance.new("TextLabel")
+		row.LayoutOrder = rank
+		row.Size = UDim2.fromScale(1, 0.09)
+		row.BackgroundTransparency = 1
+		row.TextXAlignment = Enum.TextXAlignment.Left
+		row.TextScaled = true
+		row.Font = Enum.Font.GothamBold
+		row.TextColor3 = if rank == 1
+			then Color3.fromRGB(255, 215, 80)
+			elseif rank <= 3 then Color3.fromRGB(220, 230, 255)
+			else Color3.fromRGB(180, 190, 210)
+		row.Text = string.format("#%d  %s  —  %d 💰", rank, entry.name, entry.value)
+		row.Parent = list
+	end
+end
+
+local function refresh()
+	local board = S.Data.GetEarnedBoard()
+	if not board then
+		render({})
+		return
+	end
+	local ok, pages = pcall(board.GetSortedAsync, board, false, 10)
+	if not ok then
+		return
+	end
+	local entries = {}
+	for _, item in pages:GetCurrentPage() do
+		local userId = tonumber(item.key)
+		if userId then
+			table.insert(entries, { name = nameFor(userId), value = item.value })
+		end
+	end
+	render(entries)
+end
+
+function LeaderboardService.Init(services)
+	S = services
+end
+
+function LeaderboardService.Start()
+	task.spawn(function()
+		while true do
+			refresh()
+			task.wait(REFRESH)
+		end
+	end)
+end
+
+return LeaderboardService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="12">
+        <Properties>
+          <string name="Name">LootService</string>
+          <string name="Source"><![CDATA[-- Loot and scenery that drifts past the (stationary) balloon.
+-- The balloon never actually moves - the world flows past it, which keeps
+-- standing in the basket rock solid for players.
+
+local TweenService = game:GetService("TweenService")
+
+local LootService = {}
+local S, Config, LootDefs
+
+local rng = Random.new()
+local movers = {} -- [Model] = { lv = LinearVelocity, factor = number, born = number, item = def?, taken = bool }
+local speed = 0
+local spawnTimer = 0
+local cloudTimer = 0
+
+local SPAWN_AHEAD = 240
+local DESPAWN_BEHIND = 260
+local MAX_LIFETIME = 70
+
+local function weldTo(primary: BasePart, other: BasePart)
+	local weld = Instance.new("WeldConstraint")
+	weld.Part0 = primary
+	weld.Part1 = other
+	weld.Parent = other
+end
+
+local function makeMover(model: Model, primary: BasePart, factor: number, spin: number)
+	model.PrimaryPart = primary
+	for _, d in model:GetDescendants() do
+		if d:IsA("BasePart") then
+			d.Anchored = false
+			d.CanCollide = false
+			d.CanTouch = false
+			if d ~= primary then
+				d.Massless = true
+				weldTo(primary, d)
+			end
+		end
+	end
+	local attachment = Instance.new("Attachment")
+	attachment.Parent = primary
+	local lv = Instance.new("LinearVelocity")
+	lv.Attachment0 = attachment
+	lv.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+	lv.RelativeTo = Enum.ActuatorRelativeTo.World
+	lv.MaxForce = math.huge
+	lv.VectorVelocity = Vector3.new(-speed * factor, 0, 0)
+	lv.Parent = primary
+	local av = Instance.new("AngularVelocity")
+	av.Attachment0 = attachment
+	av.RelativeTo = Enum.ActuatorRelativeTo.World
+	av.MaxTorque = math.huge
+	av.AngularVelocity = Vector3.new(0, spin, 0)
+	av.Parent = primary
+
+	model.Parent = S.World.flying
+	pcall(function()
+		primary:SetNetworkOwner(nil)
+	end)
+	local info = { lv = lv, factor = factor, born = os.clock(), model = model, primary = primary }
+	movers[model] = info
+	return info
+end
+
+local function removeMover(model: Model)
+	movers[model] = nil
+	model:Destroy()
+end
+
+---------------------------------------------------------------------------
+-- Loot
+---------------------------------------------------------------------------
+local function buildLootModel(def)
+	local model = Instance.new("Model")
+	model.Name = "Loot_" .. (def.id or "Fuel")
+
+	local body = Instance.new("Part")
+	body.Name = "Body"
+	body.Shape = Enum.PartType[def.shape]
+	body.Size = def.size
+	body.Color = def.color
+	body.Material = if def.rarity == "Mythic" or def.rarity == "Legendary"
+		then Enum.Material.Neon
+		else Enum.Material.SmoothPlastic
+	body.Parent = model
+
+	local rarityColor = LootDefs.Rarities[def.rarity].color
+	local balloon = Instance.new("Part")
+	balloon.Name = "Balloon"
+	balloon.Shape = Enum.PartType.Ball
+	balloon.Size = Vector3.new(2.6, 2.6, 2.6)
+	balloon.Color = if def.fuel then Color3.fromRGB(255, 90, 60) else rarityColor
+	balloon.Material = Enum.Material.SmoothPlastic
+	balloon.CFrame = body.CFrame * CFrame.new(0, 4.2, 0)
+	balloon.Parent = model
+
+	local string_ = Instance.new("Part")
+	string_.Name = "String"
+	string_.Size = Vector3.new(0.12, 2.6, 0.12)
+	string_.Color = Color3.new(1, 1, 1)
+	string_.CFrame = body.CFrame * CFrame.new(0, 2.2, 0)
+	string_.Parent = model
+
+	local gui = Instance.new("BillboardGui")
+	gui.Size = UDim2.fromOffset(180, 46)
+	gui.StudsOffset = Vector3.new(0, 7, 0)
+	gui.MaxDistance = 140
+	gui.Parent = body
+	local title = Instance.new("TextLabel")
+	title.Size = UDim2.fromScale(1, 0.55)
+	title.BackgroundTransparency = 1
+	title.Text = if def.fuel then "⛽ FUEL +" .. Config.FuelCanisterAmount else def.name
+	title.TextColor3 = rarityColor
+	title.TextScaled = true
+	title.Font = Enum.Font.FredokaOne
+	title.TextStrokeTransparency = 0.2
+	title.Parent = gui
+	local sub = Instance.new("TextLabel")
+	sub.Position = UDim2.fromScale(0, 0.55)
+	sub.Size = UDim2.fromScale(1, 0.45)
+	sub.BackgroundTransparency = 1
+	sub.Text = if def.fuel then "click to hook!" else string.format("%d kg • %d 💰", def.weight, def.value)
+	sub.TextColor3 = Color3.new(1, 1, 1)
+	sub.TextScaled = true
+	sub.Font = Enum.Font.GothamBold
+	sub.TextStrokeTransparency = 0.3
+	sub.Parent = gui
+
+	if LootDefs.Rarities[def.rarity].order >= 5 then
+		local highlight = Instance.new("Highlight")
+		highlight.FillTransparency = 1
+		highlight.OutlineColor = rarityColor
+		highlight.Parent = model
+	end
+
+	local click = Instance.new("ClickDetector")
+	click.MaxActivationDistance = 120
+	click.Parent = model
+
+	return model, body, click
+end
+
+local function pullTo(info, target: Vector3)
+	info.taken = true
+	movers[info.model] = nil
+	info.primary.Anchored = true
+	local tween = TweenService:Create(info.primary, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+		CFrame = CFrame.new(target),
+	})
+	tween:Play()
+	task.delay(0.3, function()
+		info.model:Destroy()
+	end)
+end
+
+-- Shared by players and bots. Returns ok, reason.
+function LootService.Grab(info, grabber)
+	if info.taken or not info.model.Parent then
+		return false, "Too slow!"
+	end
+	local def = info.item
+	if def.fuel then
+		S.Flight.AddFuel(Config.FuelCanisterAmount)
+		return true
+	end
+	if typeof(grabber) == "Instance" then
+		return S.Flight.TryCarry(grabber, def)
+	end
+	return S.Bots.TryCarry(grabber, def)
+end
+
+local function onClicked(info, player: Player)
+	if info.taken then
+		return
+	end
+	local root = S.Flight.GetRoot(player)
+	if not root or not S.Flight.IsAboard(player) then
+		return
+	end
+	if (info.primary.Position - root.Position).Magnitude > S.Flight.GetHookRange(player) + 3 then
+		S.Notify(player, "Out of reach! Upgrade your Hook Range in the shop.", "Gray")
+		return
+	end
+	local ok, reason = LootService.Grab(info, player)
+	if not ok then
+		S.Notify(player, reason, "Gray")
+		return
+	end
+	pullTo(info, root.Position)
+	local def = info.item
+	if def.fuel then
+		S.Notify(player, "⛽ +" .. Config.FuelCanisterAmount .. " fuel for the balloon!", "Green")
+	elseif LootDefs.Rarities[def.rarity].order >= 5 then
+		S.Notify(nil, string.format("✨ %s hooked a %s %s! (%d kg)", player.DisplayName, def.rarity, def.name, def.weight), def.rarity)
+	end
+	S.Analytics.Custom(player, "LootHooked_" .. def.rarity)
+end
+
+local function spawnLoot(def, position: Vector3, factor: number)
+	local model, body, click = buildLootModel(def)
+	body.CFrame = CFrame.new(position)
+	-- rebuild relative positions now that the body moved
+	model.Balloon.CFrame = body.CFrame * CFrame.new(0, 4.2, 0)
+	model.String.CFrame = body.CFrame * CFrame.new(0, 2.2, 0)
+	local info = makeMover(model, body, factor, rng:NextNumber(-0.6, 0.6))
+	info.item = def
+	info.taken = false
+	click.MouseClick:Connect(function(player)
+		onClicked(info, player)
+	end)
+	return info
+end
+
+local function spawnPosition(): Vector3
+	local top = S.World.balloon.top
+	local R = Config.BasketRadius
+	local z
+	if rng:NextNumber() < 0.65 then
+		z = rng:NextNumber(-(R + 18), R + 18)
+	else
+		z = rng:NextNumber(-70, 70)
+	end
+	local y = if math.abs(z) < R + 3 then rng:NextNumber(10, 18) else rng:NextNumber(-4, 16)
+	return top + Vector3.new(SPAWN_AHEAD, y, z)
+end
+
+function LootService.SpawnBurst(itemIds)
+	local top = S.World.balloon.top
+	for i, id in itemIds do
+		local def = LootDefs.Items[id]
+		if def then
+			local a = (i / #itemIds) * math.pi * 2
+			local r = rng:NextNumber(10, Config.BasketRadius + 6)
+			spawnLoot(def, top + Vector3.new(math.cos(a) * r + 30, rng:NextNumber(8, 14), math.sin(a) * r), 0.25)
+		end
+	end
+end
+
+-- For bots: every loot in reach of a point.
+function LootService.FindNear(position: Vector3, range: number)
+	local list = {}
+	for _, info in movers do
+		if info.item and not info.taken and (info.primary.Position - position).Magnitude <= range then
+			table.insert(list, info)
+		end
+	end
+	return list
+end
+LootService.PullTo = pullTo
+
+---------------------------------------------------------------------------
+-- Scenery
+---------------------------------------------------------------------------
+local function spawnCloud(xOffset: number?)
+	local top = S.World.balloon.top
+	local model = Instance.new("Model")
+	model.Name = "Cloud"
+	local center = top + Vector3.new(xOffset or 600, rng:NextNumber(-90, 60), rng:NextNumber(-350, 350))
+	if math.abs(center.Z - top.Z) < 60 and math.abs(center.Y - top.Y) < 50 then
+		center += Vector3.new(0, -80, 0) -- keep clouds out of the basket
+	end
+	local primary
+	for i = 1, rng:NextInteger(3, 6) do
+		local size = rng:NextNumber(14, 30)
+		local puff = Instance.new("Part")
+		puff.Shape = Enum.PartType.Ball
+		puff.Size = Vector3.new(size, size, size)
+		puff.Color = Color3.fromRGB(255, 255, 255)
+		puff.Material = Enum.Material.SmoothPlastic
+		puff.Transparency = 0.15
+		puff.CanQuery = false
+		puff.CastShadow = false
+		puff.CFrame = CFrame.new(center + Vector3.new(rng:NextNumber(-20, 20), rng:NextNumber(-4, 6), rng:NextNumber(-12, 12)))
+		puff.Parent = model
+		primary = primary or puff
+	end
+	makeMover(model, primary, rng:NextNumber(0.8, 1.2), 0)
+end
+
+local function spawnIsland()
+	local top = S.World.balloon.top
+	local model = Instance.new("Model")
+	model.Name = "Island"
+	local side = if rng:NextNumber() < 0.5 then -1 else 1
+	local center = top + Vector3.new(600, -rng:NextNumber(60, 110), side * rng:NextNumber(90, 250))
+	local rock = Instance.new("Part")
+	rock.Shape = Enum.PartType.Ball
+	rock.Size = Vector3.new(40, 40, 40)
+	rock.Color = Color3.fromRGB(120, 110, 100)
+	rock.Material = Enum.Material.Rock
+	rock.CFrame = CFrame.new(center)
+	rock.CanQuery = false
+	rock.Parent = model
+	local grass = Instance.new("Part")
+	grass.Shape = Enum.PartType.Cylinder
+	grass.Size = Vector3.new(3, 44, 44)
+	grass.Color = Color3.fromRGB(90, 190, 80)
+	grass.Material = Enum.Material.Grass
+	grass.CFrame = CFrame.new(center + Vector3.new(0, 12, 0)) * CFrame.Angles(0, 0, math.rad(90))
+	grass.CanQuery = false
+	grass.Parent = model
+	makeMover(model, rock, 1, 0)
+end
+
+---------------------------------------------------------------------------
+-- Lifecycle
+---------------------------------------------------------------------------
+function LootService.SetSpeed(newSpeed: number)
+	speed = newSpeed
+	for _, info in movers do
+		info.lv.VectorVelocity = Vector3.new(-speed * info.factor, 0, 0)
+	end
+end
+
+function LootService.Prewarm()
+	for x = -500, 500, 90 do
+		spawnCloud(x + rng:NextNumber(-30, 30))
+	end
+end
+
+function LootService.ClearAll()
+	for model in movers do
+		model:Destroy()
+	end
+	table.clear(movers)
+	S.World.flying:ClearAllChildren()
+end
+
+function LootService.Step(dt: number, distance: number)
+	spawnTimer += dt
+	cloudTimer += dt
+	if spawnTimer >= Config.LootInterval then
+		spawnTimer = 0
+		if rng:NextNumber() < Config.FuelCanisterChance then
+			spawnLoot(LootDefs.Fuel, spawnPosition(), 1)
+		else
+			local luck = 1 + distance * Config.LuckPerMeter
+			spawnLoot(LootDefs.Roll(rng, luck), spawnPosition(), rng:NextNumber(0.8, 1.15))
+		end
+	end
+	if cloudTimer >= 4 then
+		cloudTimer = 0
+		spawnCloud()
+		if rng:NextNumber() < 0.25 then
+			spawnIsland()
+		end
+	end
+
+	local limitX = S.World.balloon.top.X - DESPAWN_BEHIND * 2.3
+	local clock = os.clock()
+	for model, info in movers do
+		local x = info.primary.Position.X
+		local tooOld = clock - info.born > MAX_LIFETIME * (if info.item then 1 else 2)
+		if x < limitX or tooOld or (info.item and x < S.World.balloon.top.X - DESPAWN_BEHIND) then
+			removeMover(model)
+		end
+	end
+end
+
+function LootService.Init(services)
+	S = services
+	Config = S.Config
+	LootDefs = S.LootDefs
+end
+
+function LootService.Start() end
+
+return LootService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="Script" referent="13">
+        <Properties>
+          <string name="Name">Main</string>
+          <token name="RunContext">0</token>
+          <string name="Source"><![CDATA[-- OVERBOARD! server entry point. Creates the remotes, wires every service
+-- together and routes client actions.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+
+local remotes = Instance.new("Folder")
+remotes.Name = "Remotes"
+for _, name in { "Action", "Notify", "Profile", "Carry", "Vote", "Fling" } do
+	local remote = Instance.new("RemoteEvent")
+	remote.Name = name
+	remote.Parent = remotes
+end
+remotes.Parent = ReplicatedStorage
+
+local S = {
+	Config = require(Shared.Config),
+	LootDefs = require(Shared.Loot),
+	Shop = require(Shared.Shop),
+	Remotes = remotes,
+}
+
+-- target = nil sends to everyone. color is a name the client maps to a colour
+-- ("Gold", "Red", a rarity name, ...). big = show as a large banner.
+function S.Notify(target: Player?, text: string, color: string?, big: boolean?)
+	if target then
+		remotes.Notify:FireClient(target, text, color or "White", big == true)
+	else
+		remotes.Notify:FireAllClients(text, color or "White", big == true)
+	end
+end
+
+local modules = script.Parent
+S.Analytics = require(modules.AnalyticsService)
+S.Data = require(modules.DataService)
+S.Monetization = require(modules.MonetizationService)
+S.WorldBuilder = require(modules.WorldBuilder)
+S.Flight = require(modules.FlightService)
+S.Loot = require(modules.LootService)
+S.Vote = require(modules.VoteService)
+S.Bots = require(modules.BotService)
+S.Raft = require(modules.RaftService)
+S.ShopSvc = require(modules.ShopService)
+S.Leaderboard = require(modules.LeaderboardService)
+
+local order = {
+	S.Analytics, S.Data, S.Monetization, S.WorldBuilder, S.Flight, S.Loot,
+	S.Vote, S.Bots, S.Raft, S.ShopSvc, S.Leaderboard,
+}
+for _, service in order do
+	service.Init(S)
+end
+S.WorldBuilder.Build()
+for _, service in order do
+	if service.Start then
+		service.Start()
+	end
+end
+
+---------------------------------------------------------------------------
+-- Client -> server actions (all arguments are validated in the services)
+---------------------------------------------------------------------------
+local handlers = {
+	Shove = function(player)
+		S.Flight.Shove(player)
+	end,
+	Drop = function(player, index)
+		S.Flight.DropItem(player, index)
+	end,
+	CallVote = function(player)
+		S.Vote.Call(player)
+	end,
+	Vote = function(player, targetId)
+		S.Vote.Cast(player, targetId)
+	end,
+	BuyUpgrade = function(player, id)
+		S.ShopSvc.BuyUpgrade(player, id)
+	end,
+	BuyTrail = function(player, id)
+		S.ShopSvc.BuyTrail(player, id)
+	end,
+	EquipTrail = function(player, id)
+		S.ShopSvc.EquipTrail(player, id)
+	end,
+	ClaimDaily = function(player)
+		S.ShopSvc.ClaimDaily(player)
+	end,
+	RequestProfile = function(player)
+		local snapshot = S.ShopSvc.Snapshot(player)
+		if snapshot then
+			remotes.Profile:FireClient(player, snapshot)
+		end
+		S.Flight.SyncCarry(player)
+	end,
+}
+
+local budget = {} -- simple rate limit: 15 actions per second per player
+remotes.Action.OnServerEvent:Connect(function(player, action, arg)
+	local handler = type(action) == "string" and handlers[action]
+	if not handler then
+		return
+	end
+	local now = os.clock()
+	local b = budget[player]
+	if not b or now - b.start > 1 then
+		b = { start = now, count = 0 }
+		budget[player] = b
+	end
+	b.count += 1
+	if b.count > 15 then
+		return
+	end
+	handler(player, arg)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+	budget[player] = nil
+end)
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="14">
+        <Properties>
+          <string name="Name">MonetizationService</string>
+          <string name="Source"><![CDATA[-- Game passes and developer products.
+-- Every product always delivers something: if it can't be used right now
+-- (e.g. Rescue Rope while you're not overboard) it is saved as a token and
+-- used automatically at the right moment.
+
+local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
+
+local MonetizationService = {}
+local S, Config
+
+local ownership = {} -- [Player] = { [passName] = bool }
+local groupMember = {} -- [Player] = bool
+local productNameById = {}
+
+function MonetizationService.OwnsPass(player: Player, name: string): boolean
+	local cache = ownership[player]
+	return cache ~= nil and cache[name] == true
+end
+
+function MonetizationService.IsGroupMember(player: Player): boolean
+	return groupMember[player] == true
+end
+
+local function refresh(player: Player)
+	local cache = {}
+	for name, id in Config.GamePasses do
+		cache[name] = false
+		if id ~= 0 then
+			local ok, owns = pcall(MarketplaceService.UserOwnsGamePassAsync, MarketplaceService, player.UserId, id)
+			cache[name] = ok and owns == true
+		end
+	end
+	ownership[player] = cache
+	if Config.GroupId ~= 0 then
+		local ok, member = pcall(player.IsInGroup, player, Config.GroupId)
+		groupMember[player] = ok and member == true
+	end
+	S.Data.MarkChanged(player)
+end
+
+-- Product grant functions. They must not yield for long and must not fail.
+local grants = {}
+
+grants.EmergencyBurner = function(player: Player, data)
+	if S.Flight.IsActive() then
+		S.Flight.EmergencyBurner(player)
+	else
+		data.tokens.EmergencyBurner += 1
+		S.Notify(player, "🔥 Emergency Burner saved - it fires automatically when the next balloon gets low!", "Gold")
+	end
+end
+
+grants.Rescue = function(player: Player, data)
+	if not S.Flight.ReturnToBalloon(player, "🪢 Rescue Rope! Back on the balloon!") then
+		data.tokens.Rescue += 1
+		S.Notify(player, "🪢 Rescue Rope saved - it pulls you back up the next time you go overboard!", "Gold")
+	end
+end
+
+grants.TreasureRain = function(player: Player, data)
+	if S.Flight.GetState().state == "Flying" then
+		S.Flight.TreasureRain(player)
+	else
+		data.tokens.TreasureRain += 1
+		S.Notify(player, "💎 Treasure Rain saved - it starts right after the next lift-off!", "Gold")
+	end
+end
+
+for name, amount in Config.ProductCoins do
+	grants[name] = function(player: Player)
+		S.Data.AddCoins(player, amount, false)
+		S.Notify(player, string.format("💰 +%d coins! Thank you for supporting the game!", amount), "Gold", true)
+	end
+end
+
+local function processReceipt(receipt)
+	local player = Players:GetPlayerByUserId(receipt.PlayerId)
+	if not player then
+		return Enum.ProductPurchaseDecision.NotProcessedYet
+	end
+	local data = S.Data.WaitForProfile(player, 10)
+	if not data then
+		return Enum.ProductPurchaseDecision.NotProcessedYet
+	end
+	if table.find(data.receipts, receipt.PurchaseId) then
+		return Enum.ProductPurchaseDecision.PurchaseGranted
+	end
+	local name = productNameById[receipt.ProductId]
+	local grant = name and grants[name]
+	if not grant then
+		warn("[Monetization] unknown product", receipt.ProductId)
+		return Enum.ProductPurchaseDecision.NotProcessedYet
+	end
+	local ok, err = pcall(grant, player, data)
+	if not ok then
+		warn("[Monetization] grant failed", name, err)
+		return Enum.ProductPurchaseDecision.NotProcessedYet
+	end
+	table.insert(data.receipts, receipt.PurchaseId)
+	while #data.receipts > 50 do
+		table.remove(data.receipts, 1)
+	end
+	S.Data.MarkChanged(player)
+	S.Data.Save(player)
+	S.Analytics.Purchase(player, name, receipt.CurrencySpent)
+	return Enum.ProductPurchaseDecision.PurchaseGranted
+end
+
+function MonetizationService.Init(services)
+	S = services
+	Config = S.Config
+	for name, id in Config.Products do
+		if id ~= 0 then
+			productNameById[id] = name
+		end
+	end
+end
+
+function MonetizationService.Start()
+	Players.PlayerAdded:Connect(refresh)
+	for _, player in Players:GetPlayers() do
+		task.spawn(refresh, player)
+	end
+	Players.PlayerRemoving:Connect(function(player)
+		ownership[player] = nil
+		groupMember[player] = nil
+	end)
+
+	MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, passId, purchased)
+		if not purchased then
+			return
+		end
+		for name, id in Config.GamePasses do
+			if id == passId then
+				ownership[player] = ownership[player] or {}
+				ownership[player][name] = true
+				S.Notify(player, "🎉 " .. name .. " unlocked! Thank you!", "Gold", true)
+				S.Flight.SyncCarry(player)
+				S.ShopSvc.ApplyTrail(player)
+				S.Data.MarkChanged(player)
+				S.Analytics.Purchase(player, "Pass_" .. name, 0)
+			end
+		end
+	end)
+
+	MarketplaceService.ProcessReceipt = processReceipt
+end
+
+return MonetizationService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="15">
+        <Properties>
+          <string name="Name">RaftService</string>
+          <string name="Source"><![CDATA[-- Going overboard is not game over: on the raft you hop across crates,
+-- grab fuel barrels and fire them up to the balloon with the Sky Cannon.
+-- Every delivery helps the people who threw you off... and after a few
+-- deliveries you get launched back aboard.
+
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
+
+local RaftService = {}
+local S, Config
+
+local carrying = {} -- [Player] = back-mounted barrel part
+
+local function playerFromHit(hit: BasePart)
+	local model = hit:FindFirstAncestorOfClass("Model")
+	return model and Players:GetPlayerFromCharacter(model)
+end
+
+function RaftService.ClearBarrel(player: Player)
+	local barrel = carrying[player]
+	if barrel then
+		barrel:Destroy()
+		carrying[player] = nil
+	end
+end
+
+local function hasBarrel(player: Player): boolean
+	local barrel = carrying[player]
+	return barrel ~= nil and barrel.Parent ~= nil
+end
+
+local function attachBarrel(player: Player)
+	local char = player.Character
+	local torso = char and (char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso"))
+	if not torso then
+		return false
+	end
+	local barrel = Instance.new("Part")
+	barrel.Name = "CarriedBarrel"
+	barrel.Shape = Enum.PartType.Cylinder
+	barrel.Size = Vector3.new(2.6, 2, 2)
+	barrel.Color = Color3.fromRGB(255, 120, 40)
+	barrel.Material = Enum.Material.Metal
+	barrel.CanCollide = false
+	barrel.Massless = true
+	barrel.CFrame = torso.CFrame * CFrame.new(0, 0, 1.4) * CFrame.Angles(0, 0, math.rad(90))
+	local weld = Instance.new("WeldConstraint")
+	weld.Part0 = torso
+	weld.Part1 = barrel
+	weld.Parent = barrel
+	barrel.Parent = char
+	carrying[player] = barrel
+	return true
+end
+
+local function spawnBarrel(spot: CFrame)
+	local barrel = Instance.new("Part")
+	barrel.Name = "FuelBarrel"
+	barrel.Shape = Enum.PartType.Cylinder
+	barrel.Size = Vector3.new(3, 2.4, 2.4)
+	barrel.Color = Color3.fromRGB(255, 120, 40)
+	barrel.Material = Enum.Material.Metal
+	barrel.Anchored = true
+	barrel.CanCollide = false
+	barrel.CFrame = spot * CFrame.Angles(0, 0, math.rad(90))
+	barrel.Parent = S.World.raft.folder
+	local light = Instance.new("PointLight")
+	light.Color = Color3.fromRGB(255, 150, 60)
+	light.Range = 10
+	light.Parent = barrel
+
+	local taken = false
+	barrel.Touched:Connect(function(hit)
+		if taken then
+			return
+		end
+		local player = playerFromHit(hit)
+		if not player or hasBarrel(player) or player:GetAttribute("Zone") ~= "Raft" then
+			return
+		end
+		if not attachBarrel(player) then
+			return
+		end
+		taken = true
+		barrel:Destroy()
+		S.Notify(player, "🛢️ Got a fuel barrel! Bring it to the SKY CANNON.", "Orange")
+		task.delay(Config.BarrelRespawn, spawnBarrel, spot)
+	end)
+end
+
+local function fireProjectile(from: Vector3)
+	local shot = Instance.new("Part")
+	shot.Shape = Enum.PartType.Ball
+	shot.Size = Vector3.new(2.5, 2.5, 2.5)
+	shot.Color = Color3.fromRGB(255, 140, 40)
+	shot.Material = Enum.Material.Neon
+	shot.Anchored = true
+	shot.CanCollide = false
+	shot.CFrame = CFrame.new(from)
+	shot.Parent = workspace
+	TweenService:Create(shot, TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+		CFrame = CFrame.new(from + Vector3.new(0, 250, 0)),
+	}):Play()
+	Debris:AddItem(shot, 1.3)
+end
+
+local function deliver(player: Player)
+	local ps = S.Flight.GetPlayerState(player)
+	if not ps or ps.zone ~= "Raft" or not hasBarrel(player) then
+		return
+	end
+	RaftService.ClearBarrel(player)
+	fireProjectile(S.World.raft.cannon.Position + Vector3.new(0, 6, 0))
+
+	if S.Flight.IsActive() then
+		S.Flight.AddFuel(Config.BarrelFuel)
+		S.Notify(nil, string.format("🚀 %s fired a fuel barrel up to the balloon! (+%d fuel)", player.DisplayName, Config.BarrelFuel), "Orange")
+	end
+	S.Data.AddCoins(player, Config.DeliveryCoins, true)
+	ps.deliveries += 1
+	player:SetAttribute("Deliveries", ps.deliveries)
+	S.Analytics.Custom(player, "FuelDelivered")
+
+	if ps.deliveries >= Config.DeliveriesToReturn then
+		S.Notify(player, "🚀 HERO! The cannon launches YOU back up!", "Green", true)
+		local root = S.Flight.GetRoot(player)
+		if root then
+			S.Flight.Fling(player, Vector3.new(0, 160, 0))
+		end
+		task.delay(0.8, S.Flight.ReturnToBalloon, player, "Welcome back aboard, hero!")
+	else
+		S.Notify(player, string.format("Delivered %d/%d - keep going!", ps.deliveries, Config.DeliveriesToReturn), "Orange")
+	end
+end
+
+function RaftService.Init(services)
+	S = services
+	Config = S.Config
+end
+
+function RaftService.Start()
+	for _, spot in S.World.raft.barrelSpots do
+		spawnBarrel(spot)
+	end
+	local debounce = {}
+	S.World.raft.cannon.Touched:Connect(function(hit)
+		local player = playerFromHit(hit)
+		if not player or debounce[player] then
+			return
+		end
+		debounce[player] = true
+		deliver(player)
+		task.delay(0.5, function()
+			debounce[player] = nil
+		end)
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		carrying[player] = nil
+	end)
+end
+
+return RaftService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="16">
+        <Properties>
+          <string name="Name">ShopService</string>
+          <string name="Source"><![CDATA[-- Coin shop (upgrades, trails), daily login rewards and the profile snapshot
+-- the client UI is built from.
+
+local ShopService = {}
+local S, Config, Shop
+
+local function dailyState(data)
+	local now = os.time()
+	local available = now - data.daily.last >= Shop.DailyCooldown
+	local streak = data.daily.streak
+	if now - data.daily.last > Shop.DailyStreakWindow then
+		streak = 0
+	end
+	local nextIndex = (streak % #Shop.DailyRewards) + 1
+	return available, streak, Shop.DailyRewards[nextIndex]
+end
+
+function ShopService.Snapshot(player: Player)
+	local data = S.Data.Get(player)
+	if not data then
+		return nil
+	end
+	local available, streak, reward = dailyState(data)
+	local passes = {}
+	for name in Config.GamePasses do
+		passes[name] = S.Monetization.OwnsPass(player, name)
+	end
+	return {
+		coins = data.coins,
+		bestDistance = data.bestDistance,
+		upgrades = data.upgrades,
+		trails = data.trails,
+		equippedTrail = data.equippedTrail,
+		tokens = data.tokens,
+		daily = { available = available, streak = streak, reward = reward },
+		passes = passes,
+	}
+end
+
+function ShopService.ApplyTrail(player: Player)
+	local char = player.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	local data = S.Data.Get(player)
+	if not root or not data then
+		return
+	end
+	local old = root:FindFirstChild("OB_Trail")
+	if old then
+		old:Destroy()
+	end
+	for _, name in { "OB_TrailA0", "OB_TrailA1" } do
+		local a = root:FindFirstChild(name)
+		if a then
+			a:Destroy()
+		end
+	end
+	local trailDef = Shop.GetTrail(data.equippedTrail)
+	if not trailDef then
+		return
+	end
+	if trailDef.vip and not S.Monetization.OwnsPass(player, "VIP") then
+		return
+	end
+	local a0 = Instance.new("Attachment")
+	a0.Name = "OB_TrailA0"
+	a0.Position = Vector3.new(0, 0.8, 0)
+	a0.Parent = root
+	local a1 = Instance.new("Attachment")
+	a1.Name = "OB_TrailA1"
+	a1.Position = Vector3.new(0, -0.8, 0)
+	a1.Parent = root
+	local keypoints = {}
+	for i, color in trailDef.colors do
+		table.insert(keypoints, ColorSequenceKeypoint.new((i - 1) / math.max(1, #trailDef.colors - 1), color))
+	end
+	if #keypoints == 1 then
+		table.insert(keypoints, ColorSequenceKeypoint.new(1, trailDef.colors[1]))
+	end
+	local trail = Instance.new("Trail")
+	trail.Name = "OB_Trail"
+	trail.Attachment0 = a0
+	trail.Attachment1 = a1
+	trail.Color = ColorSequence.new(keypoints)
+	trail.Lifetime = 0.6
+	trail.LightEmission = 0.5
+	trail.Transparency = NumberSequence.new(0.1, 1)
+	trail.Parent = root
+end
+
+function ShopService.BuyUpgrade(player: Player, id)
+	local def = type(id) == "string" and Shop.Upgrades[id]
+	local data = S.Data.Get(player)
+	if not def or not data then
+		return
+	end
+	local level = data.upgrades[id] or 0
+	if level >= def.max then
+		S.Notify(player, def.name .. " is already maxed!", "Gray")
+		return
+	end
+	local cost = Shop.UpgradeCost(id, level)
+	if not S.Data.SpendCoins(player, cost) then
+		S.Notify(player, "Not enough coins! Fly further and cash out at Sky Ports.", "Red")
+		return
+	end
+	data.upgrades[id] = level + 1
+	S.Data.MarkChanged(player)
+	S.Flight.SyncCarry(player)
+	S.Notify(player, string.format("⬆️ %s upgraded to level %d!", def.name, level + 1), "Green")
+	S.Analytics.Spend(player, cost, "Upgrade_" .. id)
+end
+
+function ShopService.BuyTrail(player: Player, id)
+	local trail = type(id) == "string" and Shop.GetTrail(id)
+	local data = S.Data.Get(player)
+	if not trail or not data or trail.vip then
+		return
+	end
+	if data.trails[id] then
+		ShopService.EquipTrail(player, id)
+		return
+	end
+	if not S.Data.SpendCoins(player, trail.price) then
+		S.Notify(player, "Not enough coins for " .. trail.name .. "!", "Red")
+		return
+	end
+	data.trails[id] = true
+	S.Analytics.Spend(player, trail.price, "Trail_" .. id)
+	ShopService.EquipTrail(player, id)
+end
+
+function ShopService.EquipTrail(player: Player, id)
+	local data = S.Data.Get(player)
+	if not data or type(id) ~= "string" then
+		return
+	end
+	if id ~= "" then
+		local trail = Shop.GetTrail(id)
+		if not trail then
+			return
+		end
+		local owned = data.trails[id] or (trail.vip and S.Monetization.OwnsPass(player, "VIP"))
+		if not owned then
+			return
+		end
+	end
+	data.equippedTrail = id
+	S.Data.MarkChanged(player)
+	ShopService.ApplyTrail(player)
+end
+
+function ShopService.ClaimDaily(player: Player)
+	local data = S.Data.Get(player)
+	if not data then
+		return
+	end
+	local available, streak, reward = dailyState(data)
+	if not available then
+		S.Notify(player, "Come back tomorrow for your next daily reward!", "Gray")
+		return
+	end
+	data.daily.streak = streak + 1
+	data.daily.last = os.time()
+	S.Data.AddCoins(player, reward, true)
+	S.Notify(player, string.format("🎁 Day %d reward: +%d coins!", data.daily.streak, reward), "Gold", true)
+	S.Analytics.Earn(player, reward, "DailyReward")
+end
+
+function ShopService.Init(services)
+	S = services
+	Config = S.Config
+	Shop = S.Shop
+end
+
+function ShopService.Start()
+	S.Data.Changed:Connect(function(player)
+		local snapshot = ShopService.Snapshot(player)
+		if snapshot then
+			S.Remotes.Profile:FireClient(player, snapshot)
+		end
+	end)
+end
+
+return ShopService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="17">
+        <Properties>
+          <string name="Name">VoteService</string>
+          <string name="Source"><![CDATA[-- "Who goes overboard?" votes. Started automatically when the balloon gets
+-- low, or by anyone with the vote horn. Bots are candidates and voters too,
+-- so this works even with a single real player.
+
+local Players = game:GetService("Players")
+
+local VoteService = {}
+local S, Config
+
+local active = nil
+local lastVoteAt = -math.huge
+
+local function candidateId(c): number
+	return if typeof(c) == "Instance" then c.UserId else c.id
+end
+
+local function buildCandidates()
+	local list, byId = {}, {}
+	for _, player in S.Flight.GetAboard() do
+		local ps = S.Flight.GetPlayerState(player)
+		byId[player.UserId] = player
+		table.insert(list, { id = player.UserId, name = player.DisplayName, weight = ps.weight, bot = false })
+	end
+	for _, bot in S.Bots.GetAboard() do
+		byId[bot.id] = bot
+		table.insert(list, { id = bot.id, name = bot.name, weight = bot.weight, bot = true })
+	end
+	table.sort(list, function(a, b)
+		return a.weight > b.weight
+	end)
+	return list, byId
+end
+
+local function tally()
+	local counts = {}
+	for _, target in active.ballots do
+		counts[target] = (counts[target] or 0) + 1
+	end
+	return counts
+end
+
+local function broadcastTally()
+	local counts = tally()
+	local payload = {}
+	for id, n in counts do
+		payload[tostring(id)] = n
+	end
+	S.Remotes.Vote:FireAllClients("Tally", payload)
+end
+
+local function finish(vote)
+	if active ~= vote then
+		return
+	end
+	active = nil
+	local counts = {}
+	for _, target in vote.ballots do
+		counts[target] = (counts[target] or 0) + 1
+	end
+	local bestId, bestCount, tie = nil, 0, false
+	for id, n in counts do
+		if n > bestCount then
+			bestId, bestCount, tie = id, n, false
+		elseif n == bestCount then
+			tie = true
+		end
+	end
+
+	local target = bestId and vote.byId[bestId]
+	if not target or tie or bestCount < Config.MinVotesToThrow or not S.Flight.IsActive() then
+		S.Remotes.Vote:FireAllClients("End", { name = nil })
+		S.Notify(nil, "🤝 The crew couldn't agree. Nobody goes overboard... for now.", "White")
+		return
+	end
+
+	local name = if typeof(target) == "Instance" then target.DisplayName else target.name
+	S.Remotes.Vote:FireAllClients("End", { name = name, votes = bestCount })
+	S.Notify(nil, string.format("🗳️ The crew has spoken: %s goes OVERBOARD! (%d votes)", name, bestCount), "Red", true)
+
+	local center = S.World.balloon.top
+	if typeof(target) == "Instance" then
+		if not S.Flight.IsAboard(target) then
+			return
+		end
+		local root = S.Flight.GetRoot(target)
+		local out = if root then (root.Position - center) * Vector3.new(1, 0, 1) else Vector3.new(1, 0, 0)
+		out = if out.Magnitude > 0.1 then out.Unit else Vector3.new(1, 0, 0)
+		S.Flight.SetFallReason(target, "(voted off by the crew)", 6)
+		S.Flight.Fling(target, out * 110 + Vector3.new(0, 70, 0))
+		task.delay(2.5, function()
+			if S.Flight.IsAboard(target) then
+				S.Flight.Overboard(target, "(voted off by the crew)")
+			end
+		end)
+		S.Analytics.Custom(target, "VotedOff")
+	else
+		S.Bots.Throw(target, "(voted off by the crew)")
+	end
+end
+
+local function start(reason: string)
+	if active or not S.Flight.IsActive() then
+		return false
+	end
+	local list, byId = buildCandidates()
+	if #list < Config.MinPlayersForVote then
+		return false
+	end
+	lastVoteAt = os.clock()
+	local vote = {
+		ballots = {}, -- [voterKey] = candidateId
+		byId = byId,
+		endsAt = workspace:GetServerTimeNow() + Config.VoteDuration,
+	}
+	active = vote
+	S.Remotes.Vote:FireAllClients("Start", {
+		reason = reason,
+		candidates = list,
+		endsAt = vote.endsAt,
+	})
+	S.Bots.OnVoteStarted(list)
+	task.delay(Config.VoteDuration, finish, vote)
+	return true
+end
+
+function VoteService.Call(player: Player)
+	if not S.Flight.IsAboard(player) or S.Flight.GetState().state ~= "Flying" then
+		return
+	end
+	if active then
+		return
+	end
+	local wait = Config.VoteCooldown - (os.clock() - lastVoteAt)
+	if wait > 0 then
+		S.Notify(player, string.format("📯 The vote horn is recharging (%ds)", math.ceil(wait)), "Gray")
+		return
+	end
+	if not start("📯 " .. player.DisplayName .. " blew the vote horn!") then
+		S.Notify(player, "Not enough passengers to vote.", "Gray")
+	end
+end
+
+function VoteService.BotCall(bot)
+	if active or S.Flight.GetState().state ~= "Flying" or os.clock() - lastVoteAt < Config.VoteCooldown then
+		return false
+	end
+	return start("📯 " .. bot.name .. " panicked and blew the vote horn!")
+end
+
+-- voterKey is a Player or a bot table; targetId is a UserId or bot id.
+function VoteService.Cast(voter, targetId)
+	if not active or type(targetId) ~= "number" or not active.byId[targetId] then
+		return
+	end
+	if typeof(voter) == "Instance" then
+		if not S.Flight.IsAboard(voter) then
+			return
+		end
+	end
+	active.ballots[voter] = targetId
+	broadcastTally()
+end
+
+function VoteService.IsActive(): boolean
+	return active ~= nil
+end
+
+function VoteService.Step(altitude: number)
+	if not active and altitude < Config.AutoVoteAltitude and os.clock() - lastVoteAt >= Config.VoteCooldown then
+		start("⚠️ ALTITUDE CRITICAL! Vote someone overboard!")
+	end
+end
+
+function VoteService.Cancel()
+	if active then
+		active = nil
+		S.Remotes.Vote:FireAllClients("End", { name = nil, cancelled = true })
+	end
+	lastVoteAt = -math.huge
+end
+
+function VoteService.Init(services)
+	S = services
+	Config = S.Config
+end
+
+function VoteService.Start()
+	Players.PlayerRemoving:Connect(function(player)
+		if active then
+			active.ballots[player] = nil
+		end
+	end)
+end
+
+VoteService.CandidateId = candidateId
+
+return VoteService
+]]></string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="18">
+        <Properties>
+          <string name="Name">WorldBuilder</string>
+          <string name="Source"><![CDATA[-- Builds the whole map from code (no assets needed):
+--   Harbor  - lobby island with the leaderboard
+--   Balloon - the giant shared basket the whole server rides in
+--   Raft    - where you end up after going overboard
+
+local Lighting = game:GetService("Lighting")
+
+local WorldBuilder = {}
+local S, Config
+
+local WOOD = Color3.fromRGB(150, 105, 60)
+local DARK_WOOD = Color3.fromRGB(105, 70, 40)
+local SEA = Color3.fromRGB(40, 125, 200)
+
+local function part(props)
+	local p = Instance.new("Part")
+	p.Anchored = true
+	p.TopSurface = Enum.SurfaceType.Smooth
+	p.BottomSurface = Enum.SurfaceType.Smooth
+	for k, v in props do
+		if k ~= "Parent" then
+			p[k] = v
+		end
+	end
+	p.Parent = props.Parent
+	return p
+end
+
+-- Cylinder parts are round along X; rotate so the flat face points up.
+local function disc(parent, name, center: Vector3, diameter: number, height: number, color, material)
+	return part({
+		Name = name,
+		Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(height, diameter, diameter),
+		CFrame = CFrame.new(center) * CFrame.Angles(0, 0, math.rad(90)),
+		Color = color,
+		Material = material,
+		Parent = parent,
+	})
+end
+
+local function label(parent: BasePart, text: string, face, textColor)
+	local gui = Instance.new("SurfaceGui")
+	gui.Face = face or Enum.NormalId.Front
+	gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	gui.PixelsPerStud = 40
+	gui.Parent = parent
+	local t = Instance.new("TextLabel")
+	t.Size = UDim2.fromScale(1, 1)
+	t.BackgroundTransparency = 1
+	t.Text = text
+	t.TextScaled = true
+	t.Font = Enum.Font.FredokaOne
+	t.TextColor3 = textColor or Color3.new(1, 1, 1)
+	t.TextStrokeTransparency = 0.4
+	t.Parent = gui
+	return t
+end
+
+local function ring(parent, center: Vector3, radius: number, segments: number, height: number, thickness: number, color, material)
+	local circumference = 2 * math.pi * radius
+	for i = 1, segments do
+		local a = (i / segments) * math.pi * 2
+		local pos = center + Vector3.new(math.cos(a) * radius, height / 2, math.sin(a) * radius)
+		part({
+			Name = "Rail",
+			Size = Vector3.new(circumference / segments + 0.6, height, thickness),
+			CFrame = CFrame.lookAt(pos, Vector3.new(center.X, pos.Y, center.Z)),
+			Color = color,
+			Material = material,
+			Parent = parent,
+		})
+	end
+end
+
+local function buildLighting()
+	Lighting.ClockTime = 15
+	Lighting.Brightness = 2.5
+	Lighting.OutdoorAmbient = Color3.fromRGB(150, 160, 180)
+	local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
+	atmosphere.Density = 0.28
+	atmosphere.Haze = 1.2
+	atmosphere.Color = Color3.fromRGB(200, 225, 255)
+	atmosphere.Decay = Color3.fromRGB(120, 170, 230)
+	atmosphere.Parent = Lighting
+end
+
+local function buildHarbor(root)
+	local folder = Instance.new("Folder")
+	folder.Name = "Harbor"
+	folder.Parent = root
+	local c = Config.HarborPos
+
+	part({
+		Name = "Sea", Size = Vector3.new(2048, 1, 2048), CFrame = CFrame.new(c + Vector3.new(0, -3, 0)),
+		Color = SEA, Material = Enum.Material.Glass, Transparency = 0.15, Parent = folder,
+	})
+	disc(folder, "Sand", c + Vector3.new(0, -1.5, 0), 150, 4, Color3.fromRGB(235, 215, 160), Enum.Material.Sand)
+	disc(folder, "Grass", c + Vector3.new(0, -0.5, 0), 120, 1, Color3.fromRGB(90, 180, 80), Enum.Material.Grass)
+
+	local spawn = Instance.new("SpawnLocation")
+	spawn.Name = "HarborSpawn"
+	spawn.Anchored = true
+	spawn.Neutral = true
+	spawn.Duration = 0
+	spawn.Size = Vector3.new(14, 1, 14)
+	spawn.CFrame = CFrame.new(c + Vector3.new(0, 0.5, 0))
+	spawn.Color = Color3.fromRGB(255, 200, 60)
+	spawn.Material = Enum.Material.SmoothPlastic
+	spawn.TopSurface = Enum.SurfaceType.Smooth
+	spawn.Parent = folder
+
+	local sign = part({
+		Name = "TitleSign", Size = Vector3.new(36, 10, 1), CFrame = CFrame.new(c + Vector3.new(0, 12, -30)),
+		Color = DARK_WOOD, Material = Enum.Material.WoodPlanks, Parent = folder,
+	})
+	label(sign, "OVERBOARD! 🎈\nThe next flight leaves soon...", Enum.NormalId.Back, Color3.fromRGB(255, 230, 120))
+	for _, x in { -16, 16 } do
+		part({
+			Name = "Post", Size = Vector3.new(1.5, 12, 1.5), CFrame = CFrame.new(c + Vector3.new(x, 6, -30)),
+			Color = DARK_WOOD, Material = Enum.Material.Wood, Parent = folder,
+		})
+	end
+
+	-- Global leaderboard board
+	local board = part({
+		Name = "Leaderboard", Size = Vector3.new(18, 22, 1),
+		CFrame = CFrame.new(c + Vector3.new(34, 12, -10)) * CFrame.Angles(0, math.rad(-60), 0),
+		Color = Color3.fromRGB(30, 40, 70), Material = Enum.Material.SmoothPlastic, Parent = folder,
+	})
+	local gui = Instance.new("SurfaceGui")
+	gui.Face = Enum.NormalId.Back
+	gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	gui.PixelsPerStud = 30
+	gui.Parent = board
+	local title = Instance.new("TextLabel")
+	title.Size = UDim2.fromScale(1, 0.12)
+	title.BackgroundTransparency = 1
+	title.Text = "🏆 TOP SKY TREASURE HUNTERS"
+	title.TextScaled = true
+	title.Font = Enum.Font.FredokaOne
+	title.TextColor3 = Color3.fromRGB(255, 215, 80)
+	title.Parent = gui
+	local list = Instance.new("Frame")
+	list.Name = "List"
+	list.Position = UDim2.fromScale(0.05, 0.14)
+	list.Size = UDim2.fromScale(0.9, 0.84)
+	list.BackgroundTransparency = 1
+	list.Parent = gui
+	local layout = Instance.new("UIListLayout")
+	layout.SortOrder = Enum.SortOrder.LayoutOrder
+	layout.Padding = UDim.new(0.01, 0)
+	layout.Parent = list
+
+	-- A small decorative balloon so new players instantly "get" the theme.
+	local deco = c + Vector3.new(-30, 0, -10)
+	disc(folder, "DecoBasket", deco + Vector3.new(0, 2, 0), 8, 4, WOOD, Enum.Material.WoodPlanks)
+	part({
+		Name = "DecoEnvelope", Shape = Enum.PartType.Ball, Size = Vector3.new(16, 16, 16),
+		CFrame = CFrame.new(deco + Vector3.new(0, 16, 0)), Color = Color3.fromRGB(230, 60, 60),
+		Material = Enum.Material.SmoothPlastic, Parent = folder,
+	})
+
+	return { spawn = spawn, leaderboardList = list }
+end
+
+local function buildBalloon(root)
+	local folder = Instance.new("Folder")
+	folder.Name = "Balloon"
+	folder.Parent = root
+	local top = Config.BalloonPos
+	local R = Config.BasketRadius
+
+	local floor = disc(folder, "BasketFloor", top - Vector3.new(0, 1, 0), R * 2 + 2, 2, WOOD, Enum.Material.WoodPlanks)
+	ring(folder, top, R + 0.5, 32, 3.5, 1, DARK_WOOD, Enum.Material.WoodPlanks)
+
+	-- Burner in the middle
+	local burner = part({
+		Name = "Burner", Size = Vector3.new(4, 5, 4), CFrame = CFrame.new(top + Vector3.new(0, 2.5, 0)),
+		Color = Color3.fromRGB(90, 90, 100), Material = Enum.Material.DiamondPlate, Parent = folder,
+	})
+	local flame = part({
+		Name = "Flame", Size = Vector3.new(3, 1, 3), CFrame = CFrame.new(top + Vector3.new(0, 5.5, 0)),
+		Color = Color3.fromRGB(60, 60, 60), Material = Enum.Material.Metal, CanCollide = false, Parent = folder,
+	})
+	local fire = Instance.new("Fire")
+	fire.Size = 12
+	fire.Heat = 20
+	fire.Enabled = false
+	fire.Parent = flame
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.ActionText = "Pump Burner"
+	prompt.ObjectText = "Burner (uses fuel)"
+	prompt.KeyboardKeyCode = Enum.KeyCode.E
+	prompt.HoldDuration = 0
+	prompt.MaxActivationDistance = 12
+	prompt.RequiresLineOfSight = false
+	prompt.Parent = burner
+
+	-- Envelope + ropes (no collision, purely visual)
+	local envelopeBottom = top + Vector3.new(0, 32, 0)
+	local envelopeSize = R * 2.4
+	part({
+		Name = "Envelope", Shape = Enum.PartType.Ball, Size = Vector3.new(envelopeSize, envelopeSize, envelopeSize),
+		CFrame = CFrame.new(envelopeBottom + Vector3.new(0, envelopeSize / 2 - 4, 0)),
+		Color = Color3.fromRGB(230, 60, 60), Material = Enum.Material.SmoothPlastic,
+		CanCollide = false, CanQuery = false, Parent = folder,
+	})
+	part({
+		Name = "Stripe", Shape = Enum.PartType.Ball, Size = Vector3.new(envelopeSize + 0.4, envelopeSize * 0.3, envelopeSize + 0.4),
+		CFrame = CFrame.new(envelopeBottom + Vector3.new(0, envelopeSize / 2 - 4, 0)),
+		Color = Color3.fromRGB(255, 220, 70), Material = Enum.Material.SmoothPlastic,
+		CanCollide = false, CanQuery = false, Parent = folder,
+	})
+	for i = 1, 8 do
+		local a = (i / 8) * math.pi * 2
+		local from = top + Vector3.new(math.cos(a) * R, 3.5, math.sin(a) * R)
+		local to = envelopeBottom + Vector3.new(math.cos(a) * R * 0.8, 0, math.sin(a) * R * 0.8)
+		local length = (to - from).Magnitude
+		part({
+			Name = "Rope", Size = Vector3.new(0.4, 0.4, length), CFrame = CFrame.lookAt((from + to) / 2, to),
+			Color = Color3.fromRGB(90, 70, 50), Material = Enum.Material.Fabric,
+			CanCollide = false, CanQuery = false, Parent = folder,
+		})
+	end
+
+	local sea = part({
+		Name = "FlightSea", Size = Vector3.new(2048, 1, 2048), CFrame = CFrame.new(top - Vector3.new(0, 250, 0)),
+		Color = SEA, Material = Enum.Material.Glass, Transparency = 0.1,
+		CanCollide = false, CanQuery = false, CanTouch = false, Parent = folder,
+	})
+
+	return {
+		top = top,
+		floor = floor,
+		burnerPrompt = prompt,
+		fire = fire,
+		sea = sea,
+		folder = folder,
+	}
+end
+
+local function buildDock(parent)
+	local top = Config.BalloonPos
+	local R = Config.BasketRadius
+	local model = Instance.new("Model")
+	model.Name = "SkyPort"
+	local base = top + Vector3.new(0, -1, R + 16)
+	part({
+		Name = "Deck", Size = Vector3.new(50, 2, 22), CFrame = CFrame.new(base),
+		Color = WOOD, Material = Enum.Material.WoodPlanks, Parent = model,
+	})
+	local sign = part({
+		Name = "Sign", Size = Vector3.new(30, 7, 1), CFrame = CFrame.new(base + Vector3.new(0, 9, 10)),
+		Color = Color3.fromRGB(40, 60, 110), Material = Enum.Material.SmoothPlastic, Parent = model,
+	})
+	label(sign, "⚓ SKY PORT - loot cashed out!", Enum.NormalId.Front, Color3.fromRGB(255, 230, 120))
+	for _, x in { -22, 22 } do
+		part({
+			Name = "Lamp", Size = Vector3.new(1, 8, 1), CFrame = CFrame.new(base + Vector3.new(x, 5, -9)),
+			Color = Color3.fromRGB(255, 220, 120), Material = Enum.Material.Neon, Parent = model,
+		})
+	end
+	model.Parent = parent
+	return model
+end
+
+local function buildRaft(root)
+	local folder = Instance.new("Folder")
+	folder.Name = "Raft"
+	folder.Parent = root
+	local top = Config.RaftPos
+
+	part({
+		Name = "RaftSea", Size = Vector3.new(700, 1, 700), CFrame = CFrame.new(top - Vector3.new(0, 6, 0)),
+		Color = SEA, Material = Enum.Material.Glass, Transparency = 0.1, CanCollide = false, Parent = folder,
+	})
+	part({
+		Name = "Raft", Size = Vector3.new(40, 2, 40), CFrame = CFrame.new(top - Vector3.new(0, 1, 0)),
+		Color = WOOD, Material = Enum.Material.WoodPlanks, Parent = folder,
+	})
+	local sign = part({
+		Name = "Sign", Size = Vector3.new(26, 7, 1), CFrame = CFrame.new(top + Vector3.new(0, 6, -19)),
+		Color = DARK_WOOD, Material = Enum.Material.WoodPlanks, Parent = folder,
+	})
+	label(sign, "OVERBOARD! Hop the crates, grab FUEL BARRELS,\nfire them from the SKY CANNON to get back up!", Enum.NormalId.Back)
+
+	-- Sky cannon
+	local cannon = part({
+		Name = "SkyCannon", Size = Vector3.new(8, 1, 8), CFrame = CFrame.new(top + Vector3.new(14, 0.5, 14)),
+		Color = Color3.fromRGB(255, 120, 40), Material = Enum.Material.Neon, Parent = folder,
+	})
+	part({
+		Name = "Barrel", Shape = Enum.PartType.Cylinder, Size = Vector3.new(8, 4, 4),
+		CFrame = CFrame.new(top + Vector3.new(14, 5, 14)) * CFrame.Angles(0, 0, math.rad(70)),
+		Color = Color3.fromRGB(40, 40, 45), Material = Enum.Material.Metal, CanCollide = false, Parent = folder,
+	})
+	local cannonLabel = Instance.new("BillboardGui")
+	cannonLabel.Size = UDim2.fromOffset(200, 50)
+	cannonLabel.StudsOffset = Vector3.new(0, 10, 0)
+	cannonLabel.AlwaysOnTop = true
+	cannonLabel.Parent = cannon
+	local t = Instance.new("TextLabel")
+	t.Size = UDim2.fromScale(1, 1)
+	t.BackgroundTransparency = 1
+	t.Text = "🚀 SKY CANNON"
+	t.TextScaled = true
+	t.Font = Enum.Font.FredokaOne
+	t.TextColor3 = Color3.fromRGB(255, 160, 60)
+	t.TextStrokeTransparency = 0.3
+	t.Parent = cannonLabel
+
+	-- Floating crates: a little jump course; barrels spawn on the outer ones.
+	local barrelSpots = {}
+	local angle, radius = 0, 30
+	for i = 1, 12 do
+		angle += math.rad(38)
+		radius += 3.2
+		local pos = top + Vector3.new(math.cos(angle) * radius, (i % 3) * 1.5, math.sin(angle) * radius)
+		part({
+			Name = "Crate", Size = Vector3.new(8, 2, 8), CFrame = CFrame.new(pos - Vector3.new(0, 1, 0)),
+			Color = Color3.fromRGB(180, 140, 80), Material = Enum.Material.Wood, Parent = folder,
+		})
+		if i >= 4 then
+			table.insert(barrelSpots, CFrame.new(pos + Vector3.new(0, 1.6, 0)))
+		end
+	end
+
+	return { top = top, cannon = cannon, barrelSpots = barrelSpots, folder = folder }
+end
+
+function WorldBuilder.Init(services)
+	S = services
+	Config = S.Config
+end
+
+function WorldBuilder.Build()
+	local root = Instance.new("Folder")
+	root.Name = "OverboardWorld"
+	root.Parent = workspace
+
+	buildLighting()
+	local world = {
+		root = root,
+		harbor = buildHarbor(root),
+		balloon = buildBalloon(root),
+		raft = buildRaft(root),
+	}
+
+	local dockTemplate = buildDock(nil)
+	function world.ShowDock(visible: boolean)
+		local existing = world.balloon.folder:FindFirstChild("SkyPort")
+		if visible and not existing then
+			dockTemplate:Clone().Parent = world.balloon.folder
+		elseif not visible and existing then
+			existing:Destroy()
+		end
+	end
+
+	-- Moving scenery and loot live here.
+	local flying = Instance.new("Folder")
+	flying.Name = "FlyingStuff"
+	flying.Parent = root
+	world.flying = flying
+
+	S.World = world
+	return world
+end
+
+return WorldBuilder
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="StarterPlayer" referent="19">
+    <Properties>
+      <string name="Name">StarterPlayer</string>
+    </Properties>
+    <Item class="StarterPlayerScripts" referent="20">
+      <Properties>
+        <string name="Name">StarterPlayerScripts</string>
+      </Properties>
+      <Item class="Folder" referent="21">
+        <Properties>
+          <string name="Name">Client</string>
+        </Properties>
+        <Item class="LocalScript" referent="22">
+          <Properties>
+            <string name="Name">Main</string>
+            <string name="Source"><![CDATA[-- OVERBOARD! client: HUD, backpack, voting, shop, notifications and input.
+-- Works with mouse, touch and gamepad.
+
+local ContextActionService = game:GetService("ContextActionService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Config = require(Shared:WaitForChild("Config"))
+local LootDefs = require(Shared:WaitForChild("Loot"))
+local Shop = require(Shared:WaitForChild("Shop"))
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local FlightState = ReplicatedStorage:WaitForChild("FlightState")
+local UI = require(script.Parent:WaitForChild("UIKit"))
+local C = UI.Colors
+
+local function colorFor(name: string?): Color3
+	if name and LootDefs.Rarities[name] then
+		return LootDefs.Rarities[name].color
+	end
+	return C[name or "Text"] or C.Text
+end
+
+local function serverNow(): number
+	return workspace:GetServerTimeNow()
+end
+
+local function action(name: string, arg)
+	Remotes.Action:FireServer(name, arg)
+end
+
+local profile = nil
+local carried = {}
+
+---------------------------------------------------------------------------
+-- Root GUI + scaling for phones
+---------------------------------------------------------------------------
+local gui = UI.new("ScreenGui", {
+	Name = "OverboardHUD",
+	ResetOnSpawn = false,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+	Parent = player:WaitForChild("PlayerGui"),
+})
+local scale = UI.new("UIScale", { Parent = gui })
+local function rescale()
+	local camera = workspace.CurrentCamera
+	if not camera then
+		return
+	end
+	local vp = camera.ViewportSize
+	scale.Scale = math.clamp(math.min(vp.X / 1280, vp.Y / 720), 0.55, 1.1)
+end
+rescale()
+workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(rescale)
+
+---------------------------------------------------------------------------
+-- Status bar (top)
+---------------------------------------------------------------------------
+local status = UI.panel({
+	AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 8), Size = UDim2.fromOffset(460, 60),
+	Parent = gui,
+})
+local statusTitle = UI.label({ Size = UDim2.new(1, 0, 0.6, 0), Text = "OVERBOARD!", Parent = status })
+local statusSub = UI.label({
+	Position = UDim2.fromScale(0, 0.58), Size = UDim2.new(1, 0, 0.38, 0),
+	Font = UI.BodyFont, TextColor3 = C.Muted, Text = "", Parent = status,
+})
+
+local coinsLabel = UI.panel({
+	Position = UDim2.fromOffset(12, 8), Size = UDim2.fromOffset(170, 44), Parent = gui,
+})
+local coinsText = UI.label({
+	Size = UDim2.fromScale(1, 1), Text = "💰 0", TextColor3 = C.Gold, Parent = coinsLabel,
+	Font = UI.Font,
+})
+UI.padding(6).Parent = coinsLabel
+
+---------------------------------------------------------------------------
+-- Altitude / fuel / load gauge (left)
+---------------------------------------------------------------------------
+local gauge = UI.panel({
+	AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 12, 0.5, 0), Size = UDim2.fromOffset(110, 330),
+	Visible = false, Parent = gui,
+})
+UI.label({ Position = UDim2.fromOffset(0, 6), Size = UDim2.new(1, 0, 0, 22), Text = "ALTITUDE", Parent = gauge })
+local altBack = UI.new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 32), Size = UDim2.fromOffset(34, 190),
+	BackgroundColor3 = Color3.fromRGB(10, 14, 28), BorderSizePixel = 0, Parent = gauge,
+}, { UI.corner(8) })
+local altFill = UI.new("Frame", {
+	AnchorPoint = Vector2.new(0, 1), Position = UDim2.fromScale(0, 1), Size = UDim2.fromScale(1, 1),
+	BackgroundColor3 = C.Green, BorderSizePixel = 0, Parent = altBack,
+}, { UI.corner(8) })
+local altText = UI.label({ Position = UDim2.fromOffset(0, 226), Size = UDim2.new(1, 0, 0, 24), Text = "100", Parent = gauge })
+local rateText = UI.label({
+	Position = UDim2.fromOffset(0, 250), Size = UDim2.new(1, 0, 0, 18), Font = UI.BodyFont, Text = "", Parent = gauge,
+})
+local fuelText = UI.label({
+	Position = UDim2.fromOffset(0, 274), Size = UDim2.new(1, 0, 0, 20), Font = UI.BodyFont,
+	TextColor3 = C.Orange, Text = "⛽ 0", Parent = gauge,
+})
+local loadText = UI.label({
+	Position = UDim2.fromOffset(0, 298), Size = UDim2.new(1, 0, 0, 20), Font = UI.BodyFont, Text = "", Parent = gauge,
+})
+
+---------------------------------------------------------------------------
+-- Backpack (right)
+---------------------------------------------------------------------------
+local backpack = UI.panel({
+	AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -12, 0.5, 0), Size = UDim2.fromOffset(230, 330),
+	Visible = false, Parent = gui,
+})
+local backpackTitle = UI.label({ Position = UDim2.fromOffset(0, 6), Size = UDim2.new(1, 0, 0, 26), Text = "🎒 0 / 10 kg", Parent = backpack })
+UI.label({
+	Position = UDim2.fromOffset(0, 32), Size = UDim2.new(1, 0, 0, 16), Font = UI.BodyFont, TextColor3 = C.Muted,
+	Text = "Cash out at the next Sky Port!", Parent = backpack,
+})
+local backpackList = UI.new("ScrollingFrame", {
+	Position = UDim2.fromOffset(8, 54), Size = UDim2.new(1, -16, 1, -62), BackgroundTransparency = 1,
+	BorderSizePixel = 0, ScrollBarThickness = 6, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
+	Parent = backpack,
+}, { UI.new("UIListLayout", { Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }) })
+
+local function renderBackpack()
+	for _, child in backpackList:GetChildren() do
+		if child:IsA("Frame") then
+			child:Destroy()
+		end
+	end
+	local value = 0
+	for index, item in carried do
+		value += item.value
+		local row = UI.new("Frame", {
+			LayoutOrder = index, Size = UDim2.new(1, -6, 0, 40), BackgroundColor3 = C.PanelLight, BorderSizePixel = 0,
+			Parent = backpackList,
+		}, { UI.corner(8) })
+		UI.new("Frame", {
+			Size = UDim2.new(0, 6, 1, 0), BackgroundColor3 = colorFor(item.rarity), BorderSizePixel = 0, Parent = row,
+		}, { UI.corner(3) })
+		UI.label({
+			Position = UDim2.fromOffset(12, 2), Size = UDim2.new(1, -74, 0.55, 0), Text = item.name,
+			TextXAlignment = Enum.TextXAlignment.Left, TextColor3 = colorFor(item.rarity), Font = UI.BodyFont, Parent = row,
+		})
+		UI.label({
+			Position = UDim2.new(0, 12, 0.55, 0), Size = UDim2.new(1, -74, 0.4, 0),
+			Text = string.format("%d kg • %d 💰", item.weight, item.value), TextXAlignment = Enum.TextXAlignment.Left,
+			TextColor3 = C.Muted, Font = UI.BodyFont, Parent = row,
+		})
+		UI.button({
+			AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -4, 0.5, 0), Size = UDim2.fromOffset(56, 30),
+			Text = "TOSS", BackgroundColor3 = C.Red, MaxTextSize = 16, Parent = row,
+		}, function()
+			action("Drop", index)
+		end)
+	end
+	local weight = player:GetAttribute("CarryWeight") or 0
+	local cap = player:GetAttribute("CarryCap") or 10
+	backpackTitle.Text = string.format("🎒 %d / %d kg  (%s 💰)", weight, cap, UI.formatNumber(value))
+	backpackTitle.TextColor3 = if weight >= cap then C.Red else C.Text
+end
+
+Remotes.Carry.OnClientEvent:Connect(function(list)
+	carried = list or {}
+	renderBackpack()
+end)
+player:GetAttributeChangedSignal("CarryCap"):Connect(renderBackpack)
+
+---------------------------------------------------------------------------
+-- Toasts & banners
+---------------------------------------------------------------------------
+local toastHolder = UI.new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 76), Size = UDim2.fromOffset(560, 220),
+	BackgroundTransparency = 1, Parent = gui,
+}, { UI.new("UIListLayout", { Padding = UDim.new(0, 4), HorizontalAlignment = Enum.HorizontalAlignment.Center }) })
+
+local function toast(text: string, color: string?)
+	local children = toastHolder:GetChildren()
+	local labels = {}
+	for _, c in children do
+		if c:IsA("TextLabel") then
+			table.insert(labels, c)
+		end
+	end
+	if #labels >= 5 then
+		labels[1]:Destroy()
+	end
+	local label = UI.label({
+		Size = UDim2.fromOffset(560, 30), BackgroundTransparency = 0.35, BackgroundColor3 = Color3.fromRGB(10, 14, 28),
+		Text = text, TextColor3 = colorFor(color), Font = UI.BodyFont, Parent = toastHolder,
+	})
+	UI.corner(8).Parent = label
+	UI.new("UITextSizeConstraint", { MaxTextSize = 20, Parent = label })
+	task.delay(4.5, function()
+		if label.Parent then
+			TweenService:Create(label, TweenInfo.new(0.4), { TextTransparency = 1, BackgroundTransparency = 1 }):Play()
+			task.wait(0.45)
+			label:Destroy()
+		end
+	end)
+end
+
+local banner = UI.label({
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.32), Size = UDim2.fromOffset(820, 70),
+	Text = "", TextStrokeTransparency = 0.2, Visible = false, Parent = gui,
+})
+local bannerToken
+local function showBanner(text: string, color: string?)
+	banner.Text = text
+	banner.TextColor3 = colorFor(color)
+	banner.Visible = true
+	banner.Size = UDim2.fromOffset(600, 50)
+	TweenService:Create(banner, TweenInfo.new(0.25, Enum.EasingStyle.Back), { Size = UDim2.fromOffset(820, 70) }):Play()
+	local token = {}
+	bannerToken = token
+	task.delay(2.8, function()
+		if bannerToken == token then
+			banner.Visible = false
+		end
+	end)
+end
+
+Remotes.Notify.OnClientEvent:Connect(function(text, color, big)
+	if big then
+		showBanner(text, color)
+	else
+		toast(text, color)
+	end
+end)
+
+---------------------------------------------------------------------------
+-- Action bar (bottom)
+---------------------------------------------------------------------------
+local bar = UI.new("Frame", {
+	AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -14), Size = UDim2.fromOffset(620, 60),
+	BackgroundTransparency = 1, Parent = gui,
+}, {
+	UI.new("UIListLayout", {
+		FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = Enum.HorizontalAlignment.Center,
+		Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder,
+	}),
+})
+
+local shoveButton = UI.button({
+	LayoutOrder = 1, Size = UDim2.fromOffset(140, 56), Text = "🤚 SHOVE [Q]", BackgroundColor3 = C.Orange,
+	Visible = false, Parent = bar,
+}, function()
+	action("Shove")
+end)
+local voteButton = UI.button({
+	LayoutOrder = 2, Size = UDim2.fromOffset(140, 56), Text = "📯 VOTE HORN", BackgroundColor3 = C.Purple,
+	Visible = false, Parent = bar,
+}, function()
+	action("CallVote")
+end)
+local shopButton = UI.button({
+	LayoutOrder = 3, Size = UDim2.fromOffset(140, 56), Text = "🛒 SHOP", BackgroundColor3 = C.Green, Parent = bar,
+})
+local dailyButton = UI.button({
+	LayoutOrder = 4, Size = UDim2.fromOffset(160, 56), Text = "🎁 DAILY", BackgroundColor3 = C.Gold,
+	TextColor3 = Color3.fromRGB(40, 30, 0), Visible = false, Parent = bar,
+}, function()
+	action("ClaimDaily")
+end)
+
+ContextActionService:BindAction("OverboardShove", function(_, state)
+	if state == Enum.UserInputState.Begin then
+		action("Shove")
+	end
+	return Enum.ContextActionResult.Pass
+end, false, Enum.KeyCode.Q, Enum.KeyCode.ButtonX)
+
+---------------------------------------------------------------------------
+-- Raft panel
+---------------------------------------------------------------------------
+local raftPanel = UI.panel({
+	AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -84), Size = UDim2.fromOffset(520, 74),
+	Visible = false, Parent = gui,
+})
+local raftText = UI.label({
+	Position = UDim2.fromOffset(10, 6), Size = UDim2.new(1, -170, 1, -12), Font = UI.BodyFont,
+	TextXAlignment = Enum.TextXAlignment.Left, Text = "", Parent = raftPanel,
+})
+local rescueButton = UI.button({
+	AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0), Size = UDim2.fromOffset(150, 50),
+	Text = "🪢 RESCUE ROPE", BackgroundColor3 = C.Gold, TextColor3 = Color3.fromRGB(40, 30, 0),
+	Visible = Config.Products.Rescue ~= 0, Parent = raftPanel,
+}, function()
+	if Config.Products.Rescue ~= 0 then
+		MarketplaceService:PromptProductPurchase(player, Config.Products.Rescue)
+	end
+end)
+
+---------------------------------------------------------------------------
+-- Vote panel
+---------------------------------------------------------------------------
+local votePanel = UI.panel({
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.55), Size = UDim2.fromOffset(440, 380),
+	Visible = false, Parent = gui,
+})
+local voteTitle = UI.label({ Position = UDim2.fromOffset(10, 8), Size = UDim2.new(1, -20, 0, 34), Text = "", Parent = votePanel })
+local voteTimer = UI.label({
+	Position = UDim2.fromOffset(10, 44), Size = UDim2.new(1, -20, 0, 22), Font = UI.BodyFont,
+	TextColor3 = C.Muted, Text = "", Parent = votePanel,
+})
+local voteList = UI.new("ScrollingFrame", {
+	Position = UDim2.fromOffset(10, 74), Size = UDim2.new(1, -20, 1, -84), BackgroundTransparency = 1,
+	BorderSizePixel = 0, ScrollBarThickness = 6, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
+	Parent = votePanel,
+}, { UI.new("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
+
+local voteState = nil -- { endsAt, buttons = {[id]=button}, candidates, myVote, counts }
+
+local function renderVoteButtons()
+	if not voteState then
+		return
+	end
+	for _, c in voteState.candidates do
+		local button = voteState.buttons[c.id]
+		local count = voteState.counts[tostring(c.id)] or 0
+		local mine = voteState.myVote == c.id
+		button.Text = string.format("%s%s  •  %d kg   [%d votes]%s", if c.bot then "🤖 " else "", c.name, c.weight, count, if mine then "  ✔" else "")
+		button.BackgroundColor3 = if mine then C.Red else C.PanelLight
+	end
+end
+
+Remotes.Vote.OnClientEvent:Connect(function(kind, payload)
+	if kind == "Start" then
+		for _, child in voteList:GetChildren() do
+			if child:IsA("TextButton") then
+				child:Destroy()
+			end
+		end
+		voteState = { endsAt = payload.endsAt, buttons = {}, candidates = payload.candidates, counts = {}, myVote = nil }
+		voteTitle.Text = payload.reason
+		local canVote = player:GetAttribute("Zone") == "Balloon"
+		for i, c in payload.candidates do
+			voteState.buttons[c.id] = UI.button({
+				LayoutOrder = i, Size = UDim2.new(1, -8, 0, 44), BackgroundColor3 = C.PanelLight,
+				Font = UI.BodyFont, MaxTextSize = 20, Text = c.name, Parent = voteList,
+			}, function()
+				if canVote and voteState then
+					voteState.myVote = c.id
+					action("Vote", c.id)
+					renderVoteButtons()
+				end
+			end)
+		end
+		votePanel.Visible = true
+		renderVoteButtons()
+	elseif kind == "Tally" and voteState then
+		voteState.counts = payload
+		renderVoteButtons()
+	elseif kind == "End" then
+		if payload and payload.name then
+			voteTitle.Text = "🌊 " .. payload.name .. " goes OVERBOARD!"
+		elseif payload and payload.cancelled then
+			voteTitle.Text = "Vote cancelled"
+		else
+			voteTitle.Text = "🤝 Nobody goes overboard!"
+		end
+		voteState = nil
+		task.delay(1.8, function()
+			if not voteState then
+				votePanel.Visible = false
+			end
+		end)
+	end
+end)
+
+---------------------------------------------------------------------------
+-- Shop
+---------------------------------------------------------------------------
+local shopPanel = UI.panel({
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromOffset(600, 440),
+	Visible = false, Parent = gui,
+})
+UI.label({ Position = UDim2.fromOffset(16, 8), Size = UDim2.new(1, -80, 0, 38), Text = "🛒 SHOP", TextXAlignment = Enum.TextXAlignment.Left, Parent = shopPanel })
+UI.button({
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -10, 0, 10), Size = UDim2.fromOffset(40, 40),
+	Text = "X", BackgroundColor3 = C.Red, Parent = shopPanel,
+}, function()
+	shopPanel.Visible = false
+end)
+local tabs = UI.new("Frame", {
+	Position = UDim2.fromOffset(16, 54), Size = UDim2.new(1, -32, 0, 40), BackgroundTransparency = 1, Parent = shopPanel,
+}, { UI.new("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8) }) })
+local shopList = UI.new("ScrollingFrame", {
+	Position = UDim2.fromOffset(16, 102), Size = UDim2.new(1, -32, 1, -114), BackgroundTransparency = 1,
+	BorderSizePixel = 0, ScrollBarThickness = 6, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
+	Parent = shopPanel,
+}, { UI.new("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
+
+local currentTab = "Upgrades"
+
+local function shopRow(order: number, title: string, desc: string, buttonText: string, buttonColor: Color3, onClick)
+	local row = UI.new("Frame", {
+		LayoutOrder = order, Size = UDim2.new(1, -8, 0, 64), BackgroundColor3 = C.PanelLight, BorderSizePixel = 0,
+		Parent = shopList,
+	}, { UI.corner(10) })
+	UI.label({
+		Position = UDim2.fromOffset(12, 6), Size = UDim2.new(1, -190, 0, 26), Text = title,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = row,
+	})
+	UI.label({
+		Position = UDim2.fromOffset(12, 34), Size = UDim2.new(1, -190, 0, 22), Text = desc, Font = UI.BodyFont,
+		TextColor3 = C.Muted, TextXAlignment = Enum.TextXAlignment.Left, Parent = row,
+	})
+	local button = UI.button({
+		AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0), Size = UDim2.fromOffset(165, 46),
+		Text = buttonText, BackgroundColor3 = buttonColor, MaxTextSize = 20, Parent = row,
+	}, onClick)
+	return row, button
+end
+
+local STORE_ITEMS = {
+	{ kind = "Pass", key = "VIP", title = "⭐ VIP", desc = "2x coins on every cash-out, gold name, Storm trail" },
+	{ kind = "Pass", key = "Lifejacket", title = "🦺 Lifejacket", desc = "Keep your loot when you go overboard or crash" },
+	{ kind = "Pass", key = "MegaHook", title = "🪝 Mega Hook", desc = "+12 hook range and +10 kg backpack, forever" },
+	{ kind = "Product", key = "EmergencyBurner", title = "🔥 Emergency Burner", desc = "+30 altitude for the WHOLE balloon. Be the hero!" },
+	{ kind = "Product", key = "TreasureRain", title = "💎 Treasure Rain", desc = "3 chests, 2 seagulls, 2 eggs, 1 crown - for everyone" },
+	{ kind = "Product", key = "Rescue", title = "🪢 Rescue Rope", desc = "Climb straight back from the raft to the balloon" },
+	{ kind = "Product", key = "CoinsSmall", title = "💰 500 Coins", desc = "A handful of coins" },
+	{ kind = "Product", key = "CoinsMedium", title = "💰 1,500 Coins", desc = "A bag of coins" },
+	{ kind = "Product", key = "CoinsLarge", title = "💰 5,000 Coins", desc = "A treasure chest of coins" },
+}
+local priceCache = {}
+
+local function renderShop()
+	for _, child in shopList:GetChildren() do
+		if child:IsA("Frame") or child:IsA("TextLabel") then
+			child:Destroy()
+		end
+	end
+	if not profile then
+		return
+	end
+
+	if currentTab == "Upgrades" then
+		for i, id in Shop.UpgradeOrder do
+			local def = Shop.Upgrades[id]
+			local level = profile.upgrades[id] or 0
+			local current = Shop.UpgradeValue(id, level)
+			local maxed = level >= def.max
+			local desc = if maxed
+				then string.format("%s  •  %d%s (MAX)", def.desc, current, def.unit)
+				else string.format("%d%s → %d%s", current, def.unit, Shop.UpgradeValue(id, level + 1), def.unit)
+			local cost = Shop.UpgradeCost(id, level)
+			shopRow(i, string.format("%s  (Lv %d/%d)", def.name, level, def.max), desc,
+				if maxed then "MAX" else "💰 " .. UI.formatNumber(cost),
+				if maxed then C.Gray elseif profile.coins >= cost then C.Green else C.Gray,
+				function()
+					action("BuyUpgrade", id)
+				end)
+		end
+	elseif currentTab == "Trails" then
+		shopRow(0, "No Trail", "Plain and simple", if profile.equippedTrail == "" then "EQUIPPED" else "EQUIP", C.Blue, function()
+			action("EquipTrail", "")
+		end)
+		for i, trail in Shop.Trails do
+			local owned = profile.trails[trail.id] or (trail.vip and profile.passes.VIP)
+			local equipped = profile.equippedTrail == trail.id
+			local text, color
+			if equipped then
+				text, color = "EQUIPPED", C.Gray
+			elseif owned then
+				text, color = "EQUIP", C.Blue
+			elseif trail.vip then
+				text, color = "VIP ONLY", C.Gold
+			else
+				text, color = "💰 " .. UI.formatNumber(trail.price), if profile.coins >= trail.price then C.Green else C.Gray
+			end
+			shopRow(i, trail.name, if trail.vip then "Exclusive to VIP" else "A shiny trail behind you", text, color, function()
+				if owned then
+					action("EquipTrail", trail.id)
+				elseif trail.vip then
+					if Config.GamePasses.VIP ~= 0 then
+						MarketplaceService:PromptGamePassPurchase(player, Config.GamePasses.VIP)
+					end
+				else
+					action("BuyTrail", trail.id)
+				end
+			end)
+		end
+	else
+		local any = false
+		for i, item in STORE_ITEMS do
+			local id = if item.kind == "Pass" then Config.GamePasses[item.key] else Config.Products[item.key]
+			if id and id ~= 0 then
+				any = true
+				local owned = item.kind == "Pass" and profile.passes[item.key]
+				local tokens = item.kind == "Product" and profile.tokens[item.key] or 0
+				local desc = item.desc .. (if tokens and tokens > 0 then string.format("  (saved: %d)", tokens) else "")
+				local _, button = shopRow(i, item.title, desc, if owned then "OWNED ✔" else (priceCache[id] or "BUY"),
+					if owned then C.Gray else C.Gold, function()
+						if owned then
+							return
+						end
+						if item.kind == "Pass" then
+							MarketplaceService:PromptGamePassPurchase(player, id)
+						else
+							MarketplaceService:PromptProductPurchase(player, id)
+						end
+					end)
+				button.TextColor3 = if owned then C.Text else Color3.fromRGB(40, 30, 0)
+				if not priceCache[id] and not owned then
+					task.spawn(function()
+						local infoType = if item.kind == "Pass" then Enum.InfoType.GamePass else Enum.InfoType.Product
+						local ok, info = pcall(MarketplaceService.GetProductInfo, MarketplaceService, id, infoType)
+						if ok and info and info.PriceInRobux then
+							priceCache[id] = "R$ " .. info.PriceInRobux
+							if button.Parent then
+								button.Text = priceCache[id]
+							end
+						end
+					end)
+				end
+			end
+		end
+		if not any then
+			UI.label({ Size = UDim2.new(1, 0, 0, 40), Text = "Store coming soon!", TextColor3 = C.Muted, Parent = shopList })
+		end
+	end
+end
+
+for i, name in { "Upgrades", "Trails", "Robux" } do
+	UI.button({
+		LayoutOrder = i, Size = UDim2.fromOffset(140, 40), Text = name, BackgroundColor3 = C.Blue, Parent = tabs,
+	}, function()
+		currentTab = name
+		renderShop()
+	end)
+end
+
+shopButton.Activated:Connect(function()
+	shopPanel.Visible = not shopPanel.Visible
+	if shopPanel.Visible then
+		renderShop()
+	end
+end)
+
+Remotes.Profile.OnClientEvent:Connect(function(snapshot)
+	profile = snapshot
+	coinsText.Text = "💰 " .. UI.formatNumber(snapshot.coins)
+	dailyButton.Visible = snapshot.daily.available
+	dailyButton.Text = string.format("🎁 DAILY +%d", snapshot.daily.reward)
+	if shopPanel.Visible then
+		renderShop()
+	end
+end)
+
+---------------------------------------------------------------------------
+-- How-to-play card (first thing a new player sees)
+---------------------------------------------------------------------------
+local howTo = UI.panel({
+	AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromOffset(520, 330),
+	Parent = gui,
+})
+UI.label({ Position = UDim2.fromOffset(0, 10), Size = UDim2.new(1, 0, 0, 44), Text = "🎈 OVERBOARD!", TextColor3 = C.Gold, Parent = howTo })
+UI.label({
+	Position = UDim2.fromOffset(24, 62), Size = UDim2.new(1, -48, 0, 190), Font = UI.BodyFont, TextScaled = false,
+	TextSize = 19, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Top,
+	Text = "🪝  Click floating loot to hook it\n"
+		.. "⚖️  Heavy loot makes the balloon SINK\n"
+		.. "🔥  Press E at the burner to climb (uses fuel)\n"
+		.. "⚓  Loot only becomes coins at a SKY PORT\n"
+		.. "🗳️  Too heavy? Vote someone OVERBOARD!\n"
+		.. "🌊  Overboard? Fire fuel barrels back up to return",
+	Parent = howTo,
+})
+UI.button({
+	AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -16), Size = UDim2.fromOffset(220, 50),
+	Text = "LET'S FLY!", BackgroundColor3 = C.Green, Parent = howTo,
+}, function()
+	howTo.Visible = false
+end)
+
+---------------------------------------------------------------------------
+-- Fling (server asks us to launch our own character)
+---------------------------------------------------------------------------
+Remotes.Fling.OnClientEvent:Connect(function(velocity: Vector3)
+	local char = player.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+	if not root or not humanoid then
+		return
+	end
+	humanoid.PlatformStand = true
+	root.AssemblyLinearVelocity = velocity
+	task.delay(0.9, function()
+		if humanoid.Parent then
+			humanoid.PlatformStand = false
+		end
+	end)
+end)
+
+---------------------------------------------------------------------------
+-- HUD update loop
+---------------------------------------------------------------------------
+local accumulator = 0
+RunService.Heartbeat:Connect(function(dt)
+	accumulator += dt
+	if accumulator < 0.1 then
+		return
+	end
+	accumulator = 0
+
+	local state = FlightState:GetAttribute("State") or "Waiting"
+	local zone = player:GetAttribute("Zone") or "Harbor"
+	local distance = FlightState:GetAttribute("Distance") or 0
+	local active = state == "Flying" or state == "Docked"
+
+	if state == "Waiting" then
+		statusTitle.Text = "Waiting for players..."
+		statusSub.Text = ""
+	elseif state == "Intermission" then
+		statusTitle.Text = string.format("Next flight in %ds", FlightState:GetAttribute("Countdown") or 0)
+		statusSub.Text = "Upgrade your gear in the SHOP!"
+	elseif state == "Flying" then
+		statusTitle.Text = "✈ " .. UI.formatNumber(distance) .. " m"
+		local toPort = math.max(0, (FlightState:GetAttribute("NextPort") or 0) - distance)
+		statusSub.Text = string.format("⚓ Next Sky Port in %s m", UI.formatNumber(toPort))
+	elseif state == "Docked" then
+		statusTitle.Text = "⚓ SKY PORT"
+		local left = math.max(0, (FlightState:GetAttribute("DockEndsAt") or 0) - serverNow())
+		statusSub.Text = string.format("Departing in %ds", math.ceil(left))
+	elseif state == "Crashed" then
+		statusTitle.Text = "💥 SPLASH!"
+		statusSub.Text = "Back to the harbor..."
+	end
+
+	-- Gauge
+	gauge.Visible = active
+	if active then
+		local alt = FlightState:GetAttribute("Altitude") or 0
+		local frac = math.clamp(alt / Config.MaxAltitude, 0, 1)
+		altFill.Size = UDim2.fromScale(1, frac)
+		local color = if alt > 60 then C.Green elseif alt > Config.AutoVoteAltitude then C.Gold else C.Red
+		if alt <= Config.AutoVoteAltitude and math.floor(os.clock() * 4) % 2 == 0 then
+			color = Color3.fromRGB(255, 255, 255)
+		end
+		altFill.BackgroundColor3 = color
+		altText.Text = string.format("%d", math.floor(alt))
+		local rate = FlightState:GetAttribute("Rate") or 0
+		rateText.Text = if rate >= 0 then string.format("▲ +%.1f/s", rate) else string.format("▼ %.1f/s", rate)
+		rateText.TextColor3 = if rate >= 0 then C.Green else C.Red
+		fuelText.Text = string.format("⛽ %d%s", FlightState:GetAttribute("Fuel") or 0, if FlightState:GetAttribute("Burning") then " 🔥" else "")
+		local load = FlightState:GetAttribute("Load") or 0
+		loadText.Text = string.format("Load %d%%", math.floor(load * 100))
+		loadText.TextColor3 = if load > 1 then C.Red elseif load > 0.75 then C.Gold else C.Text
+	end
+
+	-- Backpack & actions
+	local aboard = active and zone == "Balloon"
+	backpack.Visible = aboard or #carried > 0
+	voteButton.Visible = aboard
+	shoveButton.Visible = aboard and Config.ShoveEnabled
+	if shoveButton.Visible then
+		local left = (player:GetAttribute("ShoveReadyAt") or 0) - serverNow()
+		shoveButton.Text = if left > 0 then string.format("🤚 %ds", math.ceil(left)) else "🤚 SHOVE [Q]"
+		shoveButton.BackgroundColor3 = if left > 0 then C.Gray else C.Orange
+	end
+
+	-- Raft
+	raftPanel.Visible = active and zone == "Raft"
+	if raftPanel.Visible then
+		raftText.Text = string.format(
+			"🌊 OVERBOARD! Fire fuel barrels from the 🚀 Sky Cannon: %d/%d\n(or wait for the next Sky Port)",
+			player:GetAttribute("Deliveries") or 0, Config.DeliveriesToReturn
+		)
+	end
+	rescueButton.Visible = Config.Products.Rescue ~= 0
+
+	-- Vote timer
+	if voteState then
+		voteTimer.Text = string.format("%ds left - click a name to vote%s", math.max(0, math.ceil(voteState.endsAt - serverNow())),
+			if zone == "Balloon" then "" else " (spectating)")
+	end
+end)
+
+action("RequestProfile")
+]]></string>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="23">
+          <Properties>
+            <string name="Name">UIKit</string>
+            <string name="Source"><![CDATA[-- Tiny helpers for building UI from code.
+
+local UIKit = {}
+
+UIKit.Font = Enum.Font.FredokaOne
+UIKit.BodyFont = Enum.Font.GothamBold
+
+UIKit.Colors = {
+	Panel = Color3.fromRGB(22, 30, 52),
+	PanelLight = Color3.fromRGB(38, 50, 82),
+	Text = Color3.fromRGB(255, 255, 255),
+	Muted = Color3.fromRGB(170, 185, 215),
+	Gold = Color3.fromRGB(255, 205, 60),
+	Green = Color3.fromRGB(70, 200, 100),
+	Red = Color3.fromRGB(235, 70, 70),
+	Orange = Color3.fromRGB(255, 140, 50),
+	Blue = Color3.fromRGB(70, 140, 255),
+	Purple = Color3.fromRGB(160, 90, 255),
+	Gray = Color3.fromRGB(110, 120, 140),
+}
+
+function UIKit.new(className: string, props, children)
+	local inst = Instance.new(className)
+	local parent
+	for k, v in props or {} do
+		if k == "Parent" then
+			parent = v
+		else
+			inst[k] = v
+		end
+	end
+	for _, child in children or {} do
+		child.Parent = inst
+	end
+	inst.Parent = parent
+	return inst
+end
+
+function UIKit.corner(radius: number?)
+	return UIKit.new("UICorner", { CornerRadius = UDim.new(0, radius or 10) })
+end
+
+function UIKit.stroke(color: Color3?, thickness: number?)
+	return UIKit.new("UIStroke", {
+		Color = color or Color3.new(0, 0, 0),
+		Thickness = thickness or 2,
+		ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+	})
+end
+
+function UIKit.padding(px: number)
+	return UIKit.new("UIPadding", {
+		PaddingTop = UDim.new(0, px), PaddingBottom = UDim.new(0, px),
+		PaddingLeft = UDim.new(0, px), PaddingRight = UDim.new(0, px),
+	})
+end
+
+function UIKit.panel(props)
+	props.BackgroundColor3 = props.BackgroundColor3 or UIKit.Colors.Panel
+	props.BackgroundTransparency = props.BackgroundTransparency or 0.1
+	props.BorderSizePixel = 0
+	local frame = UIKit.new("Frame", props, { UIKit.corner(14), UIKit.stroke(Color3.fromRGB(10, 14, 28), 2) })
+	return frame
+end
+
+function UIKit.label(props)
+	props.BackgroundTransparency = props.BackgroundTransparency or 1
+	props.TextColor3 = props.TextColor3 or UIKit.Colors.Text
+	props.Font = props.Font or UIKit.Font
+	if props.TextScaled == nil then
+		props.TextScaled = true
+	end
+	return UIKit.new("TextLabel", props)
+end
+
+function UIKit.button(props, onClick)
+	props.BackgroundColor3 = props.BackgroundColor3 or UIKit.Colors.Blue
+	props.TextColor3 = props.TextColor3 or UIKit.Colors.Text
+	props.Font = props.Font or UIKit.Font
+	props.AutoButtonColor = true
+	if props.TextScaled == nil then
+		props.TextScaled = true
+	end
+	local maxTextSize = props.MaxTextSize or 24
+	props.MaxTextSize = nil
+	local button = UIKit.new("TextButton", props, {
+		UIKit.corner(10),
+		UIKit.stroke(Color3.fromRGB(10, 14, 28), 2),
+		UIKit.new("UITextSizeConstraint", { MaxTextSize = maxTextSize }),
+	})
+	if onClick then
+		button.Activated:Connect(onClick)
+	end
+	return button
+end
+
+function UIKit.formatNumber(n: number): string
+	local s = tostring(math.floor(n))
+	local formatted = s:reverse():gsub("(%d%d%d)", "%1,"):reverse()
+	if formatted:sub(1, 1) == "," then
+		formatted = formatted:sub(2)
+	end
+	return formatted
+end
+
+return UIKit
+]]></string>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="Workspace" referent="24">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <bool name="NeedsPivotMigration">false</bool>
+      <bool name="StreamingEnabled">false</bool>
+    </Properties>
+  </Item>
+</roblox>

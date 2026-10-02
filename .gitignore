@@ -1,5 +1,6 @@
 *.rbxl
 *.rbxlx
+!OVERBOARD.rbxlx
 *.rbxl.lock
 *.rbxlx.lock
 sourcemap.json

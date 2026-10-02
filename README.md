@@ -20,7 +20,19 @@
 
 ---
 
-## Einrichtung (Rojo)
+## Einrichtung OHNE Rojo (am einfachsten)
+
+1. Auf GitHub die Datei **`OVERBOARD.rbxlx`** öffnen → **Download** (Pfeil-Symbol „Download raw file“).
+2. Die Datei per Doppelklick öffnen oder in Roblox Studio *File → Open from File…* wählen.
+3. *File → Publish to Roblox* (damit Speichern & Robux-Käufe funktionieren).
+4. *Game Settings → Security → Enable Studio Access to API Services* einschalten.
+5. **Play** drücken – nach 15 Sekunden hebt der Ballon ab.
+
+Wichtig: Wenn der Code im Repo geändert wird, muss die `.rbxlx` neu gebaut werden
+(`rojo build default.project.json -o OVERBOARD.rbxlx`) – das übernimmt Claude bei jeder Änderung.
+Änderungen, die du selbst in Studio machst, sind in der Datei nicht enthalten.
+
+## Einrichtung (Rojo, für später)
 
 1. Repo klonen und im Ordner `rojo serve` ausführen.
 2. Roblox Studio → neue **Baseplate** öffnen → Rojo-Plugin → **Connect**.
@@ -28,7 +40,7 @@
 4. **Speichern testen:** *Game Settings → Security → Enable Studio Access to API Services* einschalten (sonst funktionieren Coins/DataStores nur ohne Speichern).
 5. **Play** drücken. Nach 15 Sekunden startet der erste Flug.
 6. *Empfohlen:* *Game Settings → Places → Server Size* auf **8** setzen. Wenige Spieler landen dann zusammen in einem Server statt verteilt in leeren.
-7. *Falls etwas nicht lädt:* im Workspace `StreamingEnabled` ausschalten (die drei Zonen liegen weit auseinander).
+7. `StreamingEnabled` ist im Projekt bereits ausgeschaltet (die drei Zonen liegen weit auseinander).
 
 ### Robux-Produkte anlegen
 
